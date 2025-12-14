@@ -10,6 +10,7 @@ import { SpecList } from '@/components/features/products/spec-list';
 import { SafetyChecklist } from '@/components/features/products/safety-checklist';
 import { TransactionFlow } from '@/components/features/products/transaction-flow';
 import { FAQAccordion } from '@/components/features/products/faq-accordion';
+import { ReadMoreSection } from '@/components/features/products/read-more-section';
 import { Button } from '@/components/ui/button';
 
 // High Fidelity Dummy Data matching Screenshot No.343
@@ -63,7 +64,7 @@ export default function ProductDetailPage() {
                                 <span className="text-3xl font-bold text-[#e60012]">¥{PRODUCT_DATA.price.toLocaleString()}</span>
                                 <span className="text-sm text-slate-600 mb-1">円(税込)</span>
                             </div>
-                            <Button variant="secondary" size="sm" className="h-10 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600">
+                            <Button variant="outline" size="sm" className="h-10 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 border-0">
                                 <Heart className="w-5 h-5 mr-1" />
                                 <span className="text-xs">いいね</span>
                             </Button>
@@ -96,13 +97,9 @@ export default function ProductDetailPage() {
                         <h3 className="font-bold text-base border-l-4 border-[#007bff] pl-3 mb-4">
                             このアカウントのポイント
                         </h3>
-                        <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                            ランク940と育成が進んでおり、日常の周回からイベントコンテンツまで快適に遊べる環境が整っています。
-                            ガチャ限934体と手持ちが豊富なため、幅広いクエストで適正不足に悩みにくい構成です。
-                        </p>
-                        <Button variant="outline" className="w-full text-slate-500 font-normal">
-                            もっと見る
-                        </Button>
+                        <ReadMoreSection
+                            text={`ランク940と育成が進んでおり、日常の周回からイベントコンテンツまで快適に遊べる環境が整っています。ガチャ限934体と手持ちが豊富なため、幅広いクエストで適正不足に悩みにくい構成です。運極数362体は必要な周回基盤として十分に機能し、書庫や常設などもスムーズに進行できます。平均紋章力8000も確保されているため、高難易度に挑む際の強化も行いやすく、育成の余地も残されています。全体としてバランスが良く、すぐに活用できる扱いやすい強垢です。`}
+                        />
                     </section>
 
                     <section className="border-t border-dashed pt-6">
