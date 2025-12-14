@@ -7,7 +7,7 @@ export function TransactionFlow() {
                 { step: 3, text: 'お支払い後、アカウント情報をお渡し' },
             ].map((item) => (
                 <div key={item.step} className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-[#007bff] text-white font-bold text-sm flex items-center justify-center shrink-0">
+                    <div className="w-6 h-6 rounded-full bg-[#007bff] text-white font-bold text-sm flex items-center justify-center shrink-0 pt-[2px]">
                         {item.step}
                     </div>
                     <p className="text-sm text-slate-700 font-medium">
