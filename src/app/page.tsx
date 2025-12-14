@@ -1,65 +1,90 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { ProductCard } from '@/components/features/product-card';
+import { ViewToggle } from '@/components/features/view-toggle';
+import { Product } from '@/types';
+import { Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+// Using dummy data
+const DUMMY_PRODUCTS: Partial<Product>[] = [
+  {
+    id: '1',
+    title: '【No.343】高ランクで扱いやすい強力な基盤を備えた実戦型アカウント',
+    price: 16000,
+    status: 'on_sale',
+    images: ['/sample_product.jpg'],
+    tags: ['高ランク', '強垢'],
+    rank: 1500,
+    luck_max: 300,
+    gacha_charas: 150
+  },
+  {
+    id: '2',
+    title: '【No.339】チェルノボグ運極を備えた高難易度にも強い実戦型アカウント',
+    price: 18000,
+    status: 'on_sale',
+    images: ['/sample_product.jpg'],
+    tags: ['チェル運極', '高紋章'],
+    rank: 800,
+    luck_max: 500,
+    gacha_charas: 80
+  },
+  {
+    id: '3',
+    title: '【No.336】高難易度対応力と強力な基盤が整った実戦型アカウント',
+    price: 38000,
+    status: 'on_sale',
+    images: ['/sample_product.jpg'],
+    tags: ['高ランク', '高級章', '強垢'],
+    rank: 400,
+    luck_max: 50,
+    gacha_charas: 800
+  },
+  {
+    id: '4',
+    title: '【No.327】ルシファーラック70所持 + オーブ1355個の超快適スタートアカウント',
+    price: 12000,
+    status: 'on_sale',
+    images: ['/sample_product.jpg'],
+    tags: ['ガチャ限超豊富', 'オーブ大量'],
+    rank: 200,
+    luck_max: 10,
+    gacha_charas: 50
+  }
+];
 
 export default function Home() {
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="container mx-auto px-4 py-6 pb-20 max-w-5xl">
+      {/* Page Title & Search (Header area) */}
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-xl font-bold text-slate-800">在庫一覧</h1>
+        <Button variant="ghost" size="icon">
+          <Search className="w-5 h-5 text-slate-500" />
+        </Button>
+      </div>
+
+      <div className="">
+        {/* List Header */}
+        <div className="flex items-center justify-between py-3 mb-2">
+          <h2 className="text-sm font-bold text-slate-700">すべての在庫</h2>
+          <ViewToggle viewMode={viewMode} onToggle={setViewMode} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Product Grid/List */}
+        <div className={`${viewMode === 'grid'
+            ? 'grid grid-cols-2 md:grid-cols-3 gap-2'
+            : 'flex flex-col'
+          }`}>
+          {DUMMY_PRODUCTS.map((product) => (
+            <ProductCard key={product.id} product={product} viewMode={viewMode} />
+          ))}
         </div>
-      </main>
+      </div>
     </div>
   );
 }
