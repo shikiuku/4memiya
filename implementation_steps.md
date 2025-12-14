@@ -1,69 +1,47 @@
-# Implementation Steps (ToDo Checklist)
+# 実装ステップ (Implementation Steps)
 
-このファイルは進捗管理用のチェックリストです。
-AIは開発を進める際、**常にこのリストの順番通りに実行**し、完了した項目にチェック (`[x]`) を入れてください。
+プロジェクトの進捗管理用ドキュメントです。
 
----
+## 開発ロードマップ
 
-## ✅ STEP 01: 環境構築 (Environment Setup)
-- [ ] プロジェクト作成 (TypeScript, Tailwind, App Router)。
-- [ ] 必要なライブラリ (`lucide-react`, `supabase-js`, `clsx`, `tailwind-merge`) のインストール。
-- [ ] ディレクトリ構造 (`src/components`, `src/actions` 等) の作成。
-- [ ] Git初期化 & 最初のコミット。
+- [x] **STEP 01: 環境構築**
+  - [x] Next.js プロジェクト作成 (TypeScript, Tailwind CSS, App Router)
+  - [x] ディレクトリ構造の整備 (`src/features`, `src/components` 等)
+  - [x] 必要なライブラリのインストール (`lucide-react`, `clsx`, `supabase-js` 等)
+  - [x] GitHub リポジトリの初期化
 
-## ✅ STEP 02: データベース準備 (Supabase Init)
-- [ ] Supabase プロジェクトの作成。
-- [ ] `.env.local` に環境変数を設定。
-- [ ] **DBテーブル作成**: `products` (商品), `users` (ユーザー), `app_config` (設定) テーブルを作成。
-- [ ] **初期データ投入**: UI開発用にダミーデータをSQLで挿入。
-- [ ] `src/types/index.ts` に型定義を作成。
+- [x] **STEP 02: データベース準備**
+  - [x] Supabase プロジェクト作成
+  - [x] テーブル定義 (`App Users`, `Products`, `Assessment Rules`, `App Config`)
+  - [x] 初期データ投入 (Seed Data)
+  - [x] 型定義ファイルの生成 (`types/database.ts`)
 
-## ✅ STEP 03: デザイン再現 - 共通・一覧 (UI Layout)
-- [ ] `globals.css` に基本色・フォントを設定。
-- [ ] **共通パーツ**: ヘッダー、通知バー、スマホ用固定フッターの作成。
-- [ ] **トップページ**: ヒーローセクションと新着在庫リストの見た目作成。
-- [ ] **商品一覧**: グリッド表示/リスト表示の切り替えスイッチと、商品カードの作成。
-- [ ] **レスポンシブ確認**: スマホで崩れていないか確認。
+- [x] **STEP 03: デザイン再現 - 共通・一覧 (Top Page)**
+  - [x] グローバルスタイル (`globals.css` - カラー・フォント設定)
+  - [x] 共通レイアウト (Header, Footer, Layout)
+  - [x] トップページ実装 (在庫一覧・検索UI)
+  - [x] 商品カードコンポーネント (Grid/List 表示切り替え)
 
-## ✅ STEP 04: デザイン再現 - 商品詳細 (Detail Page)
-**※最重要・完コピフェーズ**
-- [ ] **画像スライダー**: メイン画像とサムネイルの連動。
-- [ ] **スペック表**: ランク・運極数などのリスト表示。
-- [ ] **アコーディオン**: 「ポイント」「おすすめ」「FAQ」の開閉アニメーション。
-- [ ] **安心チェックリスト**: ○×アイコンを使ったリスト表示。
-- [ ] **取引フロー**: ステップ表示のデザイン。
+- [x] **STEP 04: デザイン再現 - 商品詳細 (Detail Page)**
+  - [x] ページレイアウト (`app/products/[id]/page.tsx`)
+  - [x] 画像スライダー (`ImageSlider`)
+  - [x] 商品スペック表 (Grid Layout)
+  - [x] アコーディオンメニュー (商品詳細・レビュー)
+  - [x] 購入フロー・CTAボタン
 
-## ✅ STEP 05: データ接続 (Wiring Data)
-- [ ] `src/actions/product.ts` (商品取得ロジック) の実装。
-- [ ] トップページ・一覧ページをDBデータと接続。
-- [ ] 商品詳細ページをDBデータと接続。
-- [ ] ローディング表示 (Suspense / Skeleton) の調整。
+- [ ] **STEP 05: 買取査定フォーム**
+  - [ ] フォームUI (`react-hook-form` + `zod`)
+  - [ ] 画像アップロード機能
+  - [ ] LINE連携導線
 
-## ✅ STEP 06: 認証 & アクセス制限 (Auth & Guard)
-- [ ] `src/actions/auth.ts` (ID/PW認証) の実装。
-- [ ] ログイン画面・新規登録画面 (メアド不要) のUI実装。
-- [ ] **アクセスガード**: 商品詳細ページへのアクセス時、未ログインならログイン画面へ飛ばす処理。
-- [ ] 管理画面で設定した「閲覧パスワード」機能の実装。
+- [ ] **STEP 06: インフラ・デプロイ**
+  - [ ] Vercel デプロイ設定
+  - [ ] 環境変数設定
+  - [ ] 動作確認・修正
 
-## ✅ STEP 07: 買取査定機能 (Assessment)
-- [ ] 査定ページ (`/assessment`) の入力フォーム作成。
-- [ ] `src/actions/assessment.ts` (計算ロジック) の実装。
-- [ ] 入力に合わせて金額がリアルタイムに変わる動きの実装。
-- [ ] 特定キャラ（ルシファー等）のチェックボックス加算処理。
-
-## ✅ STEP 08: 管理画面 (Admin Dashboard)
-- [ ] 管理者専用レイアウトの作成。
-- [ ] **在庫管理**: 商品の追加・編集・削除機能 (画像アップロード含む)。
-- [ ] **サイト設定**: 閲覧パスワードや査定基準値の変更フォーム。
-
-## ✅ STEP 09: スマホ最適化 & 通知 (PWA/Push)
-- [ ] `manifest.json` の作成 (ホーム画面に追加用)。
-- [ ] アプリアイコンの設定。
-- [ ] 最終的なスマホ実機での表示崩れチェック。
-
-## ✅ STEP 10: 最終公開 (Deployment)
-- [ ] コードのクリーンアップ (不要なログ削除)。
-- [ ] Vercel へのデプロイ実行。
-- [ ] 環境変数の本番設定。
-- [ ] ドメイン (`4memiya.com`) のDNS設定。
-- [ ] 動作確認完了。
+## 技術スタック
+- Framework: Next.js (App Router)
+- Language: TypeScript
+- Styling: Tailwind CSS v4
+- Database: Supabase
+- Icons: Lucide React
