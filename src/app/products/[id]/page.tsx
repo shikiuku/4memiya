@@ -135,15 +135,6 @@ export default function ProductDetailPage() {
                         <Button className="w-full bg-[#007bff] hover:bg-[#0069d9] font-bold h-14 text-lg rounded-md shadow-md">
                             購入希望のDMを送る
                         </Button>
-                        <p className="text-center text-xs text-slate-500 mt-3">
-                            質問だけでも大丈夫です。お気軽にDMしてください。
-                        </p>
-
-                        <div className="grid grid-cols-3 gap-2 mt-4">
-                            <Button variant="outline" className="h-10 text-xs px-1 bg-slate-50 border-slate-200">Xでシェア</Button>
-                            <Button variant="outline" className="h-10 text-xs px-1 bg-slate-50 border-slate-200">LINEでシェア</Button>
-                            <Button variant="outline" className="h-10 text-xs px-1 bg-slate-50 border-slate-200">URLコピー</Button>
-                        </div>
                     </section>
 
                     {/* 7. FAQ */}
