@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/footer";
 import { NotificationBanner } from "@/components/layout/notification-banner";
 
 export const metadata: Metadata = {
-  title: "SNS STORE",
+  title: "在庫一覧",
   description: "ゲームアカウント売買プラットフォーム",
 };
 
