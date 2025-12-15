@@ -20,6 +20,7 @@ export type Product = {
   description_recommend: string | null;
   created_at: string;
   updated_at: string;
+  seq_id: number;
 };
 
 export type AssessmentRule = {

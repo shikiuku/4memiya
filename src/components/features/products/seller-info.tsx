@@ -9,10 +9,10 @@ export function SellerInfo() {
             </div>
             <div>
                 <div className="flex items-center gap-1">
-                    <span className="font-bold text-slate-900">しと【モンスト垢 販売/買取】</span>
+                    <span className="font-bold text-slate-900">雨宮 【モンスト垢 買取/販売/代行】</span>
                     <BadgeCheck className="w-4 h-4 text-[#007bff] fill-[#007bff] text-white" />
                 </div>
-                <div className="text-xs text-slate-500">@Ox3Sn</div>
+                <div className="text-xs text-slate-500">@AJAJDNW</div>
             </div>
         </div>
     );

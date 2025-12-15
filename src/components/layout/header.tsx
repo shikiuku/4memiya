@@ -3,7 +3,14 @@ import Link from 'next/link';
 import { Menu, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export function Header() {
+import { createClient } from '@/lib/supabase/server';
+import { logout } from '@/actions/auth';
+import { LogOut, User } from 'lucide-react';
+
+export async function Header() {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     return (
         <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between relative">
@@ -37,10 +44,39 @@ export function Header() {
 
                 {/* Right: Actions */}
                 <div className="flex items-center gap-2 z-10">
-                    {/* Removed duplicate Search icon as requested */}
-                    <Button variant="ghost" size="icon" className="relative">
+                    <div className="hidden md:flex items-center gap-2 mr-2">
+                        {user ? (
+                            <>
+                                <div className="flex items-center gap-2 mr-2 text-sm font-bold text-slate-700">
+                                    <User className="w-4 h-4" />
+                                    <span>{user.user_metadata?.username || 'ユーザー'}</span>
+                                </div>
+                                <form action={logout}>
+                                    <Button variant="ghost" className="text-slate-600 font-bold hover:text-red-600 hover:bg-red-50">
+                                        <LogOut className="w-4 h-4 mr-1" />
+                                        ログアウト
+                                    </Button>
+                                </form>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login">
+                                    <Button variant="ghost" className="text-slate-600 font-bold hover:text-primary hover:bg-blue-50">
+                                        ログイン
+                                    </Button>
+                                </Link>
+                                <Link href="/register">
+                                    <Button className="bg-[#007bff] hover:bg-[#0069d9] text-white font-bold shadow-sm">
+                                        新規会員登録
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                    {/* Mobile Menu Button - Moved here or kept on left? The design had menu on left. Let's keep duplicate search/cart out for now or keep cart. */}
+                    <Button variant="ghost" size="icon" className="relative md:hidden">
+                        {/* Mobile only actions? Or just keep it clean */}
                         <ShoppingBag className="w-5 h-5 text-slate-600" />
-                        {/* Badge placeholder if needed */}
                     </Button>
                 </div>
             </div>

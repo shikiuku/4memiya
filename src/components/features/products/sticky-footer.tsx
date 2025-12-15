@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 type StickyFooterProps = {
     price: number;
-    onConsult: () => void;
+    onConsult?: () => void;
 };
 
 export function StickyFooter({ price, onConsult }: StickyFooterProps) {

@@ -59,6 +59,7 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
 
                     <h3 className={`font-bold text-slate-800 leading-snug group-hover:text-primary transition-colors ${isList ? 'text-sm mb-1 truncate' : 'text-sm line-clamp-2 mb-2'
                         }`}>
+                        {product.seq_id && <span className="mr-1">【No.{product.seq_id}】</span>}
                         {product.title}
                     </h3>
                 </div>

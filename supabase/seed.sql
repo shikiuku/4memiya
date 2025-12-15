@@ -1,30 +1,62 @@
--- Initial Admin User (Password: admin123 -> Hash needed, using placeholder)
--- Note: In production, password hashing should be handled by the application logic (bcrypt).
-INSERT INTO app_users (username, password_hash, role)
-VALUES ('admin_user', '$2b$10$EpOd/..hashed_password_placeholder..', 'admin')
-ON CONFLICT (username) DO NOTHING;
+-- Seed Data for Products
 
--- Dummy Products
-INSERT INTO products (title, price, status, rank, luck_max, gacha_charas, badge_power, tags, images, description_points, description_recommend)
-VALUES
-('【No.343】高ランクで扱いやすい最強アカウント', 16000, 'on_sale', 1500, 300, 150, 5000, ARRAY['高ランク', 'ルシファー所持', '運極多数'], ARRAY['/sample_product.jpg'], 'このアカウントのポイントは...', 'こんな人におすすめ...'),
-('【No.344】運極多数！即戦力', 8000, 'sold_out', 800, 500, 80, 2000, ARRAY['運極', '即戦力'], ARRAY['/sample_product.jpg'], '...', '...'),
-('【No.345】ガチャ限大量引退垢', 45000, 'on_sale', 400, 50, 800, 1000, ARRAY['ガチャ限', 'コンプ'], ARRAY['/sample_product.jpg'], '...', '...')
-ON CONFLICT DO NOTHING;
-
--- Default Rules
-INSERT INTO assessment_rules (category, threshold_min, bonus_amount, character_name)
-VALUES
-('rank', 500, 1000, NULL),
-('rank', 1000, 3000, NULL),
-('luck', 100, 500, NULL),
-('luck', 500, 5000, NULL),
-('character_bonus', 0, 2000, 'ルシファー')
-ON CONFLICT DO NOTHING;
-
--- Default App Config
-INSERT INTO app_config (key, value, description)
-VALUES
-('view_password', '1234', '商品詳細閲覧用パスワード'),
-('require_auth_for_detail', 'true', '閲覧制限の有効化')
-ON CONFLICT (key) DO NOTHING;
+insert into public.products (
+  id, title, price, status, rank, luck_max, gacha_charas, badge_power, images, tags, description_points, description_recommend
+)
+values
+  (
+    '00000000-0000-0000-0000-000000000001',
+    '高ランクで扱いやすい強力な基盤を備えた実戦型アカウント',
+    16000,
+    'on_sale',
+    940,
+    362,
+    934,
+    8000,
+    ARRAY['https://placehold.jp/32/cccccc/ffffff/400x400.png?text=Product+1'],
+    ARRAY['高ランク', '強垢'],
+    'ランク940と育成が進んでおり、日常の周回からイベントコンテンツまで快適に遊べる環境が整っています。ガチャ限934体と手持ちが豊富なため、幅広いクエストで適正不足に悩みにくい構成です。運極数362体は必要な周回基盤として十分に機能し、書庫や常設などもスムーズに進行できます。平均紋章力8000も確保されているため、高難易度に挑む際の強化も行いやすく、育成の余地も残されています。全体としてバランスが良く、すぐに活用できる扱いやすい強垢です。',
+    '高ランクの快適さを求める人や、豊富な手持ちで幅広いクエストに挑みたい人に向いています。復帰勢で無理なく環境へ追いつきたい人や、強すぎず扱いやすい基盤でモンストを楽しみたい人にも適しています。'
+  ),
+  (
+    '00000000-0000-0000-0000-000000000002',
+    'チェルノボグ運極を備えた高難易度にも強い実戦型アカウント',
+    50000,
+    'on_sale',
+    1500,
+    500,
+    1200,
+    15000,
+    ARRAY['https://placehold.jp/32/3d4070/ffffff/400x400.png?text=Product+2'],
+    ARRAY['運極多数', 'ガチ勢引退'],
+    '高難易度クエスト「チェルノボグ」を運極状態で所持しており、即戦力として活躍します。その他轟絶運極も多数所持。',
+    null
+  ),
+  (
+    '00000000-0000-0000-0000-000000000003',
+    '初心者におすすめ！運極30体作成済みアカウント',
+    3000,
+    'sold_out',
+    200,
+    30,
+    150,
+    1000,
+    ARRAY['https://placehold.jp/32/ffcccc/333333/400x400.png?text=SOLD+OUT'],
+    ARRAY['初心者向け', '格安'],
+    'これから始める方に最適なスターターセットです。',
+    null
+  ),
+  (
+    '00000000-0000-0000-0000-000000000004',
+    '【限定キャラ多数】ネオ・ヤクモ共存アカウント',
+    25000,
+    'on_sale',
+    600,
+    100,
+    400,
+    5000,
+    ARRAY['https://placehold.jp/32/88cc88/ffffff/400x400.png?text=Product+4'],
+    ARRAY['人権キャラ', '環境トップ'],
+    '現環境トップクラスのキャラを複数所持しています。',
+    null
+  );
