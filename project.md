@@ -242,3 +242,8 @@ UI Construction: src/components でパーツ作成（デザイン再現優先）
 Logic Integration: src/actions にDB操作・認証ロジックを実装。
 
 Wiring: UIとロジックを接続し、動的なサイトにする。
+
+## 8. データベース変更フロー (DB Workflow)
+- **マイグレーション**: `supabase/migrations` ディレクトリで管理。
+- **反映**: `npx supabase db push` を使用してリモートDBに反映する。この操作には Access Token が必要。
+- **禁止事項**: 手動でSQLエディタからスキーマを変更すると、ローカルのマイグレーション履歴と整合性が取れなくなるため避ける。常にコード (Migration File) を正とする。

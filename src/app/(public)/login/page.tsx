@@ -21,7 +21,7 @@ export default function LoginPage() {
                 </Link>
                 <div className="text-center">
                     <h2 className="text-3xl font-extrabold text-slate-900">
-                        管理画面ログイン
+                        ログイン
                     </h2>
                 </div>
             </div>

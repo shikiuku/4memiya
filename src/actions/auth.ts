@@ -91,7 +91,7 @@ export async function login(formData: FormData) {
     // Check role and redirect
     const role = data.user?.user_metadata?.role;
     if (role === 'admin') {
-        redirect('/admin');
+        redirect('/dev');
     } else {
         redirect('/');
     }

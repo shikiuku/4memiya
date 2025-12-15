@@ -40,9 +40,20 @@ export type AppConfig = {
   updated_at: string;
 };
 
+export type Tag = {
+  id: string;
+  name: string;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
+      tags: {
+        Row: Tag;
+        Insert: Omit<Tag, 'id' | 'created_at'>;
+        Update: Partial<Omit<Tag, 'id' | 'created_at'>>;
+      };
       app_users: {
         Row: AppUser;
         Insert: Omit<AppUser, 'id' | 'created_at'>;

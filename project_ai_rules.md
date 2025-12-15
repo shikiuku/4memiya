@@ -35,3 +35,10 @@
 
 ## 7. ルールの運用
 - **ルールの追加・更新**: 開発中の対話を通じて、このルールファイル自体も随時更新される可能性がある。指示があった場合は即座にこのファイルを更新すること。
+
+## 8. データベース管理・変更 (Supabase)
+- **変更の自動化可能**: Supabaseのテーブル作成やカラム変更は、以下の手順で**CLIを使用して自動化可能**である。安易に「ユーザーにSQL実行をお願い」しないこと。
+  1. `supabase/migrations` に新しいマイグレーションファイル (`YYYYMMDDHHMMSS_name.sql`) を作成する。
+  2. `npx supabase db push` コマンドを実行する。
+  3. 必要に応じて、ユーザーから提供された Access Token を使用してログインする (`npx supabase login --token ...`)。
+- **Management APIの制限**: Management API (`api.supabase.com/v1/projects/.../query`) 経由のSQL実行は制限されている場合が多いため、CLI (`db push`) を第一選択とすること。
