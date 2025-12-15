@@ -30,6 +30,9 @@ export function Header() {
                     <Link href="/contact" className="hover:text-primary transition-colors">
                         お問い合わせ
                     </Link>
+                    <Link href="/terms" className="hover:text-primary transition-colors">
+                        利用規約
+                    </Link>
                 </nav>
 
                 {/* Right: Actions */}

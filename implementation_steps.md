@@ -10,11 +10,11 @@
   - [x] 必要なライブラリのインストール (`lucide-react`, `clsx`, `supabase-js` 等)
   - [x] GitHub リポジトリの初期化
 
-- [x] **STEP 02: データベース準備**
-  - [x] Supabase プロジェクト作成
-  - [x] テーブル定義 (`App Users`, `Products`, `Assessment Rules`, `App Config`)
-  - [x] 初期データ投入 (Seed Data)
-  - [x] 型定義ファイルの生成 (`types/database.ts`)
+- [ ] **STEP 02: データベース準備** (後回し)
+  - [ ] Supabase プロジェクト作成
+  - [ ] テーブル定義 (`App Users`, `Products`, `Assessment Rules`, `App Config`)
+  - [ ] 初期データ投入 (Seed Data)
+  - [ ] 型定義ファイルの生成 (`types/database.ts`)
 
 - [x] **STEP 03: デザイン再現 - 共通・一覧 (Top Page)**
   - [x] グローバルスタイル (`globals.css` - カラー・フォント設定)
@@ -29,10 +29,8 @@
   - [x] アコーディオンメニュー (商品詳細・レビュー)
   - [x] 購入フロー・CTAボタン
 
-- [ ] **STEP 05: 買取査定フォーム**
-  - [ ] フォームUI (`react-hook-form` + `zod`)
-  - [ ] 画像アップロード機能
-  - [ ] LINE連携導線
+- [x] **STEP 05: 買取査定フォーム**
+  - [x] フォームUI (リアルタイム査定実装済)
 
 - [ ] **STEP 06: インフラ・デプロイ**
   - [ ] Vercel デプロイ設定

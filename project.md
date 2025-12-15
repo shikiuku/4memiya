@@ -1,4 +1,4 @@
-# Project Specification: SNS STORE Game Account Shop
+# Project Specification: Game Account Shop
 
 ## 1. 開発目的 (Goal)
 参考サイト (`https://ox3sn.com/`) および提供されたスクリーンショットのデザイン・構成を忠実に再現したWebサイトを構築する。

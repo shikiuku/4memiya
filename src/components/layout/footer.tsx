@@ -17,7 +17,6 @@ export function Footer() {
                     <ul className="space-y-2 text-sm">
                         <li><Link href="/products" className="hover:text-white">在庫一覧</Link></li>
                         <li><Link href="/assessment" className="hover:text-white">買取査定</Link></li>
-                        <li><Link href="/guide" className="hover:text-white">ご利用ガイド</Link></li>
                     </ul>
                 </div>
 

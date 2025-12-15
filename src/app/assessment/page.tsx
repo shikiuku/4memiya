@@ -107,8 +107,8 @@ export default function AssessmentPage() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-md border border-slate-200">
 
                     {/* Live Price Display */}
-                    <div className="bg-gradient-to-br from-[#007bff] to-[#0056b3] text-white p-6 rounded-md text-center shadow-md transform transition-all duration-300">
-                        <p className="text-blue-100 text-xs mb-1">現在の査定金額</p>
+                    <div className="bg-slate-50 border border-slate-200 text-slate-900 p-6 rounded-md text-center transform transition-all duration-300">
+                        <p className="text-slate-500 text-xs mb-1">現在の査定金額</p>
                         <div className="text-4xl font-bold tracking-tight">
                             ¥{currentPrice.toLocaleString()}
                         </div>
