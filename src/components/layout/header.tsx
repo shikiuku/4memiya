@@ -27,8 +27,8 @@ export function Header() {
                     <Link href="/assessment" className="hover:text-primary transition-colors">
                         買取査定
                     </Link>
-                    <Link href="/about" className="hover:text-primary transition-colors">
-                        ご利用ガイド
+                    <Link href="/contact" className="hover:text-primary transition-colors">
+                        お問い合わせ
                     </Link>
                 </nav>
 

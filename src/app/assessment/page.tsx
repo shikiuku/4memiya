@@ -27,19 +27,49 @@ export default function AssessmentPage() {
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors },
     } = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             gameTitle: 'モンスターストライク',
+            rank: 0,
+            luckMax: 0,
+            gachaLimit: 0,
         },
     });
+
+    const rank = watch('rank');
+    const luckMax = watch('luckMax');
+    const gachaLimit = watch('gachaLimit');
+
+    // Real-time Calculation Logic
+    const calculatePrice = () => {
+        let price = 0;
+
+        // Rank Bonus
+        if (rank >= 1000) price += 5000;
+        else if (rank >= 500) price += 1000;
+
+        // Luck Bonus
+        if (luckMax >= 500) price += 3000;
+        else if (luckMax >= 100) price += 500;
+
+        // Gacha Bonus (+500 per 100 chars)
+        if (gachaLimit > 0) {
+            price += Math.floor(gachaLimit / 100) * 500;
+        }
+
+        return price;
+    };
+
+    const currentPrice = calculatePrice();
 
     const onSubmit = async (data: FormData) => {
         setIsSubmitting(true);
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log(data);
+        console.log({ ...data, estimatedPrice: currentPrice });
         setIsSubmitting(false);
         setIsSuccess(true);
     };
@@ -52,13 +82,15 @@ export default function AssessmentPage() {
                         <ShieldCheck className="w-10 h-10 text-green-600" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold text-slate-900 mb-2">査定依頼が完了しました</h2>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">査定が完了しました</h2>
                         <p className="text-slate-600">
-                            担当者が内容を確認いたします。
+                            査定金額: <span className="text-xl font-bold text-slate-900">¥{currentPrice.toLocaleString()}</span><br />
+                            この金額で買取を進めますか？<br />
+                            <span className="text-xs text-slate-400">※現在はデモのためここまでです</span>
                         </p>
                     </div>
                     <Button className="w-full" onClick={() => setIsSuccess(false)}>
-                        トップページへ戻る
+                        再査定する
                     </Button>
                 </div>
             </div>
@@ -74,6 +106,14 @@ export default function AssessmentPage() {
             <main className="container mx-auto max-w-md px-4 py-8">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-md border border-slate-200">
 
+                    {/* Live Price Display */}
+                    <div className="bg-gradient-to-br from-[#007bff] to-[#0056b3] text-white p-6 rounded-md text-center shadow-md transform transition-all duration-300">
+                        <p className="text-blue-100 text-xs mb-1">現在の査定金額</p>
+                        <div className="text-4xl font-bold tracking-tight">
+                            ¥{currentPrice.toLocaleString()}
+                        </div>
+                    </div>
+
                     <div className="space-y-4">
                         {/* Game Title (Fixed) */}
                         <div className="space-y-2">
@@ -86,7 +126,7 @@ export default function AssessmentPage() {
                             />
                         </div>
 
-                        {/* Rank */}
+                        {/* Inputs with handlers (preserved) */}
                         <div className="space-y-2">
                             <Label htmlFor="rank">ランク</Label>
                             <div className="relative">
@@ -106,7 +146,6 @@ export default function AssessmentPage() {
                             {errors.rank && <p className="text-xs text-red-500">{errors.rank.message}</p>}
                         </div>
 
-                        {/* Luck Max */}
                         <div className="space-y-2">
                             <Label htmlFor="luckMax">運極数</Label>
                             <div className="relative">
@@ -126,7 +165,6 @@ export default function AssessmentPage() {
                             {errors.luckMax && <p className="text-xs text-red-500">{errors.luckMax.message}</p>}
                         </div>
 
-                        {/* Gacha Limit */}
                         <div className="space-y-2">
                             <Label htmlFor="gachaLimit">ガチャ限数</Label>
                             <div className="relative">
@@ -150,10 +188,9 @@ export default function AssessmentPage() {
                     <Button
                         type="submit"
                         className="w-full h-12 bg-[#007bff] hover:bg-[#0069d9] font-bold text-base rounded-md"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || currentPrice === 0}
                     >
-                        {isSubmitting ? '送信中...' : '査定を依頼する'}
-                        {!isSubmitting && <ChevronRight className="w-5 h-5 ml-1" />}
+                        {isSubmitting ? '処理中...' : 'この金額で買取を申し込む'}
                     </Button>
 
                 </form>
