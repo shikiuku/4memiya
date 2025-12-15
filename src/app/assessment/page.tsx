@@ -93,9 +93,13 @@ export default function AssessmentPage() {
                                 <Input
                                     id="rank"
                                     type="number"
+                                    inputMode="numeric"
+                                    min="0"
                                     placeholder="例: 1500"
                                     {...register('rank')}
                                     className={errors.rank ? "border-red-500" : ""}
+                                    onWheel={(e) => e.currentTarget.blur()}
+                                    onKeyDown={(e) => ["-", "e", "E", "+"].includes(e.key) && e.preventDefault()}
                                 />
                                 <div className="absolute right-3 top-2.5 text-xs text-slate-400">ランク</div>
                             </div>
@@ -109,9 +113,13 @@ export default function AssessmentPage() {
                                 <Input
                                     id="luckMax"
                                     type="number"
+                                    inputMode="numeric"
+                                    min="0"
                                     placeholder="例: 500"
                                     {...register('luckMax')}
                                     className={errors.luckMax ? "border-red-500" : ""}
+                                    onWheel={(e) => e.currentTarget.blur()}
+                                    onKeyDown={(e) => ["-", "e", "E", "+"].includes(e.key) && e.preventDefault()}
                                 />
                                 <div className="absolute right-3 top-2.5 text-xs text-slate-400">体</div>
                             </div>
@@ -125,9 +133,13 @@ export default function AssessmentPage() {
                                 <Input
                                     id="gachaLimit"
                                     type="number"
+                                    inputMode="numeric"
+                                    min="0"
                                     placeholder="例: 1000"
                                     {...register('gachaLimit')}
                                     className={errors.gachaLimit ? "border-red-500" : ""}
+                                    onWheel={(e) => e.currentTarget.blur()}
+                                    onKeyDown={(e) => ["-", "e", "E", "+"].includes(e.key) && e.preventDefault()}
                                 />
                                 <div className="absolute right-3 top-2.5 text-xs text-slate-400">体</div>
                             </div>
