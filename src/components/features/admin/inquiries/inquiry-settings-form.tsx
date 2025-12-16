@@ -37,7 +37,7 @@ export function InquirySettingsForm({ initialEmail, initialNote }: Props) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-md border border-slate-200 shadow-sm space-y-6 max-w-lg">
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-md border border-slate-200 shadow-sm space-y-6 max-w-lg mx-auto">
 
             <div className="space-y-2">
                 <Label htmlFor="email">お問い合わせメールアドレス</Label>

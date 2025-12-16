@@ -33,7 +33,7 @@ export function TermsSettingsForm({ initialTerms }: Props) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-md border border-slate-200 shadow-sm space-y-6 max-w-3xl">
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-md border border-slate-200 shadow-sm space-y-6 max-w-3xl mx-auto">
             <div className="space-y-2">
                 <Label htmlFor="terms">利用規約の内容</Label>
                 <div className="text-xs text-slate-500 mb-1">
