@@ -25,8 +25,8 @@ export default async function Home({
   return (
     <div className="container mx-auto px-4 py-6 pb-20 max-w-5xl">
       {/* Page Title & Search (Header area) */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8">
-        <h1 className="text-xl font-bold text-slate-800 mt-2">在庫一覧</h1>
+      <div className="flex flex-col md:flex-row md:items-start justify-start gap-6 mb-8">
+        <h1 className="text-xl font-bold text-slate-800 mt-2 shrink-0">在庫一覧</h1>
         <ProductSearch availableTags={allTags} />
       </div>
 
