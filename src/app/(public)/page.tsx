@@ -34,8 +34,3 @@ export default async function Home({
     </div>
   );
 }
-
-<ProductListContainer products={products} />
-    </div >
-  );
-}
