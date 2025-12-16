@@ -45,8 +45,8 @@ export async function middleware(request: NextRequest) {
 
         const path = request.nextUrl.pathname
 
-        // Redirect to login if accessing admin but not logged in
-        if (path.startsWith('/admin') && !user) {
+        // Redirect to login if accessing admin or dev routes but not logged in
+        if ((path.startsWith('/admin') || path.startsWith('/dev')) && !user) {
             console.log('Redirecting to /login from', path);
             return NextResponse.redirect(new URL('/login', request.url))
         }

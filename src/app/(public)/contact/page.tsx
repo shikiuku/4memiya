@@ -1,6 +1,9 @@
-import { Button } from '@/components/ui/button';
+import { getSiteSetting } from '@/actions/admin/settings';
 
-export default function ContactPage() {
+export default async function ContactPage() {
+    const inquiryEmail = await getSiteSetting('inquiry_email') || 'support@example.com';
+    const inquiryNote = await getSiteSetting('inquiry_note');
+
     return (
         <div className="min-h-screen bg-slate-50 pb-20">
             <div className="bg-white border-b border-slate-100 py-8 px-4 text-center">
@@ -15,14 +18,14 @@ export default function ContactPage() {
 
                     <div>
                         <p className="text-sm text-slate-500 mb-2">お問い合わせメールアドレス</p>
-                        <a href="mailto:amemiyarmt@gmail.com" className="text-xl md:text-2xl font-bold text-slate-900 hover:text-blue-600 transition-colors break-all">
-                            メール@gmail.com
+                        <a href={`mailto:${inquiryEmail}`} className="text-xl md:text-2xl font-bold text-slate-900 hover:text-blue-600 transition-colors break-all">
+                            {inquiryEmail}
                         </a>
                     </div>
 
-                    <div className="pt-4 text-xs text-slate-400 leading-relaxed">
-                        ※ 通常24時間以内にご返信いたします。<br />
-                        ※ 買取査定に関するお問い合わせは「買取査定」ページからも可能です。
+                    <div className="pt-4 text-xs text-slate-400 leading-relaxed whitespace-pre-wrap">
+                        {inquiryNote || `※ 通常24時間以内にご返信いたします。
+※ 買取査定に関するお問い合わせは「買取査定」ページからも可能です。`}
                     </div>
                 </div>
             </main>
