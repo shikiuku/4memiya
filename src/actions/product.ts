@@ -9,13 +9,28 @@ import { Product } from '@/types/index';
 // Our DB 'products' table matches the Product type closely, 
 // except for date fields which come as strings (timestamptz).
 
-export async function getProducts(options?: { limit?: number }): Promise<Product[]> {
+export async function getProducts(options?: {
+    limit?: number;
+    query?: string;
+    tags?: string[];
+}): Promise<Product[]> {
     const supabase = await createClient();
 
     let query = supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
+
+    // Filter by Keyword (Title)
+    if (options?.query) {
+        query = query.ilike('title', `%${options.query}%`);
+    }
+
+    // Filter by Tags (Array contains)
+    // Note: Assuming 'tags' column is a text array (text[])
+    if (options?.tags && options.tags.length > 0) {
+        query = query.contains('tags', options.tags);
+    }
 
     if (options?.limit) {
         query = query.limit(options.limit);
@@ -58,4 +73,21 @@ export async function getProductById(id: string): Promise<Product | null> {
         ...data,
         status: data.status as 'draft' | 'on_sale' | 'sold_out',
     } as Product;
+}
+
+export async function getAllUniqueTags(): Promise<string[]> {
+    const supabase = await createClient();
+
+    // Fetch all tags. 
+    // Optimization: If many products, consider database RPC or separate tags table.
+    const { data, error } = await supabase
+        .from('products')
+        .select('tags')
+        .not('tags', 'is', null);
+
+    if (error || !data) return [];
+
+    const allTags = data.flatMap(p => p.tags as string[]);
+    // Dedup
+    return Array.from(new Set(allTags)).sort();
 }
