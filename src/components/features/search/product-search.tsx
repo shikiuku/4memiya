@@ -46,12 +46,12 @@ export function ProductSearch({ availableTags = [] }: Props) {
     }
 
     return (
-        <div className="flex flex-col gap-3 w-full md:w-auto">
+        <div className="flex flex-col gap-3 items-end">
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
                     placeholder="キーワードで検索"
-                    className="pl-10 w-full md:w-[300px]"
+                    className="pl-10 w-[280px] md:w-[300px]"
                     onChange={(e) => handleSearch(e.target.value)}
                     defaultValue={searchParams.get('q')?.toString()}
                 />

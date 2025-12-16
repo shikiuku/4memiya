@@ -136,17 +136,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         </h3>
                         <FAQAccordion />
                     </section>
-
-                    {/* 8. Other Products */}
-                    <section className="border-t border-dashed pt-6">
-                        <h3 className="font-bold text-base border-l-4 border-[#007bff] pl-3 mb-4">
-                            その他商品
-                        </h3>
-                        {/* Simplified list for now */}
-                        <div className="space-y-4">
-                            {/* Placeholder for other products grid/list */}
-                        </div>
-                    </section>
                 </div>
             </main>
 
