@@ -7,12 +7,12 @@ import Image from 'next/image';
 import { uploadImageAction } from '@/actions/admin/upload';
 
 interface ImageUploaderProps {
-    defaultImages?: string[];
+    initialImages?: string[];
     onImagesChange: (urls: string[]) => void;
 }
 
-export function ImageUploader({ defaultImages = [], onImagesChange }: ImageUploaderProps) {
-    const [images, setImages] = useState<string[]>(defaultImages);
+export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploaderProps) {
+    const [images, setImages] = useState<string[]>(initialImages);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 

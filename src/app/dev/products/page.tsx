@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { DeleteButton } from '@/components/features/admin/products/delete-button';
+
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProductListPage() {
@@ -18,19 +20,6 @@ export default async function AdminProductListPage() {
     if (error) {
         console.error('Error fetching products:', error);
         return <div className="p-8 text-red-500">エラーが発生しました: {error.message}</div>;
-    }
-
-    // Server Action for Deletion
-    async function deleteProduct(formData: FormData) {
-        'use server';
-        const id = formData.get('id') as string;
-        if (!id) return;
-
-        const supabase = await createClient();
-        await supabase.from('products').delete().eq('id', id);
-        revalidatePath('/dev/products');
-        revalidatePath('/products');
-        revalidatePath('/');
     }
 
     return (
@@ -63,17 +52,7 @@ export default async function AdminProductListPage() {
                                 </Button>
                             </Link>
 
-                            <form action={deleteProduct}>
-                                <input type="hidden" name="id" value={product.id} />
-                                <Button
-                                    size="sm"
-                                    className="bg-red-600 text-white hover:bg-red-700 font-bold border-0"
-                                    type="submit"
-                                >
-                                    <Trash2 className="w-4 h-4 mr-1" />
-                                    削除
-                                </Button>
-                            </form>
+                            <DeleteButton id={product.id} />
                         </div>
 
                         {/* Status Badge (if needed) */}

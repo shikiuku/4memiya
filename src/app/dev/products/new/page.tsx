@@ -21,9 +21,22 @@ export default async function NewProductPage() {
         allTags = Array.from(new Set(products?.flatMap(p => p.tags || []) || []));
     }
 
+    // Fetch next seq_id
+    const { data: maxSeqData } = await supabase
+        .from('products')
+        .select('seq_id')
+        .order('seq_id', { ascending: false })
+        .limit(1)
+        .single();
+
+    const nextSeqId = (maxSeqData?.seq_id ?? 0) + 1;
+
     return (
         <div className="container mx-auto px-4 py-8">
-            <ProductForm suggestedTags={allTags} />
+            <ProductForm
+                suggestedTags={allTags}
+                defaultSeqId={nextSeqId}
+            />
         </div>
     );
 }
