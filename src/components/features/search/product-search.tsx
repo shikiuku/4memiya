@@ -63,14 +63,14 @@ export function ProductSearch({ availableTags = [] }: Props) {
             </div>
 
             {availableTags.length > 0 && (
-                <div className="flex flex-wrap gap-2 max-w-[500px]">
+                <div className="flex flex-wrap gap-2 max-w-[600px] justify-end ml-auto">
                     {availableTags.map(tag => (
                         <button
                             key={tag}
                             onClick={() => handleTagClick(tag)}
                             className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${currentTag === tag
-                                    ? 'bg-slate-800 text-white border-slate-800'
-                                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                                ? 'bg-slate-800 text-white border-slate-800'
+                                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
                                 }`}
                         >
                             #{tag}
