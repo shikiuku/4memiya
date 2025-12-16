@@ -20,9 +20,9 @@ export async function getSiteSetting(key: string) {
 }
 
 /**
- * Update the inquiry settings (email and note)
+ * Update site settings (email, note, terms)
  */
-export async function updateInquirySettings(prevState: any, formData: FormData) {
+export async function updateSiteSettings(prevState: any, formData: FormData) {
     const supabase = await createServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -30,12 +30,9 @@ export async function updateInquirySettings(prevState: any, formData: FormData) 
         return { error: '認証エラー: ログインしてください。' };
     }
 
-    const email = formData.get('email') as string;
-    const note = formData.get('note') as string;
-
-    if (!email || !email.trim()) {
-        return { error: 'メールアドレスは必須です。' };
-    }
+    const email = formData.get('email') as string | null;
+    const note = formData.get('note') as string | null;
+    const terms = formData.get('terms') as string | null;
 
     // Use Service Role for Admin Write
     const supabaseAdmin = createClient(
@@ -49,33 +46,56 @@ export async function updateInquirySettings(prevState: any, formData: FormData) 
         }
     );
 
-    // Update Email
-    const { error: emailError } = await (supabaseAdmin.from('site_settings' as any) as any)
-        .upsert({
-            key: 'inquiry_email',
-            value: email.trim(),
-            updated_at: new Date().toISOString()
-        });
+    // Update Email (if present in formData)
+    if (email !== null) {
+        if (!email.trim()) return { error: 'メールアドレスは必須です。' };
 
-    if (emailError) {
-        console.error('Update email error details:', JSON.stringify(emailError, null, 2));
-        return { error: `メールアドレスの保存に失敗しました: ${emailError.message}` };
+        const { error: emailError } = await (supabaseAdmin.from('site_settings' as any) as any)
+            .upsert({
+                key: 'inquiry_email',
+                value: email.trim(),
+                updated_at: new Date().toISOString()
+            });
+
+        if (emailError) {
+            console.error('Update email error details:', JSON.stringify(emailError, null, 2));
+            return { error: `メールアドレスの保存に失敗しました: ${emailError.message}` };
+        }
     }
 
-    // Update Note
-    const { error: noteError } = await (supabaseAdmin.from('site_settings' as any) as any)
-        .upsert({
-            key: 'inquiry_note',
-            value: note ? note.trim() : '',
-            updated_at: new Date().toISOString()
-        });
+    // Update Note (if present in formData)
+    if (note !== null) {
+        const { error: noteError } = await (supabaseAdmin.from('site_settings' as any) as any)
+            .upsert({
+                key: 'inquiry_note',
+                value: note.trim(),
+                updated_at: new Date().toISOString()
+            });
 
-    if (noteError) {
-        console.error('Update note error details:', JSON.stringify(noteError, null, 2));
-        return { error: `注釈の保存に失敗しました: ${noteError.message}` };
+        if (noteError) {
+            console.error('Update note error details:', JSON.stringify(noteError, null, 2));
+            return { error: `注釈の保存に失敗しました: ${noteError.message}` };
+        }
+    }
+
+    // Update Terms (if present in formData)
+    if (terms !== null) {
+        const { error: termsError } = await (supabaseAdmin.from('site_settings' as any) as any)
+            .upsert({
+                key: 'terms_content',
+                value: terms.trim(),
+                updated_at: new Date().toISOString()
+            });
+
+        if (termsError) {
+            console.error('Update terms error details:', JSON.stringify(termsError, null, 2));
+            return { error: `利用規約の保存に失敗しました: ${termsError.message}` };
+        }
+        revalidatePath('/terms');
     }
 
     revalidatePath('/dev/inquiries');
+    revalidatePath('/dev/terms');
     revalidatePath('/contact');
 
     return { success: true, message: '設定を更新しました。' };

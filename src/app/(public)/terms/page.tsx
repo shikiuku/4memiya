@@ -1,6 +1,8 @@
-import { ScrollText } from 'lucide-react';
+import { getSiteSetting } from '@/actions/admin/settings';
 
-export default function TermsPage() {
+export default async function TermsPage() {
+    const termsContent = await getSiteSetting('terms_content');
+
     return (
         <div className="min-h-screen bg-slate-50 pb-20">
             <div className="bg-white border-b border-slate-100 py-8 px-4 text-center">
@@ -11,11 +13,8 @@ export default function TermsPage() {
             </div>
 
             <main className="container mx-auto max-w-3xl px-4 py-8">
-                <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm space-y-8 text-slate-400">
-                    <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-                    <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-                    <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-                    <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
+                <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
+                    {termsContent || '利用規約は現在準備中です。'}
                 </div>
             </main>
         </div>

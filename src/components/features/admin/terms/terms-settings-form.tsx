@@ -2,19 +2,16 @@
 
 import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { updateSiteSettings } from '@/actions/admin/settings';
 
 interface Props {
-    initialEmail: string;
-    initialNote: string;
+    initialTerms: string;
 }
 
-export function InquirySettingsForm({ initialEmail, initialNote }: Props) {
-    const [email, setEmail] = useState(initialEmail || '');
-    const [note, setNote] = useState(initialNote || '');
+export function TermsSettingsForm({ initialTerms }: Props) {
+    const [terms, setTerms] = useState(initialTerms || '');
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
@@ -23,8 +20,7 @@ export function InquirySettingsForm({ initialEmail, initialNote }: Props) {
         setMessage(null);
 
         const formData = new FormData();
-        formData.append('email', email);
-        formData.append('note', note);
+        formData.append('terms', terms);
 
         startTransition(async () => {
             const result = await updateSiteSettings(null, formData);
@@ -37,31 +33,18 @@ export function InquirySettingsForm({ initialEmail, initialNote }: Props) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-md border border-slate-200 shadow-sm space-y-6 max-w-lg">
-
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-md border border-slate-200 shadow-sm space-y-6 max-w-3xl">
             <div className="space-y-2">
-                <Label htmlFor="email">お問い合わせメールアドレス</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="example@gmail.com"
-                    required
-                />
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="note">ページ下部の注釈</Label>
+                <Label htmlFor="terms">利用規約の内容</Label>
                 <div className="text-xs text-slate-500 mb-1">
                     ※改行はそのまま反映されます
                 </div>
                 <Textarea
-                    id="note"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    placeholder="※ 通常24時間以内に..."
-                    className="min-h-[120px]"
+                    id="terms"
+                    value={terms}
+                    onChange={(e) => setTerms(e.target.value)}
+                    placeholder="規約内容を入力..."
+                    className="min-h-[400px] font-mono text-sm"
                 />
             </div>
 
@@ -72,7 +55,7 @@ export function InquirySettingsForm({ initialEmail, initialNote }: Props) {
             )}
 
             <Button type="submit" disabled={isPending} className="bg-[#007bff] hover:bg-[#0069d9]">
-                {isPending ? '保存中...' : '設定を保存する'}
+                {isPending ? '保存中...' : '規約を保存する'}
             </Button>
         </form>
     );
