@@ -23,15 +23,7 @@ export type Product = {
   seq_id: number;
 };
 
-export type AssessmentRule = {
-  id: string;
-  category: 'rank' | 'luck' | 'character_bonus';
-  threshold_min: number;
-  bonus_amount: number;
-  character_name: string | null;
-  is_active: boolean;
-  created_at: string;
-};
+
 
 export type AppConfig = {
   key: string;
@@ -43,6 +35,16 @@ export type AppConfig = {
 export type Tag = {
   id: string;
   name: string;
+  created_at: string;
+};
+
+export type AssessmentRule = {
+  id: string;
+  rule_type: 'range' | 'boolean';
+  category: string;
+  label: string | null;
+  threshold: number | null;
+  price_adjustment: number;
   created_at: string;
 };
 

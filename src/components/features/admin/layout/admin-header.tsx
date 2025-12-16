@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { LogOut, Package, Settings, LayoutDashboard, Plus } from 'lucide-react';
+import { LogOut, Package, Settings, LayoutDashboard, Plus, FileText, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { logout } from '@/actions/auth';
 
@@ -21,17 +21,21 @@ export function AdminHeader() {
 
                 {/* Center: Navigation */}
                 <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-                    <Link href="/dev" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
-                        <LayoutDashboard className="w-4 h-4" />
-                        ダッシュボード
-                    </Link>
                     <Link href="/dev/products" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
                         <Package className="w-4 h-4" />
                         在庫管理
                     </Link>
-                    <Link href="/dev/settings" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
-                        <Settings className="w-4 h-4" />
-                        サイト設定
+                    <Link href="/dev/assessment" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
+                        <FileText className="w-4 h-4" />
+                        買取査定
+                    </Link>
+                    <Link href="/dev/inquiries" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
+                        <MessageSquare className="w-4 h-4" />
+                        お問い合わせ
+                    </Link>
+                    <Link href="/dev/terms" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
+                        <FileText className="w-4 h-4" />
+                        利用規約
                     </Link>
                 </nav>
 
