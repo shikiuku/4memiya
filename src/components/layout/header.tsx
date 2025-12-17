@@ -64,8 +64,14 @@ export async function Header() {
                         <>
                             <div className="hidden md:flex items-center gap-2 mr-2 text-sm font-bold text-slate-700">
                                 <User className="w-4 h-4 ml-2" />
-                                <span>{user.user_metadata?.username || 'ユーザー'}</span>
+                                <span>{user.user_metadata?.displayName || user.user_metadata?.username || 'ユーザー'}</span>
                             </div>
+                            <Link href="/account">
+                                <Button variant="ghost" className="text-slate-600 font-bold hover:text-blue-600 hover:bg-blue-50 text-xs md:text-sm px-2 md:px-4">
+                                    <span className="hidden md:inline">設定</span>
+                                    <span className="md:hidden">設定</span>
+                                </Button>
+                            </Link>
                             <form action={logout}>
                                 <Button variant="ghost" className="text-slate-600 font-bold hover:text-red-600 hover:bg-red-50 text-xs md:text-sm px-2 md:px-4">
                                     <LogOut className="w-4 h-4 md:mr-1" />
