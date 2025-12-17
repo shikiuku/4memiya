@@ -37,6 +37,11 @@ export async function Header() {
                     <Link href="/terms" className="hover:text-primary transition-colors py-2 shrink-0">
                         利用規約
                     </Link>
+                    {user && (
+                        <Link href="/account" className="hover:text-primary transition-colors py-2 shrink-0">
+                            設定
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Center: Navigation (Desktop) */}
@@ -53,6 +58,11 @@ export async function Header() {
                     <Link href="/terms" className="hover:text-primary transition-colors">
                         利用規約
                     </Link>
+                    {user && (
+                        <Link href="/account" className="hover:text-primary transition-colors">
+                            設定
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Right: Actions (Desktop & Mobile Login/User status) */}
@@ -66,12 +76,6 @@ export async function Header() {
                                 <User className="w-4 h-4 ml-2" />
                                 <span>{user.user_metadata?.displayName || user.user_metadata?.username || 'ユーザー'}</span>
                             </div>
-                            <Link href="/account">
-                                <Button variant="ghost" className="text-slate-600 font-bold hover:text-blue-600 hover:bg-blue-50 text-xs md:text-sm px-2 md:px-4">
-                                    <span className="hidden md:inline">設定</span>
-                                    <span className="md:hidden">設定</span>
-                                </Button>
-                            </Link>
                             <form action={logout}>
                                 <Button variant="ghost" className="text-slate-600 font-bold hover:text-red-600 hover:bg-red-50 text-xs md:text-sm px-2 md:px-4">
                                     <LogOut className="w-4 h-4 md:mr-1" />

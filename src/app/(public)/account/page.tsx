@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import { AccountForm } from '@/components/features/account/account-form';
 
 export default async function AccountPage() {
@@ -15,6 +17,13 @@ export default async function AccountPage() {
 
     return (
         <div className="container max-w-4xl mx-auto py-8 px-4">
+            <div className="mb-6">
+                <Link href="/" className="inline-flex items-center text-slate-500 hover:text-slate-800 transition-colors font-medium">
+                    <ArrowLeft className="w-4 h-4 mr-1" />
+                    トップに戻る
+                </Link>
+            </div>
+
             <h1 className="text-2xl font-bold text-slate-800 mb-2">アカウント設定</h1>
             <p className="text-slate-500 mb-8">ログイン情報や表示名を変更できます。</p>
 

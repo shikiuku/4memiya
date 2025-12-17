@@ -49,16 +49,22 @@ export function NotificationCenter() {
         }
     }, []);
 
-    // Fetch notifications when opened
+    // Fetch notifications when opened or check for unread
     useEffect(() => {
         if (isOpen) {
             getRecentNotifications().then(data => {
                 setNotifications(data as any[] || []);
-                // Mark as read mechanism could go here (e.g., store lastReadTime in localstorage)
+                // Mark as read immediately when opened
                 localStorage.setItem('lastViewedNotificationTime', new Date().toISOString());
                 setUnreadCount(0);
             });
         } else {
+            // Only check for unread notifications if subscribed
+            if (!isSubscribed) {
+                setUnreadCount(0);
+                return;
+            }
+
             // Check if there are new notifications relative to last view
             getRecentNotifications(20).then(data => {
                 if (data && data.length > 0) {
@@ -73,7 +79,7 @@ export function NotificationCenter() {
                 }
             });
         }
-    }, [isOpen]);
+    }, [isOpen, isSubscribed]);
 
     const handleToggleSubscription = async () => {
         if (!('serviceWorker' in navigator)) {
