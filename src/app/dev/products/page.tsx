@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { ProductCard } from '@/components/features/product-card';
+import { Product } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
@@ -15,7 +16,8 @@ export default async function AdminProductListPage() {
     const { data: products, error } = await supabase
         .from('products')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .returns<Product[]>();
 
     if (error) {
         console.error('Error fetching products:', error);

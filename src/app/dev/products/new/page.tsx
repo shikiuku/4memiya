@@ -5,7 +5,7 @@ export default async function NewProductPage() {
     const supabase = await createClient();
 
     // Fetch specifically defined tags (Persistent Tags)
-    const { data: tagsData } = await supabase.from('tags').select('name').order('created_at', { ascending: false });
+    const { data: tagsData } = await supabase.from('tags').select('name').order('created_at', { ascending: false }).returns<{ name: string }[]>();
 
     // Fallback? If table empty, maybe fetch from products? 
     // For now, let's mix both or just rely on 'tags' table if user runs migration.
@@ -17,7 +17,7 @@ export default async function NewProductPage() {
         allTags = tagsData.map(t => t.name);
     } else {
         // Fallback to existing behavior if Tags table missing (or empty first run)
-        const { data: products } = await supabase.from('products').select('tags');
+        const { data: products } = await supabase.from('products').select('tags').returns<{ tags: string[] }[]>();
         allTags = Array.from(new Set(products?.flatMap(p => p.tags || []) || []));
     }
 
@@ -27,7 +27,7 @@ export default async function NewProductPage() {
         .select('seq_id')
         .order('seq_id', { ascending: false })
         .limit(1)
-        .single();
+        .single<{ seq_id: number }>();
 
     const nextSeqId = (maxSeqData?.seq_id ?? 0) + 1;
 

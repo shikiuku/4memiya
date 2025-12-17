@@ -1,4 +1,6 @@
 import { Header } from "@/components/layout/header";
+import { NotificationBanner } from "@/components/layout/notification-banner";
+
 export default function PublicLayout({
     children,
 }: {
@@ -7,6 +9,7 @@ export default function PublicLayout({
     return (
         <>
             <Header />
+            <NotificationBanner />
             <main className="min-h-screen pb-20">
                 {children}
             </main>

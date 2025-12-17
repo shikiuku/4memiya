@@ -87,8 +87,25 @@ export async function saveProduct(currentState: any, formData: FormData) {
         };
         if (seq_id !== undefined) insertData.seq_id = seq_id;
 
-        const { error: insertError } = await supabaseAdmin.from('products').insert(insertData);
+        const { data: newProduct, error: insertError } = await supabaseAdmin
+            .from('products')
+            .insert(insertData)
+            .select()
+            .single();
+
         error = insertError;
+
+        // Send Push Notification for new products
+        if (!error && newProduct) {
+            // We don't await this to keep UI responsive? Or maybe we should log errors.
+            // Using logic from previous plan:
+            const { sendPushNotification } = await import('@/actions/notification');
+            await sendPushNotification({
+                title: '新着在庫が入荷しました！',
+                body: `${title} - ¥${price.toLocaleString()}`,
+                url: `/products/${newProduct.id}`
+            });
+        }
     }
 
     if (error) {

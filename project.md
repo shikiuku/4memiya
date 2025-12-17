@@ -86,7 +86,6 @@ Product Card (List View):
 ステータス: 「販売中」の青いボタン。
 
 src/app/products/[id]/page.tsx (詳細ページ)
-※アクセス制御: src/actions/auth.ts の checkViewPermission() を呼び出し、権限がない場合は認証画面へリダイレクト。
 
 Hero Image & Gallery:
 
@@ -137,12 +136,6 @@ Bottom Fixed Bar (スマホ版):
 src/app/assessment/page.tsx (査定)
 Logic: 計算ロジックは actions/assessment.ts に定義。入力変更のたびにリアルタイム再計算。
 
-src/app/admin/config/page.tsx (管理者設定)
-Site Lock Config:
-
-閲覧パスワード設定: 詳細ページ閲覧用の共通パスワードを設定・変更する機能。
-
-トグル: 「詳細ページ閲覧にパスワード/ログインを必須にする」ON/OFFスイッチ。
 
 5. データベース詳細設計 (Supabase Schema)
 Supabase (PostgreSQL) を使用。JSON型に頼りすぎず、検索・ソートが必要な項目はカラムとして独立させる。
@@ -205,9 +198,6 @@ app_config Table
 
 key (Text, PK):
 
-'view_password': 詳細ページ閲覧用の共通パスワード
-
-'require_auth_for_detail': 詳細閲覧に認証を強制するか ('true'/'false')
 
 value (Text): 設定値の実体
 
@@ -217,14 +207,8 @@ value (Text): 設定値の実体
 graph TD
     User[ユーザー] --> Top[在庫一覧ページ]
     Top --> Click[商品をクリック]
-    Click --> Check{閲覧制限ON?}
-    
-    Check -- OFF --> Detail[商品詳細ページ]
-    Check -- ON --> Gate[パスワード/ログイン入力画面]
-    
-    Gate --> Input{入力判定}
-    Input -- 正解/認証OK --> Detail
-    Input -- 不正解 --> Error[エラー表示]
+    Top --> Click[商品をクリック]
+    Click --> Detail[商品詳細ページ]
     
     Detail --> Action[DMで相談/購入ボタン]
     Action --> External[X または LINEへ遷移]
@@ -247,3 +231,10 @@ Wiring: UIとロジックを接続し、動的なサイトにする。
 - **マイグレーション**: `supabase/migrations` ディレクトリで管理。
 - **反映**: `npx supabase db push` を使用してリモートDBに反映する。この操作には Access Token が必要。
 - **禁止事項**: 手動でSQLエディタからスキーマを変更すると、ローカルのマイグレーション履歴と整合性が取れなくなるため避ける。常にコード (Migration File) を正とする。
+
+## 9. デプロイ履歴 (Deployment History)
+- **Vercel Production**: [https://4memiya-e853byr4w-shikiuku-5395s-projects.vercel.app](https://4memiya-e853byr4w-shikiuku-5395s-projects.vercel.app)
+- **最終更新**: 2025-12-16
+- **主な修正**: 
+    - TypeScriptの型定義エラーの修正 (`src/app/dev/products` および `src/types/index.ts`)
+    - Vercel環境変数 (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) の設定

@@ -2,6 +2,8 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { Product } from '@/types/index';
+import { revalidatePath } from 'next/cache';
+import { sendPushNotification } from '@/actions/notification';
 
 // --- Types ---
 // Define a type for the raw DB response if it differs slightly, 
@@ -46,8 +48,8 @@ export async function getProducts(options?: {
     if (!data) return [];
 
     // Map DB response to Product type
-    return data.map(item => ({
-        ...item,
+    return (data as any[]).map(item => ({
+        ...(item as any),
         status: item.status as 'draft' | 'on_sale' | 'sold_out',
         // seq_id is included in * and mapped automatically via spread
     })) as Product[];
@@ -70,8 +72,8 @@ export async function getProductById(id: string): Promise<Product | null> {
     if (!data) return null;
 
     return {
-        ...data,
-        status: data.status as 'draft' | 'on_sale' | 'sold_out',
+        ...(data as any),
+        status: (data as any).status as 'draft' | 'on_sale' | 'sold_out',
     } as Product;
 }
 
@@ -87,7 +89,7 @@ export async function getAllUniqueTags(): Promise<string[]> {
 
     if (error || !data) return [];
 
-    const allTags = data.flatMap(p => p.tags as string[]);
+    const allTags = (data as any[]).flatMap(p => p.tags as string[]);
     // Dedup
     return Array.from(new Set(allTags)).sort();
 }

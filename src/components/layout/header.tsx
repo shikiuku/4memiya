@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
+import { NotificationCenter } from '@/components/features/notifications/notification-center';
 
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/actions/auth';
@@ -56,10 +57,13 @@ export async function Header() {
 
                 {/* Right: Actions (Desktop & Mobile Login/User status) */}
                 <div className="flex items-center gap-3 z-10">
+                    <div className="mr-2">
+                        <NotificationCenter />
+                    </div>
                     {user ? (
                         <>
                             <div className="hidden md:flex items-center gap-2 mr-2 text-sm font-bold text-slate-700">
-                                <User className="w-4 h-4" />
+                                <User className="w-4 h-4 ml-2" />
                                 <span>{user.user_metadata?.username || 'ユーザー'}</span>
                             </div>
                             <form action={logout}>

@@ -19,13 +19,13 @@ export default async function EditProductPage({ params }: { params: { id: string
     }
 
     // Fetch Tags for suggestions (reusing the logic from new page)
-    const { data: tagsData } = await supabase.from('tags').select('name').order('created_at', { ascending: false });
+    const { data: tagsData } = await supabase.from('tags').select('name').order('created_at', { ascending: false }).returns<{ name: string }[]>();
 
     let allTags: string[] = [];
     if (tagsData) {
         allTags = tagsData.map(t => t.name);
     } else {
-        const { data: products } = await supabase.from('products').select('tags');
+        const { data: products } = await supabase.from('products').select('tags').returns<{ tags: string[] }[]>();
         allTags = Array.from(new Set(products?.flatMap(p => p.tags || []) || []));
     }
 

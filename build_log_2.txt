@@ -1,0 +1,35 @@
+
+> temp_app@0.1.0 build
+> next build
+
+ 笞 Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\k4849\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\k4849\Downloads\coconala\4memiya\package-lock.json
+
+   笆ｲ Next.js 16.0.10 (Turbopack)
+   - Environments: .env.local
+
+ 笞 The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+ 笨・Compiled successfully in 3.9s
+   Running TypeScript ...
+Failed to compile.
+
+./src/app/dev/products/[id]/edit/page.tsx:22:52
+Type error: No overload matches this call.
+  Overload 1 of 2, '(relation: "assessment_rules" | "products" | "app_config" | "app_users"): PostgrestQueryBuilder<{ PostgrestVersion: "14.1"; }, { Tables: { app_config: { Row: { description: string | null; key: string; updated_at: string; value: string; }; Insert: { ...; }; Update: { ...; }; Relationships: []; }; app_users: { ...; }; assessment_rules: { ...; }; products: { ...; }; }; Views: {}; Functions: {}; Enums: {}; CompositeTypes: {}; }, { ...; } | ... 2 more ... | { ...; }, "assessment_rules" | ... 2 more ... | "app_users", []>', gave the following error.
+    Argument of type '"tags"' is not assignable to parameter of type '"assessment_rules" | "products" | "app_config" | "app_users"'.
+  Overload 2 of 2, '(relation: never): PostgrestQueryBuilder<{ PostgrestVersion: "14.1"; }, { Tables: { app_config: { Row: { description: string | null; key: string; updated_at: string; value: string; }; Insert: { description?: string | null | undefined; key: string; updated_at?: string | undefined; value: string; }; Update: { ...; }; Relationships: []; }; app_users: { ...; }; assessment_rules: { ...; }; products: { ...; }; }; Views: {}; Functions: {}; Enums: {}; CompositeTypes: {}; }, never, never, never>', gave the following error.
+    Argument of type '"tags"' is not assignable to parameter of type 'never'.
+
+  20 |
+  21 |     // Fetch Tags for suggestions (reusing the logic from new page)
+> 22 |     const { data: tagsData } = await supabase.from('tags').select('name').order('created_at', { ascending: false });
+     |                                                    ^
+  23 |
+  24 |     let allTags: string[] = [];
+  25 |     if (tagsData) {
+Next.js build worker exited with code: 1 and signal: null

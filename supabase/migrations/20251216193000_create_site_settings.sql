@@ -14,12 +14,16 @@ on conflict (key) do nothing;
 alter table site_settings enable row level security;
 
 -- Everyone can read settings (for public pages)
+-- Everyone can read settings (for public pages)
+drop policy if exists "Enable read access for all users" on site_settings;
 create policy "Enable read access for all users" on site_settings
     for select using (true);
 
 -- Only authenticated users can update (admins)
+drop policy if exists "Enable update for authenticated users only" on site_settings;
 create policy "Enable update for authenticated users only" on site_settings
     for update using (auth.role() = 'authenticated');
 
+drop policy if exists "Enable insert for authenticated users only" on site_settings;
 create policy "Enable insert for authenticated users only" on site_settings
     for insert with check (auth.role() = 'authenticated');

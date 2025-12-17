@@ -13,7 +13,7 @@ export default async function TermsPage() {
             </div>
 
             <main className="container mx-auto max-w-3xl px-4 py-8">
-                <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
+                <div className="bg-white p-8 rounded-xl border border-slate-200 text-slate-600 leading-relaxed whitespace-pre-wrap">
                     {termsContent || '利用規約は現在準備中です。'}
                 </div>
             </main>

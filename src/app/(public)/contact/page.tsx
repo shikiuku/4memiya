@@ -14,7 +14,7 @@ export default async function ContactPage() {
             </div>
 
             <main className="container mx-auto max-w-lg px-4 py-12">
-                <div className="bg-white p-8 rounded-xl border border-slate-200 text-center space-y-6 shadow-sm">
+                <div className="bg-white p-8 rounded-xl border border-slate-200 text-center space-y-6">
 
                     <div>
                         <p className="text-sm text-slate-500 mb-2">お問い合わせメールアドレス</p>

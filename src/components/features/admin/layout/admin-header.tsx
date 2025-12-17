@@ -37,6 +37,10 @@ export function AdminHeader() {
                         <FileText className="w-4 h-4" />
                         利用規約
                     </Link>
+                    <Link href="/dev/account" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
+                        <Settings className="w-4 h-4" />
+                        アカウント設定
+                    </Link>
                 </nav>
 
                 {/* Right: Actions */}
@@ -47,6 +51,7 @@ export function AdminHeader() {
                             新規在庫追加
                         </Button>
                     </Link>
+
                     <span className="text-xs text-slate-400 hidden sm:inline-block">管理者としてログイン中</span>
                     <form action={logout}>
                         <Button variant="ghost" size="sm" className="text-white hover:bg-slate-800 hover:text-red-300">

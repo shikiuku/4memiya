@@ -42,3 +42,6 @@
   2. `npx supabase db push` コマンドを実行する。
   3. 必要に応じて、ユーザーから提供された Access Token を使用してログインする (`npx supabase login --token ...`)。
 - **Management APIの制限**: Management API (`api.supabase.com/v1/projects/.../query`) 経由のSQL実行は制限されている場合が多いため、CLI (`db push`) を第一選択とすること。
+
+## 9. デザイン・UI/UX
+- **影 (Shadow) の使用禁止**: カードやコンテナなどの要素に `shadow` クラス（ドロップシャドウ）を使用しないこと。フラットなデザインを基本とする。

@@ -1,6 +1,6 @@
 'use server';
 
-import { createSupabaseClient } from '@/lib/supabase/server-utils'; // Custom util that can take keys? Or just use createClient() but we need service role.
+
 import { createClient } from '@supabase/supabase-js';
 
 // We need a specific client with service role for bypassing RLS during upload if RLS is strict
