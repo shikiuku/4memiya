@@ -39,7 +39,7 @@ export function AdminHeader() {
                     </Link>
                     <Link href="/dev/account" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
                         <Settings className="w-4 h-4" />
-                        アカウント設定
+                        設定
                     </Link>
                 </nav>
 

@@ -63,7 +63,7 @@ export function AccountForm({ currentUsername, currentDisplayName }: AccountForm
                         </div>
 
                         <div>
-                            <Label htmlFor="newLoginId">ログインID</Label>
+                            <Label htmlFor="newLoginId">新しいログインID</Label>
                             <p className="text-xs text-slate-400 mb-1">※変更するとログイン時のIDが変わります</p>
                             <Input
                                 id="newLoginId"

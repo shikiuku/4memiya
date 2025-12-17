@@ -9,7 +9,12 @@ import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const initialState: UpdateAccountState = {};
 
-export function AccountForm() {
+interface AccountFormProps {
+    currentUsername?: string;
+    currentDisplayName?: string;
+}
+
+export function AccountForm({ currentUsername, currentDisplayName }: AccountFormProps) {
     const [state, formAction, isPending] = useActionState(updateAdminCredentials, initialState);
 
     return (
@@ -47,12 +52,24 @@ export function AccountForm() {
 
                     <div className="space-y-4">
                         <div>
+                            <Label htmlFor="newUsername">アカウント名（表示名）</Label>
+                            <Input
+                                id="newUsername"
+                                name="newUsername"
+                                type="text"
+                                placeholder={currentDisplayName || "表示名を入力"}
+                                defaultValue={currentDisplayName}
+                            />
+                        </div>
+
+                        <div>
                             <Label htmlFor="newLoginId">新しいログインID</Label>
                             <Input
                                 id="newLoginId"
                                 name="newLoginId"
                                 type="text"
-                                placeholder="半角英数字 (変更しない場合は空欄)"
+                                placeholder={currentUsername || "半角英数字 (変更しない場合は空欄)"}
+                                defaultValue={currentUsername}
                             />
                         </div>
 

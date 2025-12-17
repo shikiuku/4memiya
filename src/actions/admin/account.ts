@@ -17,13 +17,14 @@ export async function updateAdminCredentials(
     const currentPassword = (formData.get('currentPassword') as string)?.trim();
     const newLoginId = (formData.get('newLoginId') as string)?.trim();
     const newPassword = (formData.get('newPassword') as string)?.trim();
+    const newUsername = (formData.get('newUsername') as string)?.trim();
 
     if (!currentPassword) {
         return { error: '現在のパスワードを入力してください' };
     }
 
-    if (!newLoginId && !newPassword) {
-        return { error: '変更内容（新しいログインIDまたは新しいパスワード）を入力してください' };
+    if (!newLoginId && !newPassword && !newUsername) {
+        return { error: '変更内容（アカウント名、ログインID、またはパスワード）を入力してください' };
     }
 
     const supabase = await createClient();
@@ -63,6 +64,7 @@ export async function updateAdminCredentials(
     );
 
     const updates: { email?: string; password?: string; user_metadata?: any } = {};
+    const metadataUpdates: any = { ...user.user_metadata };
 
     // 3. Handle Login ID Change
     if (newLoginId) {
@@ -75,8 +77,17 @@ export async function updateAdminCredentials(
         const newEmail = `${newLoginId}@4memiya.com`;
         if (newEmail !== user.email) {
             updates.email = newEmail;
-            updates.user_metadata = { ...user.user_metadata, username: newLoginId };
+            metadataUpdates.username = newLoginId;
         }
+    }
+
+    // 4. Handle Account Name (Display Name) Change
+    if (newUsername) {
+        metadataUpdates.displayName = newUsername;
+    }
+
+    if (Object.keys(metadataUpdates).length > 0) {
+        updates.user_metadata = metadataUpdates;
     }
 
     // 4. Handle Password Change
