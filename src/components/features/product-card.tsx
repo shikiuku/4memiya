@@ -7,15 +7,17 @@ import { Image as ImageIcon } from 'lucide-react';
 type ProductCardProps = {
     product: Partial<Product>;
     viewMode?: 'grid' | 'list';
+    customHref?: string;
 };
 
-export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
+export function ProductCard({ product, viewMode = 'grid', customHref }: ProductCardProps) {
     const isList = viewMode === 'list';
     const imageSrc = product.images?.[0];
+    const linkHref = customHref || `/products/${product.id}`;
 
     return (
         <Link
-            href={`/products/${product.id}`}
+            href={linkHref}
             className={`group block bg-white ${isList
                 ? 'flex gap-2 px-2 py-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors'
                 : 'rounded-md overflow-hidden border border-slate-100 hover:border-slate-300 transition-colors'

@@ -178,7 +178,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                 </div>
 
                 {/* Sidebar (Right: 1 col) */}
-                <div className="space-y-6">
+                <div className="space-y-6 order-first lg:order-none">
                     {/* Images */}
                     <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 space-y-4">
                         <h2 className="font-bold text-lg text-slate-800 border-b pb-2 mb-4 flex items-center">

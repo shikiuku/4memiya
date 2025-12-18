@@ -32,7 +32,7 @@ export default async function AdminProductListPage() {
                     <p className="text-sm text-slate-500">登録されている在庫アカウントの管理を行います。</p>
                 </div>
                 <Link href="/dev/products/new">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full px-6 shadow-lg transform hover:scale-105 transition-all">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md px-4 transition-colors">
                         <Plus className="w-5 h-5 mr-2" />
                         新規在庫追加
                     </Button>
@@ -45,7 +45,11 @@ export default async function AdminProductListPage() {
                     <div key={product.id} className="bg-white rounded-lg border border-slate-100 p-2 flex gap-3 shadow-sm hover:shadow-md transition-shadow">
                         {/* Product Card Content */}
                         <div className="flex-1 min-w-0">
-                            <ProductCard product={product} viewMode="list" />
+                            <ProductCard
+                                product={product}
+                                viewMode="list"
+                                customHref={`/dev/products/${product.id}/edit`}
+                            />
                         </div>
 
                         {/* Actions Column */}

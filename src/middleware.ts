@@ -55,11 +55,20 @@ export async function middleware(request: NextRequest) {
         if (path === '/login' && user) {
             const role = user.user_metadata?.role;
             if (role === 'admin') {
-                console.log('Redirecting to /admin');
-                return NextResponse.redirect(new URL('/admin', request.url));
+                console.log('Redirecting to /dev/products');
+                return NextResponse.redirect(new URL('/dev/products', request.url));
             } else {
                 console.log('Redirecting to / (home)');
                 return NextResponse.redirect(new URL('/', request.url));
+            }
+        }
+
+        // Redirect to admin dashboard if accessing root as admin
+        if (path === '/' && user) {
+            const role = user.user_metadata?.role;
+            if (role === 'admin') {
+                console.log('Redirecting to /dev/products from root');
+                return NextResponse.redirect(new URL('/dev/products', request.url));
             }
         }
     } catch (e) {
