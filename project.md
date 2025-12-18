@@ -236,5 +236,8 @@ Wiring: UIとロジックを接続し、動的なサイトにする。
 - **Vercel Production**: [https://4memiya-e853byr4w-shikiuku-5395s-projects.vercel.app](https://4memiya-e853byr4w-shikiuku-5395s-projects.vercel.app)
 - **最終更新**: 2025-12-16
 - **主な修正**: 
-    - TypeScriptの型定義エラーの修正 (`src/app/dev/products` および `src/types/index.ts`)
     - Vercel環境変数 (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) の設定
+
+## 10. 手動デプロイ (Manual Deployment)
+本プロジェクトはGitHub連携を行わず、以下のコマンドで手動デプロイを行います。
+`npx vercel --prod`

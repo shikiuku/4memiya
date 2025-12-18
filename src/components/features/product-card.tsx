@@ -70,13 +70,13 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
                     </div>
 
                     {isList && (
-                        <div className="">
+                        <div className="shrink-0 ml-2">
                             {product.status === 'on_sale' ? (
-                                <span className="bg-[#007bff] text-white text-xs font-bold px-4 py-1 rounded-sm">
+                                <span className="bg-[#007bff] text-white text-xs font-bold px-3 py-1 rounded inline-block whitespace-nowrap">
                                     販売中
                                 </span>
                             ) : (
-                                <span className="bg-slate-400 text-white text-xs font-bold px-4 py-1 rounded-sm">
+                                <span className="bg-slate-400 text-white text-xs font-bold px-3 py-1 rounded inline-block whitespace-nowrap">
                                     売り切れ
                                 </span>
                             )}

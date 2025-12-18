@@ -39,27 +39,29 @@ export default async function AdminProductListPage() {
                 </Link>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {/* Product List - List View for all devices */}
+            <div className="flex flex-col gap-2">
                 {products?.map((product) => (
-                    <div key={product.id} className="relative group">
-                        {/* Reuse the public ProductCard */}
-                        <ProductCard product={product} />
+                    <div key={product.id} className="bg-white rounded-lg border border-slate-100 p-2 flex gap-3 shadow-sm hover:shadow-md transition-shadow">
+                        {/* Product Card Content */}
+                        <div className="flex-1 min-w-0">
+                            <ProductCard product={product} viewMode="list" />
+                        </div>
 
-                        {/* Admin Overlay Actions */}
-                        <div className="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 rounded-lg backdrop-blur-[1px]">
-                            <Link href={`/dev/products/${product.id}/edit`}>
-                                <Button size="sm" className="bg-white text-slate-900 hover:bg-slate-100 font-bold border-0">
-                                    <Edit className="w-4 h-4 mr-1" />
+                        {/* Actions Column */}
+                        <div className="flex flex-col gap-2 justify-center shrink-0 w-20 border-l border-slate-50 pl-2">
+                            <Link href={`/dev/products/${product.id}/edit`} className="w-full">
+                                <Button size="sm" variant="ghost" className="w-full flex-col h-auto py-1 text-xs font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50">
+                                    <Edit className="w-4 h-4 mb-0.5" />
                                     編集
                                 </Button>
                             </Link>
-
-                            <DeleteButton id={product.id} />
-                        </div>
-
-                        {/* Status Badge (if needed) */}
-                        <div className="absolute top-2 right-2 bg-black/70 text-white text-[10px] px-2 py-1 rounded backdrop-blur-sm">
-                            No.{product.seq_id}
+                            <div className="w-full flex justify-center">
+                                <DeleteButton
+                                    id={product.id}
+                                    className="w-full flex-col h-auto py-1 text-xs bg-transparent text-red-500 hover:bg-red-50 hover:text-red-600 border-0"
+                                />
+                            </div>
                         </div>
                     </div>
                 ))}

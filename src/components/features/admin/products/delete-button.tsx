@@ -6,11 +6,14 @@ import { Trash2 } from 'lucide-react';
 import { deleteProduct } from '@/actions/admin/product';
 import { useRouter } from 'next/navigation';
 
+import { cn } from '@/lib/utils';
+
 interface DeleteButtonProps {
     id: string;
+    className?: string;
 }
 
-export function DeleteButton({ id }: DeleteButtonProps) {
+export function DeleteButton({ id, className }: DeleteButtonProps) {
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDelete = async () => {
@@ -33,12 +36,13 @@ export function DeleteButton({ id }: DeleteButtonProps) {
     return (
         <Button
             size="sm"
-            className="bg-red-600 text-white hover:bg-red-700 font-bold border-0"
+            variant="ghost"
+            className={cn("bg-red-50 text-red-600 hover:bg-red-100 font-bold border-0", className)}
             onClick={handleDelete}
             disabled={isDeleting}
         >
-            <Trash2 className="w-4 h-4 mr-1" />
-            {isDeleting ? '削除中...' : '削除'}
+            <Trash2 className="w-4 h-4" />
+            <span className="ml-0.5">{isDeleting ? '削除中' : '削除'}</span>
         </Button>
     );
 }

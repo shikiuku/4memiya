@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { LogOut, Package, Settings, LayoutDashboard, Plus, FileText, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { logout } from '@/actions/auth';
+import { AdminMobileMenu } from './admin-mobile-menu';
 
 export function AdminHeader() {
     return (
@@ -45,20 +46,25 @@ export function AdminHeader() {
 
                 {/* Right: Actions */}
                 <div className="flex items-center gap-4">
-                    <Link href="/dev/products/new">
-                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white font-bold">
-                            <Plus className="w-4 h-4 mr-1" />
-                            新規在庫追加
-                        </Button>
-                    </Link>
+                    <div className="hidden md:flex items-center gap-4">
+                        <Link href="/dev/products/new">
+                            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white font-bold">
+                                <Plus className="w-4 h-4 mr-1" />
+                                新規在庫追加
+                            </Button>
+                        </Link>
 
-                    <span className="text-xs text-slate-400 hidden sm:inline-block">管理者としてログイン中</span>
-                    <form action={logout}>
-                        <Button variant="ghost" size="sm" className="text-white hover:bg-slate-800 hover:text-red-300">
-                            <LogOut className="w-4 h-4 mr-2" />
-                            ログアウト
-                        </Button>
-                    </form>
+                        <span className="text-xs text-slate-400 hidden sm:inline-block">管理者としてログイン中</span>
+                        <form action={logout}>
+                            <Button variant="ghost" size="sm" className="text-white hover:bg-slate-800 hover:text-red-300">
+                                <LogOut className="w-4 h-4 mr-2" />
+                                ログアウト
+                            </Button>
+                        </form>
+                    </div>
+
+                    {/* Mobile Menu */}
+                    <AdminMobileMenu />
                 </div>
             </div>
         </header>
