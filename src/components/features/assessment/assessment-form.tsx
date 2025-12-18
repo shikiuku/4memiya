@@ -25,9 +25,10 @@ type FormData = z.infer<typeof baseSchema>;
 
 interface AssessmentFormProps {
     rules: AssessmentRule[];
+    remainingWinners?: number;
 }
 
-export function AssessmentForm({ rules }: AssessmentFormProps) {
+export function AssessmentForm({ rules, remainingWinners = 10 }: AssessmentFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
@@ -111,6 +112,12 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
         return price;
     }, [rangeRules, booleanRules, rank, luckMax, gachaLimit, JSON.stringify(customRules), dynamicRanges]);
 
+    const handleShare = () => {
+        const text = `モンストアカウントが${currentPrice.toLocaleString()}円で査定されました！\n#モンスト買取 #雨宮査定`;
+        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+    };
+
 
     return (
         <form className="space-y-6 bg-white p-6 rounded-md border border-slate-200" onSubmit={(e) => e.preventDefault()}>
@@ -118,9 +125,10 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
             {/* Live Price Display */}
             <div className="bg-slate-50 border border-slate-200 text-slate-900 p-6 rounded-md text-center transform transition-all duration-300">
                 <p className="text-slate-500 text-xs mb-1">現在の査定金額</p>
-                <div className="text-4xl font-bold tracking-tight">
+                <div className="text-4xl font-bold tracking-tight mb-4">
                     ¥{currentPrice.toLocaleString()}
                 </div>
+
             </div>
 
             <div className="space-y-4">
@@ -236,6 +244,35 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                         </div>
                     </div>
                 )}
+            </div>
+
+            {/* Campaign Banner & Actions - Moved to Bottom */}
+            <div className="pt-6 border-t border-slate-100 space-y-4">
+                <div className="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-md p-3 text-center text-xs font-bold animate-pulse">
+                    <p>シェアで毎月10人にPayPay1,000円プレゼント！</p>
+                    <p className="text-sm mt-1">今月残り <span className="text-red-600 text-lg">{remainingWinners}</span> 名</p>
+                </div>
+
+                <div className="space-y-3">
+                    <Button
+                        type="button"
+                        onClick={handleShare}
+                        className="w-full bg-black hover:bg-slate-800 text-white font-bold rounded-full h-12 text-base"
+                    >
+                        Xで査定結果をシェア
+                    </Button>
+
+                    <a
+                        href="https://twitter.com/messages/compose?recipient_id=YOUR_TWITTER_ID"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full"
+                    >
+                        <Button variant="outline" type="button" className="w-full font-bold rounded-full border-slate-300 h-10">
+                            アカウント売却の相談 (DM)
+                        </Button>
+                    </a>
+                </div>
             </div>
 
             {/* Submit button removed as per request */}

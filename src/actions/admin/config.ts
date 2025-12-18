@@ -28,6 +28,8 @@ export async function updateAppConfig(key: string, value: string, description?: 
         return { error: 'Unauthorized' };
     }
 
+    console.log(`Updating config [${key}] to [${value}]`);
+
     const { error } = await supabase
         .from('app_config')
         .upsert({
@@ -35,14 +37,15 @@ export async function updateAppConfig(key: string, value: string, description?: 
             value,
             description,
             updated_at: new Date().toISOString()
-        });
+        }, { onConflict: 'key' });
 
     if (error) {
         console.error(`Error updating config ${key}:`, error);
         return { error: 'Failed to update config' };
     }
 
-    revalidatePath('/assessment'); // Revalidate public page
-    revalidatePath('/dev/config'); // Revalidate admin page
+    revalidatePath('/assessment');
+    revalidatePath('/dev/assessment');
+    revalidatePath('/', 'layout'); // Force refresh everywhere
     return { success: true };
 }
