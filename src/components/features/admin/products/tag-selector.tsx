@@ -128,7 +128,7 @@ export function TagSelector({ initialTags = [], suggestedTags = [] }: TagSelecto
                                 <button
                                     type="button"
                                     onClick={(e) => deleteFromAvailable(e, tag)}
-                                    className="pr-2 pl-1 py-1.5 text-slate-300 hover:text-red-500 focus:outline-none opacity-0 group-hover:opacity-100 transition-opacity border-l border-transparent group-hover:border-slate-100"
+                                    className="pr-2 pl-1 py-1.5 text-slate-300 hover:text-red-500 focus:outline-none transition-opacity border-l border-slate-100"
                                     title="リストから削除"
                                 >
                                     <X className="w-3 h-3" />
