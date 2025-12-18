@@ -149,112 +149,114 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
             </div>
 
             <div className="space-y-4">
-                {/* Game Title */}
-                <div className="space-y-2">
-                    <Label htmlFor="gameTitle">ゲームタイトル</Label>
-                    <Input
-                        id="gameTitle"
-                        {...register('gameTitle')}
-                        disabled
-                        className="bg-slate-100 text-slate-500 border-slate-200"
-                    />
-                </div>
-
-                {/* Numeric Inputs */}
-                <div className="space-y-2">
-                    <Label htmlFor="rank">ランク</Label>
-                    <div className="relative">
-                        <Input
-                            id="rank"
-                            type="number"
-                            min="0"
-                            placeholder="例: 1500"
-                            {...register('rank')}
-                        />
-                        <div className="absolute right-3 top-2.5 text-xs text-slate-400">ランク</div>
+                {/* Game Title - Compact */}
+                <div>
+                    <Label htmlFor="gameTitle" className="text-xs text-slate-500">ゲームタイトル</Label>
+                    <div className="font-bold text-slate-900 bg-slate-50 border border-slate-100 rounded px-3 py-2 text-sm mt-1">
+                        {watch('gameTitle')}
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <Label htmlFor="luckMax">運極数</Label>
-                    <div className="relative">
-                        <Input
-                            id="luckMax"
-                            type="number"
-                            min="0"
-                            placeholder="例: 500"
-                            {...register('luckMax')}
-                        />
-                        <div className="absolute right-3 top-2.5 text-xs text-slate-400">体</div>
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <Label htmlFor="gachaLimit">ガチャ限数</Label>
-                    <div className="relative">
-                        <Input
-                            id="gachaLimit"
-                            type="number"
-                            min="0"
-                            placeholder="例: 1000"
-                            {...register('gachaLimit')}
-                        />
-                        <div className="absolute right-3 top-2.5 text-xs text-slate-400">体</div>
-                    </div>
-                </div>
-
-                {/* Dynamic Range Inputs for Custom Categories */}
-                {extraRangeCategories.map(cat => (
-                    <div key={cat} className="space-y-2">
-                        <Label htmlFor={`dynamicRanges.${cat}`} className="capitalize">{cat}</Label>
+                {/* Numeric Inputs Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                        <Label htmlFor="rank" className="text-xs">ランク</Label>
                         <div className="relative">
                             <Input
-                                id={`dynamicRanges.${cat}`}
+                                id="rank"
                                 type="number"
                                 min="0"
-                                placeholder={`例: 100`}
-                                {...register(`dynamicRanges.${cat}` as any)}
+                                placeholder="1500"
+                                className="pr-10"
+                                {...register('rank')}
                             />
-                            <div className="absolute right-3 top-2.5 text-xs text-slate-400">値</div>
+                            <div className="absolute right-3 top-2.5 text-xs text-slate-400">ランク</div>
                         </div>
                     </div>
-                ))}
 
-                {/* Boolean Rules (Checkboxes) - Always at bottom */}
+                    <div className="space-y-1">
+                        <Label htmlFor="luckMax" className="text-xs">運極数</Label>
+                        <div className="relative">
+                            <Input
+                                id="luckMax"
+                                type="number"
+                                min="0"
+                                placeholder="500"
+                                className="pr-8"
+                                {...register('luckMax')}
+                            />
+                            <div className="absolute right-3 top-2.5 text-xs text-slate-400">体</div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-1">
+                        <Label htmlFor="gachaLimit" className="text-xs">ガチャ限数</Label>
+                        <div className="relative">
+                            <Input
+                                id="gachaLimit"
+                                type="number"
+                                min="0"
+                                placeholder="1000"
+                                className="pr-8"
+                                {...register('gachaLimit')}
+                            />
+                            <div className="absolute right-3 top-2.5 text-xs text-slate-400">体</div>
+                        </div>
+                    </div>
+
+                    {/* Dynamic Range Inputs within same grid */}
+                    {extraRangeCategories.map(cat => (
+                        <div key={cat} className="space-y-1">
+                            <Label htmlFor={`dynamicRanges.${cat}`} className="capitalize text-xs">{cat}</Label>
+                            <div className="relative">
+                                <Input
+                                    id={`dynamicRanges.${cat}`}
+                                    type="number"
+                                    min="0"
+                                    placeholder="100"
+                                    className="pr-8"
+                                    {...register(`dynamicRanges.${cat}` as any)}
+                                />
+                                <div className="absolute right-3 top-2.5 text-xs text-slate-400">値</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Boolean Rules (Checkboxes) - Compact Grid */}
                 {booleanRules.length > 0 && (
                     <div className="pt-4 border-t border-slate-100">
-                        <Label className="mb-3 block">プラス査定要素 / その他</Label>
-                        <div className="grid grid-cols-1 gap-3">
+                        <Label className="mb-2 block text-sm font-bold text-slate-700">プラス査定要素 / その他</Label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {booleanRules.map(rule => (
                                 <div key={rule.id}
-                                    className="relative flex items-center justify-between space-x-3 border border-slate-200 p-3 rounded-md hover:bg-slate-50 transition-colors cursor-pointer"
+                                    className="relative flex items-center space-x-2 border border-slate-200 p-2 rounded hover:bg-slate-50 transition-colors cursor-pointer bg-white"
                                     onClick={() => {
                                         const current = customRules?.[rule.id] ?? false;
                                         setValue(`customRules.${rule.id}`, !current, { shouldDirty: true });
                                     }}
                                 >
-                                    <div className="flex items-center space-x-3 overflow-hidden">
-                                        {/* Visual Checkbox Replacement to avoid Radix errors */}
-                                        <div
-                                            className={`
-                                                h-4 w-4 shrink-0 rounded-sm border flex items-center justify-center pointer-events-none transition-colors
-                                                ${(customRules?.[rule.id])
-                                                    ? 'bg-[#007bff] border-[#007bff] text-white'
-                                                    : 'border-slate-300 bg-white'
-                                                }
-                                            `}
-                                        >
-                                            {(customRules?.[rule.id]) && <Check className="h-3 w-3" strokeWidth={3} />}
-                                        </div>
-                                        <span className="text-sm font-medium leading-tight text-slate-700 break-words">
-                                            {rule.label || '指定なし'}
-                                            {rule.category !== 'character' && (
-                                                <span className="text-xs text-slate-400 font-normal ml-1">({rule.category})</span>
-                                            )}
-                                        </span>
+                                    {/* Checkbox Visual */}
+                                    <div
+                                        className={`
+                                            h-4 w-4 shrink-0 rounded border flex items-center justify-center pointer-events-none transition-colors
+                                            ${(customRules?.[rule.id])
+                                                ? 'bg-blue-600 border-blue-600 text-white'
+                                                : 'border-slate-300 bg-white'
+                                            }
+                                        `}
+                                    >
+                                        {(customRules?.[rule.id]) && <Check className="h-3 w-3" strokeWidth={3} />}
                                     </div>
-                                    <div className="text-xs font-bold text-[#e60012] whitespace-nowrap shrink-0">
-                                        +{rule.price_adjustment.toLocaleString()}円
+
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-xs font-medium text-slate-700 truncate leading-tight">
+                                            {rule.label || '指定なし'}
+                                        </p>
+                                        <p className="text-[10px] text-slate-400 leading-none mt-0.5">
+                                            {rule.category !== 'checkbox' && `(${rule.category})`}
+                                            <span className="font-bold text-[#e60012] ml-1">+{rule.price_adjustment.toLocaleString()}</span>
+                                        </p>
                                     </div>
                                 </div>
                             ))}
@@ -285,7 +287,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                     </Button>
 
                     <a
-                        href="https://twitter.com/messages/compose?recipient_id=YOUR_TWITTER_ID"
+                        href="https://twitter.com/direct_messages/create/AJAJDNW"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block w-full"
