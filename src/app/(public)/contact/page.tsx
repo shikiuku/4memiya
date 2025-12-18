@@ -52,13 +52,7 @@ export default function ContactPage() {
                         に連絡お願いします。
                     </p>
 
-                    <div className="pt-2">
-                        <a href="mailto:amemiyarmt@gmail.com">
-                            <Button variant="outline" className="w-full border-slate-300 font-bold h-10 rounded-full">
-                                メールを送信する
-                            </Button>
-                        </a>
-                    </div>
+
                 </div>
 
             </main>
