@@ -16,7 +16,7 @@ export async function getAppConfig(key: string) {
         return null;
     }
 
-    return data?.value;
+    return (data as any)?.value;
 }
 
 export async function updateAppConfig(key: string, value: string, description?: string) {
@@ -37,7 +37,7 @@ export async function updateAppConfig(key: string, value: string, description?: 
             value,
             description,
             updated_at: new Date().toISOString()
-        }, { onConflict: 'key' });
+        } as any, { onConflict: 'key' });
 
     if (error) {
         console.error(`Error updating config ${key}:`, error);
