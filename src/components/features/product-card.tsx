@@ -46,7 +46,7 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
             </div>
 
             {/* Content */}
-            <div className={`flex flex-col ${isList ? 'flex-1 min-w-0 justify-between py-1' : 'p-4'}`}>
+            <div className={`flex flex-col ${isList ? 'flex-1 min-w-0 justify-between py-1' : 'p-4 md:p-5'}`}>
                 <div>
                     {/* Tags */}
                     <div className="flex flex-wrap gap-1 mb-1.5">

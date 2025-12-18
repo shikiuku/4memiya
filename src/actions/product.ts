@@ -24,8 +24,11 @@ export async function getProducts(options?: {
         .order('created_at', { ascending: false });
 
     // Filter by Keyword (Title)
+    // Filter by Keyword (Title or Tags)
     if (options?.query) {
-        query = query.ilike('title', `%${options.query}%`);
+        // Search in title AND tags (casting arrays to text for simple search)
+        // Syntax: column.operator.value,column.operator.value
+        query = query.or(`title.ilike.%${options.query}%,tags.ilike.%${options.query}%`);
     }
 
     // Filter by Tags (Array contains)

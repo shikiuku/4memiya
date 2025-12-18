@@ -12,22 +12,20 @@ export default async function Home({
 }) {
   const params = await searchParams;
   const query = typeof params.q === 'string' ? params.q : undefined;
+  // tag support remains in logic but UI is gone
   const tag = typeof params.tag === 'string' ? params.tag : undefined;
 
-  const [products, allTags] = await Promise.all([
-    getProducts({
-      query: query,
-      tags: tag ? [tag] : undefined
-    }),
-    getAllUniqueTags()
-  ]);
+  const products = await getProducts({
+    query: query,
+    tags: tag ? [tag] : undefined
+  });
 
   return (
     <div className="container mx-auto px-4 pt-2 pb-20 max-w-5xl">
       {/* Page Title & Search (Header area) */}
       <div className="flex flex-row flex-wrap items-start justify-between gap-4 mb-8">
         <h1 className="text-xl font-bold text-slate-800 shrink-0 mt-2">在庫一覧</h1>
-        <ProductSearch availableTags={allTags} />
+        <ProductSearch />
       </div>
 
       <ProductListContainer products={products} />

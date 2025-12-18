@@ -6,16 +6,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-interface Props {
-    availableTags?: string[];
-}
+interface Props { }
 
-export function ProductSearch({ availableTags = [] }: Props) {
+export function ProductSearch({ }: Props) {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const [isPending, startTransition] = useTransition();
-
-    const currentTag = searchParams.get('tag');
 
     const handleSearch = useDebouncedCallback((term: string) => {
         const params = new URLSearchParams(searchParams);
@@ -30,20 +26,6 @@ export function ProductSearch({ availableTags = [] }: Props) {
             replace(`/?${params.toString()}`);
         });
     }, 300);
-
-    const handleTagClick = (tag: string) => {
-        const params = new URLSearchParams(searchParams);
-        if (currentTag === tag) {
-            params.delete('tag');
-        } else {
-            params.set('tag', tag);
-        }
-        params.delete('page');
-
-        startTransition(() => {
-            replace(`/?${params.toString()}`);
-        });
-    }
 
     return (
         <div className="flex flex-col gap-3 items-end">
@@ -61,23 +43,6 @@ export function ProductSearch({ availableTags = [] }: Props) {
                     </div>
                 )}
             </div>
-
-            {availableTags.length > 0 && (
-                <div className="flex flex-wrap gap-2 max-w-[600px] justify-end ml-auto">
-                    {availableTags.map(tag => (
-                        <button
-                            key={tag}
-                            onClick={() => handleTagClick(tag)}
-                            className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${currentTag === tag
-                                ? 'bg-slate-800 text-white border-slate-800'
-                                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-                                }`}
-                        >
-                            #{tag}
-                        </button>
-                    ))}
-                </div>
-            )}
         </div>
     );
 }
