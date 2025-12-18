@@ -9,7 +9,7 @@ export async function getAppConfig(key: string) {
         .from('app_config')
         .select('value')
         .eq('key', key)
-        .single();
+        .maybeSingle();
 
     if (error) {
         console.error(`Error fetching config ${key}:`, error);
