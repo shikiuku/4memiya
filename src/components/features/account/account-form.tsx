@@ -36,7 +36,7 @@ export function AccountForm({ currentUsername, currentDisplayName }: AccountForm
             <div className="space-y-6">
                 <div className="bg-slate-50 p-4 rounded-md border border-slate-100 mb-6">
                     <Label htmlFor="currentPassword">現在のパスワード（必須）</Label>
-                    <p className="text-xs text-slate-500 mb-2">本人確認のため、現在のパスワードを入力してください。</p>
+                    <p className="text-xs text-slate-500 mb-2">現在のパスワードを入力してください。</p>
                     <Input
                         id="currentPassword"
                         name="currentPassword"

@@ -58,7 +58,7 @@ export async function Header() {
                         <>
                             <div className="hidden md:flex items-center gap-2 mr-2 text-sm font-bold text-slate-700">
                                 <User className="w-4 h-4 ml-2" />
-                                <span>{user.user_metadata?.displayName || user.user_metadata?.username || 'ユーザー'}</span>
+                                <span>{user.email?.split('@')[0] || user.user_metadata?.displayName || 'ユーザー'}</span>
                             </div>
                             <form action={logout} className="hidden md:block">
                                 <Button variant="ghost" className="text-slate-600 font-bold hover:text-red-600 hover:bg-red-50 text-xs md:text-sm px-2 md:px-4">

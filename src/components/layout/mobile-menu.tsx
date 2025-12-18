@@ -109,10 +109,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
                                                         </div>
                                                         <div>
                                                             <p className="font-bold text-slate-800">
-                                                                {user.user_metadata?.displayName || user.user_metadata?.username || 'ユーザー'}
-                                                            </p>
-                                                            <p className="text-xs text-slate-500 truncate max-w-[200px]">
-                                                                {user.email}
+                                                                {user.email?.split('@')[0] || user.user_metadata?.displayName || 'ユーザー'}
                                                             </p>
                                                         </div>
                                                     </div>

@@ -12,7 +12,7 @@ export default async function AssessmentPage() {
                 <p className="text-xs text-slate-500 mt-1">予想査定金額を表示します</p>
             </div>
 
-            <main className="container mx-auto max-w-md px-4 py-8">
+            <main className="container mx-auto max-w-xl px-4 py-8">
                 <AssessmentForm rules={rules} />
             </main>
         </div>
