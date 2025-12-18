@@ -34,7 +34,7 @@ export default function ContactPage() {
                             rel="noopener noreferrer"
                         >
                             <Button className="w-full bg-black hover:bg-slate-800 text-white font-bold h-12 rounded-full">
-                                X (Twitter) でDMを送る
+                                XでDMを送る
                             </Button>
                         </a>
                     </div>
