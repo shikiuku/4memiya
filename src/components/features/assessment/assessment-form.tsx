@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ShieldCheck, Check } from 'lucide-react';
@@ -25,12 +26,28 @@ type FormData = z.infer<typeof baseSchema>;
 
 interface AssessmentFormProps {
     rules: AssessmentRule[];
-    remainingWinners?: number;
 }
 
-export function AssessmentForm({ rules, remainingWinners = 10 }: AssessmentFormProps) {
+export function AssessmentForm({ rules }: AssessmentFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+
+    // Calculate days until end of month (Announcement Date)
+    const daysUntilAnnouncement = useMemo(() => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth();
+        // 0th day of next month is the last day of current month
+        const lastDay = new Date(year, month + 1, 0);
+
+        // Reset hours to compare dates only
+        const todayMidnight = new Date(year, month, today.getDate());
+        const lastDayMidnight = new Date(year, month, lastDay.getDate());
+
+        const diffTime = lastDayMidnight.getTime() - todayMidnight.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+    }, []);
 
     const {
         register,
@@ -250,7 +267,12 @@ export function AssessmentForm({ rules, remainingWinners = 10 }: AssessmentFormP
             <div className="pt-6 border-t border-slate-100 space-y-4">
                 <div className="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-md p-3 text-center text-xs font-bold animate-pulse">
                     <p>シェアで毎月10人にPayPay1,000円プレゼント！</p>
-                    <p className="text-sm mt-1">今月残り <span className="text-red-600 text-lg">{remainingWinners}</span> 名</p>
+                    <p className="text-sm mt-1 mb-2">
+                        当選発表まであと <span className="text-red-600 text-lg">{daysUntilAnnouncement}</span> 日
+                    </p>
+                    <Link href="/campaign" className="text-xs text-yellow-700 underline hover:text-yellow-900 block mt-1">
+                        このキャンペーンの詳細はこちら
+                    </Link>
                 </div>
 
                 <div className="space-y-3">

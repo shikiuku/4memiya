@@ -1,12 +1,9 @@
 import { getAssessmentRules } from '@/actions/admin/assessment';
 import { AssessmentForm } from '@/components/features/assessment/assessment-form';
 
-import { getAppConfig } from '@/actions/admin/config';
-
 export default async function AssessmentPage() {
     // Fetch rules from DB
     const rules = await getAssessmentRules();
-    const remainingWinners = await getAppConfig('campaign_remaining_winners') || '10';
 
     return (
         <div className="min-h-screen bg-slate-50 pb-20">
@@ -16,7 +13,7 @@ export default async function AssessmentPage() {
             </div>
 
             <main className="container mx-auto max-w-md px-4 py-8">
-                <AssessmentForm rules={rules} remainingWinners={Number(remainingWinners)} />
+                <AssessmentForm rules={rules} />
             </main>
         </div>
     );
