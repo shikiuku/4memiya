@@ -52,7 +52,7 @@ export function ProductCard({ product, viewMode = 'grid', customHref }: ProductC
                 <div>
                     {/* Tags */}
                     <div className="flex flex-wrap gap-1 mb-1.5">
-                        {product.tags?.slice(0, 3).map((tag, i) => (
+                        {product.tags?.map((tag, i) => (
                             <span key={i} className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">
                                 {tag}
                             </span>
