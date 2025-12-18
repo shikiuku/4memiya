@@ -98,9 +98,6 @@ export function NotificationBanner() {
                     <Bell className="w-4 h-4 text-yellow-600 shrink-0" />
                     <span className="font-medium">
                         新着在庫やお知らせを通知で受け取れます。
-                        <span className="text-xs text-yellow-500 ml-1 hidden sm:inline">
-                            (アプリのようにホーム画面に追加するとより確実に届きます)
-                        </span>
                     </span>
                 </div>
                 <div className="flex items-center gap-3">

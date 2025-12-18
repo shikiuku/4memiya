@@ -28,21 +28,22 @@ export async function Header() {
 
 
                 {/* Center: Navigation (Desktop) */}
-                <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-600 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <Link href="/" className="hover:text-primary transition-colors">
+                {/* Center: Navigation (Desktop) */}
+                <nav className="hidden md:flex items-center gap-4 lg:gap-8 text-sm font-bold text-slate-600 mx-4">
+                    <Link href="/" className="hover:text-primary transition-colors whitespace-nowrap">
                         在庫一覧
                     </Link>
-                    <Link href="/assessment" className="hover:text-primary transition-colors">
+                    <Link href="/assessment" className="hover:text-primary transition-colors whitespace-nowrap">
                         買取査定
                     </Link>
-                    <Link href="/contact" className="hover:text-primary transition-colors">
+                    <Link href="/contact" className="hover:text-primary transition-colors whitespace-nowrap">
                         お問い合わせ
                     </Link>
-                    <Link href="/terms" className="hover:text-primary transition-colors">
+                    <Link href="/terms" className="hover:text-primary transition-colors whitespace-nowrap">
                         利用規約
                     </Link>
                     {user && (
-                        <Link href="/account" className="hover:text-primary transition-colors">
+                        <Link href="/account" className="hover:text-primary transition-colors whitespace-nowrap">
                             設定
                         </Link>
                     )}

@@ -18,7 +18,7 @@ export function AccountForm({ currentUsername, currentDisplayName }: AccountForm
     const [state, formAction, isPending] = useActionState(updateAccountCredentials, initialState);
 
     return (
-        <form action={formAction} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 max-w-lg mx-auto">
+        <form action={formAction} className="bg-white p-6 rounded-lg border border-slate-200 max-w-lg mx-auto">
             {state.error && (
                 <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg flex items-start gap-2 text-sm">
                     <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />

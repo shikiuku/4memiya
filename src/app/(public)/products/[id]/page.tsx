@@ -58,16 +58,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                 <span className="text-3xl font-bold text-[#e60012]">¥{product.price.toLocaleString()}</span>
                                 <span className="text-sm text-slate-600 mb-1">円(税込)</span>
                             </div>
-                            <Button variant="outline" size="sm" className="h-10 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 border-0">
-                                <Heart className="w-5 h-5 mr-1" />
-                                <span className="text-xs">いいね</span>
-                            </Button>
+
                         </div>
 
                         {/* Large CTA Button (Screenshot Style) */}
-                        <Button className="w-full bg-[#007bff] hover:bg-[#0069d9] font-bold h-12 text-base rounded-md">
-                            DMで相談
-                        </Button>
+                        <a href="https://twitter.com/direct_messages/create/AJAJDNW" target="_blank" rel="noopener noreferrer">
+                            <Button className="w-full bg-[#007bff] hover:bg-[#0069d9] font-bold h-12 text-base rounded-md">
+                                DMで相談
+                            </Button>
+                        </a>
                     </div>
 
                     {/* 3. Seller Info */}
@@ -124,9 +123,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
                     {/* CTA 2 */}
                     <section className="pt-6 pb-2">
-                        <Button className="w-full bg-[#007bff] hover:bg-[#0069d9] font-bold h-14 text-lg rounded-md shadow-md">
-                            購入希望のDMを送る
-                        </Button>
+                        <a href="https://twitter.com/direct_messages/create/AJAJDNW" target="_blank" rel="noopener noreferrer">
+                            <Button className="w-full bg-[#007bff] hover:bg-[#0069d9] font-bold h-14 text-lg rounded-md shadow-md">
+                                購入希望のDMを送る
+                            </Button>
+                        </a>
                     </section>
 
                     {/* 7. FAQ */}

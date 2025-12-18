@@ -16,29 +16,29 @@ export function AdminHeader() {
                             {/* Reusing logo but making it fit in dark header */}
                             <Image src="/logo.png" alt="SNS STORE" fill className="object-contain p-1" />
                         </div>
-                        <span className="font-bold text-lg tracking-tight">管理者画面</span>
+                        <span className="font-bold text-lg tracking-tight whitespace-nowrap md:hidden xl:inline">管理者画面</span>
                     </Link>
                 </div>
 
                 {/* Center: Navigation */}
-                <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-                    <Link href="/dev/products" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
-                        <Package className="w-4 h-4" />
+                <nav className="hidden md:flex items-center gap-4 lg:gap-8 text-sm font-bold mx-4">
+                    <Link href="/dev/products" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
+                        <Package className="w-4 h-4 ml-1" />
                         在庫管理
                     </Link>
-                    <Link href="/dev/assessment" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
+                    <Link href="/dev/assessment" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
                         <FileText className="w-4 h-4" />
                         買取査定
                     </Link>
-                    <Link href="/dev/inquiries" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
+                    <Link href="/dev/inquiries" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
                         <MessageSquare className="w-4 h-4" />
                         お問い合わせ
                     </Link>
-                    <Link href="/dev/terms" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
+                    <Link href="/dev/terms" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
                         <FileText className="w-4 h-4" />
                         利用規約
                     </Link>
-                    <Link href="/dev/account" className="flex items-center gap-2 hover:text-blue-300 transition-colors">
+                    <Link href="/dev/account" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
                         <Settings className="w-4 h-4" />
                         設定
                     </Link>
@@ -48,15 +48,15 @@ export function AdminHeader() {
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex items-center gap-4">
                         <Link href="/dev/products/new">
-                            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white font-bold">
+                            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white font-bold whitespace-nowrap">
                                 <Plus className="w-4 h-4 mr-1" />
                                 新規在庫追加
                             </Button>
                         </Link>
 
-                        <span className="text-xs text-slate-400 hidden sm:inline-block">管理者としてログイン中</span>
+                        <span className="text-xs text-slate-400 hidden xl:inline-block whitespace-nowrap">管理者としてログイン中</span>
                         <form action={logout}>
-                            <Button variant="ghost" size="sm" className="text-white hover:bg-slate-800 hover:text-red-300">
+                            <Button variant="ghost" size="sm" className="text-white hover:bg-slate-800 hover:text-red-300 whitespace-nowrap">
                                 <LogOut className="w-4 h-4 mr-2" />
                                 ログアウト
                             </Button>

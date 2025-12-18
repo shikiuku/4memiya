@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { Gift, Share2, Calendar, MessageCircle, Info } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CampaignPage() {
@@ -7,9 +6,6 @@ export default function CampaignPage() {
         <div className="min-h-screen bg-slate-50 pb-20">
             {/* Header */}
             <div className="bg-white border-b border-slate-100 py-6 px-4 text-center">
-                <div className="inline-flex items-center justify-center p-3 bg-yellow-100 rounded-full mb-4">
-                    <Gift className="w-8 h-8 text-yellow-600" />
-                </div>
                 <h1 className="text-xl font-bold text-slate-900 mb-2">
                     毎月10名様に<br />PayPay 1,000円分プレゼント！
                 </h1>
@@ -22,8 +18,7 @@ export default function CampaignPage() {
 
                 {/* Campaign Overview */}
                 <section className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <Info className="w-5 h-5 text-blue-500" />
+                    <h2 className="text-lg font-bold text-slate-900 border-b pb-2 mb-2">
                         キャンペーン概要
                     </h2>
                     <p className="text-sm text-slate-600 leading-relaxed">
@@ -35,8 +30,7 @@ export default function CampaignPage() {
 
                 {/* How to Apply */}
                 <section className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-6">
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <Share2 className="w-5 h-5 text-green-500" />
+                    <h2 className="text-lg font-bold text-slate-900 border-b pb-2 mb-4">
                         応募方法
                     </h2>
 
@@ -79,28 +73,22 @@ export default function CampaignPage() {
 
                 {/* Schedule & Notes */}
                 <section className="space-y-4">
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex items-start gap-4">
-                        <Calendar className="w-6 h-6 text-purple-500 flex-none" />
-                        <div>
-                            <h3 className="font-bold text-slate-900 mb-1">当選発表</h3>
-                            <p className="text-sm text-slate-600">
-                                <span className="font-bold text-slate-900">毎月末日</span>に抽選および発表を行います。
-                            </p>
-                        </div>
+                    <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <h3 className="font-bold text-slate-900 mb-2 border-b pb-2">当選発表</h3>
+                        <p className="text-sm text-slate-600">
+                            <span className="font-bold text-slate-900">毎月末日</span>に抽選および発表を行います。
+                        </p>
                     </div>
 
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex items-start gap-4">
-                        <MessageCircle className="w-6 h-6 text-pink-500 flex-none" />
-                        <div>
-                            <h3 className="font-bold text-slate-900 mb-1">当選連絡・賞品送付</h3>
-                            <p className="text-sm text-slate-600">
-                                Xの<span className="font-bold">DM（ダイレクトメッセージ）</span>にてご連絡いたします。
-                                賞品はPayPayの送付リンクをお送りします。
-                            </p>
-                            <p className="text-xs text-slate-400 mt-2">
-                                ※DMを受け取れる設定にしてお待ちください。
-                            </p>
-                        </div>
+                    <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <h3 className="font-bold text-slate-900 mb-2 border-b pb-2">当選連絡・賞品送付</h3>
+                        <p className="text-sm text-slate-600">
+                            Xの<span className="font-bold">DM（ダイレクトメッセージ）</span>にてご連絡いたします。
+                            賞品はPayPayの送付リンクをお送りします。
+                        </p>
+                        <p className="text-xs text-slate-400 mt-2">
+                            ※DMを受け取れる設定にしてお待ちください。
+                        </p>
                     </div>
                 </section>
 

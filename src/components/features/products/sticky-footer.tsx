@@ -17,12 +17,18 @@ export function StickyFooter({ price, onConsult }: StickyFooterProps) {
                         ¥{price.toLocaleString()}
                     </div>
                 </div>
-                <Button
-                    onClick={onConsult}
-                    className="flex-1 bg-[#007bff] hover:bg-[#0069d9] text-white font-bold h-12 rounded-lg text-base"
+                <a
+                    href="https://twitter.com/direct_messages/create/AJAJDNW"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1"
                 >
-                    DMで相談
-                </Button>
+                    <Button
+                        className="w-full bg-[#007bff] hover:bg-[#0069d9] text-white font-bold h-12 rounded-lg text-base"
+                    >
+                        DMで相談
+                    </Button>
+                </a>
             </div>
         </div>
     );

@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { Mail, MessageCircle, User } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ContactPage() {
@@ -16,11 +15,8 @@ export default function ContactPage() {
 
                 {/* Primary Contact: DM */}
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center space-y-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-blue-50 text-blue-600 rounded-full mx-auto mb-2">
-                        <MessageCircle className="w-6 h-6" />
-                    </div>
 
-                    <h2 className="text-lg font-bold text-slate-900">出品者情報</h2>
+                    <h2 className="text-lg font-bold text-slate-900 border-b pb-2 mb-2">出品者情報</h2>
 
                     <p className="text-sm text-slate-600 leading-relaxed">
                         購入/買取などのご質問、ご相談は<br />
@@ -42,9 +38,6 @@ export default function ContactPage() {
 
                 {/* Secondary Contact: Email Fallback */}
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center space-y-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-slate-50 text-slate-500 rounded-full mx-auto mb-2">
-                        <Mail className="w-6 h-6" />
-                    </div>
 
                     <p className="text-sm text-slate-600 leading-relaxed text-left">
                         24時間経ってもお返事が返ってこない等ありましたら<br />
