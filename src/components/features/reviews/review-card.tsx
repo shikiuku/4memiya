@@ -119,6 +119,7 @@ export function ReviewCard({ review, currentUserId, isAdmin = false, onDelete, o
                 onOpenChange={setEditOpen}
                 review={review}
                 onUpdate={onUpdate}
+                isAdmin={isAdmin}
             />
         </div>
     );

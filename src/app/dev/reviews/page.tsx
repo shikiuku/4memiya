@@ -54,16 +54,27 @@ export default function AdminReviewListPage() {
         }
     };
 
+    const averageRating = reviews.length > 0
+        ? (reviews.reduce((acc, r) => acc + r.star, 0) / reviews.length).toFixed(1)
+        : '0.0';
+
     return (
-        <div className="container mx-auto py-10 space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold">お客様レビュー管理</h1>
-                <Link href="/dev/reviews/create">
-                    <Button className="gap-2">
-                        <Plus className="w-4 h-4" />
-                        レビュー作成
-                    </Button>
-                </Link>
+        <div className="container mx-auto px-4 py-8 max-w-2xl space-y-6">
+            <div className="flex items-center justify-between bg-[#555] text-white p-3 rounded-sm shadow-sm">
+                <div className="flex items-center gap-3">
+                    <div className="bg-white rounded-full p-1 w-8 h-8 flex items-center justify-center">
+                        <span className="text-[#555] text-sm font-bold">●</span>
+                    </div>
+                    <div>
+                        <h1 className="text-lg font-bold leading-none">お客様レビュー管理</h1>
+                        <div className="flex items-center gap-2 mt-1">
+                            <div className="flex items-center text-yellow-400">
+                                <span className="text-lg font-bold mr-1">{averageRating}</span>
+                                <span className="text-xs text-slate-300">({reviews.length}件)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {loading ? (

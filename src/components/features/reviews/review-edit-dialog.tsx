@@ -17,9 +17,10 @@ interface ReviewEditDialogProps {
     onOpenChange: (open: boolean) => void;
     review: Review;
     onUpdate?: () => void;
+    isAdmin?: boolean;
 }
 
-export function ReviewEditDialog({ open, onOpenChange, review, onUpdate }: ReviewEditDialogProps) {
+export function ReviewEditDialog({ open, onOpenChange, review, onUpdate, isAdmin = false }: ReviewEditDialogProps) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
@@ -135,18 +136,20 @@ export function ReviewEditDialog({ open, onOpenChange, review, onUpdate }: Revie
                         />
                     </div>
 
-                    <div className="flex items-center gap-2 pt-2">
-                        <Label htmlFor="is_published" className="cursor-pointer">公開ステータス:</Label>
-                        <select
-                            id="is_published"
-                            className="border rounded p-1 text-sm bg-white"
-                            value={formData.is_published ? 'true' : 'false'}
-                            onChange={(e) => setFormData(prev => ({ ...prev, is_published: e.target.value === 'true' }))}
-                        >
-                            <option value="true">公開</option>
-                            <option value="false">非公開</option>
-                        </select>
-                    </div>
+                    {isAdmin && (
+                        <div className="flex items-center gap-2 pt-2">
+                            <Label htmlFor="is_published" className="cursor-pointer">公開ステータス:</Label>
+                            <select
+                                id="is_published"
+                                className="border rounded p-1 text-sm bg-white"
+                                value={formData.is_published ? 'true' : 'false'}
+                                onChange={(e) => setFormData(prev => ({ ...prev, is_published: e.target.value === 'true' }))}
+                            >
+                                <option value="true">公開</option>
+                                <option value="false">非公開</option>
+                            </select>
+                        </div>
+                    )}
 
                     <div className="flex justify-end pt-2">
                         <Button type="submit" disabled={isSubmitting}>

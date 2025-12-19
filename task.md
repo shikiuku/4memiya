@@ -46,6 +46,11 @@
     - [x] UI: Star Rating Component (with "Very Good" badge for 4+ stars)
     - [x] UI Refinement (Simplified List View & Header Position)
     - [x] Admin Review Management (One-click actions, silent refresh, single-column layout)
+    - [x] Review UI Polish:
+        - [x] Header: "Everyone's Reviews" with Average Rating & Count
+        - [x] Admin Layout: Match Public UI (centered, max-width)
+        - [x] Permissions: Restrict "Publish Status" toggle to Admins only
+        - [x] Sort Order: Newest reviews first (by review date)
 
 ---
 

@@ -56,6 +56,7 @@ export async function getAdminReviews(limit: number = 50): Promise<Review[]> {
     const { data, error } = await supabase
         .from('reviews')
         .select('*')
+        .order('review_date', { ascending: false })
         .order('created_at', { ascending: false })
         .limit(limit);
 
