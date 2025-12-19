@@ -12,6 +12,18 @@ export async function Header() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
+    let username = 'ユーザー';
+    if (user) {
+        // @ts-ignore
+        const { data: appData } = await supabase
+            .from('app_users')
+            .select('username')
+            .eq('id', user.id)
+            .single();
+        const appUser = appData as any;
+        username = appUser?.username || user.email?.split('@')[0] || 'ユーザー';
+    }
+
     return (
         <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-100">
             <div className="w-full px-4 md:px-8 h-14 md:h-16 flex items-center justify-between relative">
@@ -61,7 +73,7 @@ export async function Header() {
                         <>
                             <div className="hidden md:flex items-center gap-2 mr-2 text-sm font-bold text-slate-700">
                                 <User className="w-4 h-4 ml-2" />
-                                <span>{user.email?.split('@')[0] || user.user_metadata?.displayName || 'ユーザー'}</span>
+                                <span>{username}</span>
                             </div>
                             <form action={logout} className="hidden md:block">
                                 <Button variant="ghost" className="text-slate-600 font-bold hover:text-red-600 hover:bg-red-50 text-xs md:text-sm px-2 md:px-4">
@@ -84,7 +96,7 @@ export async function Header() {
                             </Link>
                         </div>
                     )}
-                    <MobileMenu user={user} />
+                    <MobileMenu user={user} username={username} />
                 </div>
             </div>
 

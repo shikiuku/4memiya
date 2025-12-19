@@ -1,4 +1,5 @@
 import { getProducts } from '@/actions/product';
+import { getReviewStats } from '@/actions/review';
 import { ProductListContainer } from '@/components/features/product-list-container';
 import { ProductSearch } from '@/components/features/search/product-search';
 import { HeroCarousel } from '@/components/features/top/hero-carousel';
@@ -21,13 +22,16 @@ export default async function Home({
   // Fetch data for carousel (Latest 3)
   const latestProducts = await getProducts({ limit: 3 });
 
+  // Fetch review stats
+  const reviewStats = await getReviewStats();
+
   return (
     <div className="container mx-auto px-4 pt-4 pb-20 max-w-5xl space-y-8">
 
       {/* Hero Carousel (Only show on top page proper, maybe hide if searching? optional) */}
       {!query && !tag && (
         <section>
-          <HeroCarousel latestProducts={latestProducts} />
+          <HeroCarousel latestProducts={latestProducts} reviewStats={reviewStats} />
         </section>
       )}
 

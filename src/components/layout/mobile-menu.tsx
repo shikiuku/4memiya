@@ -9,10 +9,11 @@ import { cn } from '@/lib/utils';
 import { logout } from '@/actions/auth';
 
 interface MobileMenuProps {
-    user: any; // Using any to avoid strict type coupling with supabase user type for now, or could use User type
+    user: any;
+    username?: string;
 }
 
-export function MobileMenu({ user }: MobileMenuProps) {
+export function MobileMenu({ user, username }: MobileMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
 
@@ -110,7 +111,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
                                                         </div>
                                                         <div>
                                                             <p className="font-bold text-slate-800">
-                                                                {user.email?.split('@')[0] || user.user_metadata?.displayName || 'ユーザー'}
+                                                                {username || user.email?.split('@')[0] || 'ユーザー'}
                                                             </p>
                                                         </div>
                                                     </div>

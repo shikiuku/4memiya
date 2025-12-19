@@ -11,9 +11,10 @@ import { createPortal } from 'react-dom';
 
 interface AdminMobileMenuProps {
     user?: any;
+    username?: string;
 }
 
-export function AdminMobileMenu({ user }: AdminMobileMenuProps) {
+export function AdminMobileMenu({ user, username }: AdminMobileMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
 
@@ -105,7 +106,7 @@ export function AdminMobileMenu({ user }: AdminMobileMenuProps) {
                                     </nav>
 
                                     <div className="mt-auto border-t border-slate-800 pt-8">
-                                        <p className="text-xs text-slate-500 mb-4 px-4">管理者としてログイン中</p>
+                                        <p className="text-xs text-slate-500 mb-4 px-4">{username || '管理者'} としてログイン中</p>
                                         <form action={logout} className="px-4">
                                             <Button variant="outline" className="w-full text-red-400 hover:bg-red-950/30 hover:text-red-300 border-slate-700 hover:border-red-900 bg-transparent justify-start gap-3">
                                                 <LogOut className="w-4 h-4" />

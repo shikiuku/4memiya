@@ -5,7 +5,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Bell, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Bell, ChevronLeft, ChevronRight, MessageSquareQuote, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types/index';
 import { Badge } from '@/components/ui/badge';
@@ -13,12 +13,28 @@ import { subscribeToPush } from '@/actions/notification';
 
 interface HeroCarouselProps {
     latestProducts: Product[];
+    reviewStats?: {
+        count: number;
+        average: number;
+    };
 }
 
-export function HeroCarousel({ latestProducts }: HeroCarouselProps) {
+export function HeroCarousel({ latestProducts, reviewStats }: HeroCarouselProps) {
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
         Autoplay({ delay: 5000, stopOnInteraction: false })
     ]);
+    const [isSubscribed, setIsSubscribed] = React.useState(false);
+
+    // Check subscription status on mount
+    React.useEffect(() => {
+        if ('serviceWorker' in navigator && 'PushManager' in window && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.ready.then(reg => {
+                reg.pushManager.getSubscription().then(sub => {
+                    if (sub) setIsSubscribed(true);
+                });
+            });
+        }
+    }, []);
 
     const scrollPrev = useCallback(() => {
         if (emblaApi) emblaApi.scrollPrev();
@@ -29,20 +45,40 @@ export function HeroCarousel({ latestProducts }: HeroCarouselProps) {
     }, [emblaApi]);
 
     const handleEnableNotifications = async () => {
-        if (!('serviceWorker' in navigator)) return;
+        if (!('serviceWorker' in navigator)) {
+            alert('お使いのブラウザはプッシュ通知に対応していません。');
+            return;
+        }
 
         try {
-            const registration = await navigator.serviceWorker.ready;
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            const permission = await Notification.requestPermission();
+
+            if (permission !== 'granted') {
+                alert('通知権限が許可されませんでした。ブラウザの設定を確認してください。');
+                return;
+            }
+
             const subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
             });
 
             await subscribeToPush(JSON.parse(JSON.stringify(subscription)));
+            setIsSubscribed(true);
             alert('通知設定をオンにしました！');
         } catch (error) {
             console.error('Error enabling notifications:', error);
-            alert('通知設定の有効化に失敗しました。ブラウザの設定を確認してください。');
+            alert('通知設定の有効化に失敗しました。');
+        }
+    };
+
+    const scrollToProducts = () => {
+        const productSection = document.getElementById('product-list');
+        if (productSection) {
+            productSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            window.scrollBy({ top: 500, behavior: 'smooth' });
         }
     };
 
@@ -50,22 +86,100 @@ export function HeroCarousel({ latestProducts }: HeroCarouselProps) {
         <div className="relative group px-12 md:px-16">
             <div className="overflow-hidden rounded-xl bg-slate-100 shadow-sm border border-slate-200" ref={emblaRef}>
                 <div className="flex h-full">
+                    {/* Slide 0: New Site Announcement */}
+                    <div className="flex-[0_0_100%] min-w-0 relative">
+                        <div className="relative h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full group/slide">
+                            {/* Background Image */}
+                            <Image
+                                src="/images/banner-bg.jpg"
+                                alt="在庫一覧サイト公開"
+                                fill
+                                className="object-cover"
+                                priority
+                            />
+                            {/* Overlay */}
+                            <div className="absolute inset-0 bg-black/50" />
+
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-6 text-center">
+                                <div className="mb-2 sm:mb-4 bg-white/20 p-1 sm:p-1.5 rounded-full backdrop-blur-sm animate-bounce">
+                                    <div className="relative w-12 h-12 sm:w-16 sm:h-16">
+                                        <Image
+                                            src="/images/banner-icon.png"
+                                            alt="New Icon"
+                                            fill
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                </div>
+                                <h2 className="text-base sm:text-2xl md:text-3xl font-bold mb-2">モンストの買取・販売・代行ならお任せ</h2>
+                                <p className="text-white text-xs sm:text-base mb-4 max-w-md font-medium">
+                                    取引実績6000件以上！アカウント査定・相談は無料。<br className="hidden sm:block" />
+                                    モンスト専門の安心・安全な取引を提供します。
+                                </p>
+                                <Button
+                                    onClick={scrollToProducts}
+                                    className="bg-white text-indigo-900 hover:bg-slate-100 font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-lg"
+                                >
+                                    今すぐ在庫をチェック
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Slide 1: Notification Promo */}
                     <div className="flex-[0_0_100%] min-w-0 relative">
-                        <div className="bg-gradient-to-r from-blue-600 to-blue-800 h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full flex flex-col items-center justify-center text-white p-6 text-center">
-                            <div className="mb-2 sm:mb-4 bg-white/20 p-3 sm:p-4 rounded-full backdrop-blur-sm">
-                                <Bell className="w-6 h-6 sm:w-12 sm:h-12 text-yellow-300 fill-yellow-300 animate-pulse" />
+                        <div className="bg-yellow-50 h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full flex flex-col items-center justify-center text-yellow-900 p-6 text-center">
+                            <div className="mb-2 sm:mb-4 bg-white/50 p-3 sm:p-4 rounded-full backdrop-blur-sm shadow-sm">
+                                <Bell className="w-6 h-6 sm:w-12 sm:h-12 text-yellow-600 animate-pulse" />
                             </div>
                             <h2 className="text-base sm:text-2xl md:text-3xl font-bold mb-2">新着情報をいち早くGET！</h2>
-                            <p className="text-blue-100 text-xs sm:text-base mb-4 max-w-md">
+                            <p className="text-yellow-800 text-xs sm:text-base mb-4 max-w-md font-medium">
                                 ブラウザ通知をオンにすると、新しい在庫やキャンペーン情報がすぐに届きます。
                             </p>
                             <Button
                                 onClick={handleEnableNotifications}
-                                className="bg-white text-blue-700 hover:bg-blue-50 font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-lg"
+                                disabled={isSubscribed}
+                                className={`font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-md ${isSubscribed ? 'bg-green-600 text-white' : 'bg-[#007bff] hover:bg-blue-600 text-white'}`}
                             >
-                                通知を受け取る
+                                {isSubscribed ? '通知設定済み' : '通知を受け取る'}
                             </Button>
+                        </div>
+                    </div>
+
+                    {/* Slide 2: Reviews Promo */}
+                    <div className="flex-[0_0_100%] min-w-0 relative">
+                        <div className="bg-[#555555] h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full flex flex-col items-center justify-center text-white p-6 text-center border-l-4 border-transparent">
+                            <div className="mb-2 sm:mb-4 bg-white/10 p-3 sm:p-4 rounded-full backdrop-blur-sm">
+                                <MessageSquareQuote className="w-8 h-8 sm:w-12 sm:h-12 text-white" />
+                            </div>
+                            <div className="flex items-end gap-2 mb-2 justify-center">
+                                <h2 className="text-base sm:text-2xl md:text-3xl font-bold text-white">みんなのレビュー</h2>
+                                <span className="text-xl sm:text-3xl font-bold text-yellow-400">{reviewStats?.average || 0}</span>
+                                <span className="text-xs sm:text-base text-slate-300 mb-1">({reviewStats?.count || 0}件)</span>
+                            </div>
+                            <p className="text-slate-300 text-xs sm:text-base mb-4 max-w-md font-medium">
+                                {(reviewStats?.count || 0) > 0
+                                    ? '実際に購入されたお客様の声を公開中！'
+                                    : 'まだレビューがありません。最初のレビューを書きましょう！'
+                                }
+                            </p>
+                            <div className="flex gap-4">
+                                <Link href="/reviews">
+                                    <Button
+                                        className="bg-white text-slate-900 hover:bg-slate-100 font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-lg"
+                                    >
+                                        レビューを見る
+                                    </Button>
+                                </Link>
+                                <Link href="/reviews">
+                                    <Button
+                                        variant="outline"
+                                        className="bg-transparent text-white border-white hover:bg-white/10 font-bold rounded-full text-xs sm:text-base px-6 sm:px-8"
+                                    >
+                                        投稿する
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
 

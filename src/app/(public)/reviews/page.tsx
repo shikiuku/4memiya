@@ -4,6 +4,7 @@ import { ReviewCard } from '@/components/features/reviews/review-card';
 import { ReviewSubmissionDialog } from '@/components/features/reviews/review-submission-dialog';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { MessageSquareQuote } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -21,8 +22,8 @@ export default async function ReviewsPage() {
             {/* Header Section */}
             <div className="flex items-center justify-between bg-[#555] text-white p-3 rounded-sm shadow-sm">
                 <div className="flex items-center gap-3">
-                    <div className="bg-white rounded-full p-1 w-8 h-8 flex items-center justify-center">
-                        <span className="text-[#555] text-sm font-bold">●</span>
+                    <div className="bg-white rounded-full p-1.5 w-8 h-8 flex items-center justify-center">
+                        <MessageSquareQuote className="w-5 h-5 text-[#8B5E3C]" />
                     </div>
                     <div>
                         <h1 className="text-lg font-bold leading-none">みんなのレビュー</h1>

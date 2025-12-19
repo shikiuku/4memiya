@@ -5,7 +5,24 @@ import { Button } from '@/components/ui/button';
 import { logout } from '@/actions/auth';
 import { AdminMobileMenu } from './admin-mobile-menu';
 
-export function AdminHeader() {
+import { createClient } from '@/lib/supabase/server';
+
+export async function AdminHeader() {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    let username = '管理者';
+    if (user) {
+        // @ts-ignore
+        const { data: appUserData } = await supabase
+            .from('app_users')
+            .select('username')
+            .eq('id', user.id)
+            .single();
+        const appUser = appUserData as any;
+        username = appUser?.username || user.email?.split('@')[0] || '管理者';
+    }
+
     return (
         <header className="sticky top-0 z-50 w-full bg-slate-900 text-white shadow-md">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -58,7 +75,9 @@ export function AdminHeader() {
                             </Button>
                         </Link>
 
-                        <span className="text-xs text-slate-400 hidden xl:inline-block whitespace-nowrap">管理者としてログイン中</span>
+                        <span className="text-xs text-slate-400 hidden xl:inline-block whitespace-nowrap">
+                            {username} としてログイン中
+                        </span>
                         <form action={logout}>
                             <Button variant="ghost" size="sm" className="text-white hover:bg-slate-800 hover:text-red-300 whitespace-nowrap">
                                 <LogOut className="w-4 h-4 mr-2" />
@@ -68,7 +87,7 @@ export function AdminHeader() {
                     </div>
 
                     {/* Mobile Menu */}
-                    <AdminMobileMenu />
+                    <AdminMobileMenu user={user} username={username} />
                 </div>
             </div>
         </header>

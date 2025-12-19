@@ -104,6 +104,26 @@ export async function getReviews(limit: number = 20): Promise<Review[]> {
     return data as any as Review[];
 }
 
+export async function getReviewStats(): Promise<{ count: number; average: number }> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from('reviews')
+        .select('star')
+        .eq('is_published', true);
+
+    if (error || !data || data.length === 0) {
+        return { count: 0, average: 0 };
+    }
+
+    const reviews = data as any[];
+    const count = reviews.length;
+    const total = reviews.reduce((acc, curr) => acc + (curr.star || 0), 0);
+    const average = parseFloat((total / count).toFixed(1));
+
+    return { count, average };
+}
+
 export async function createReview(data: ReviewInput) {
     const supabase = await createClient();
 
