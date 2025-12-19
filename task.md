@@ -43,12 +43,9 @@
     - [x] Database Schema (`reviews` table: star, comment, date, manual_stock_no, manual_price)
     - [x] Admin: Manage Reviews (Create/Edit/Delete) - Allow manual entry of Stock No/Price
     - [x] Public: Review List Page (`/reviews`)
-- [x] Customer Review System
-    - [x] Database Schema (`reviews` table: star, comment, date, manual_stock_no, manual_price)
-    - [x] Admin: Manage Reviews (Create/Edit/Delete) - Allow manual entry of Stock No/Price
-    - [x] Public: Review List Page (`/reviews`)
     - [x] UI: Star Rating Component (with "Very Good" badge for 4+ stars)
     - [x] UI Refinement (Simplified List View & Header Position)
+    - [x] Admin Review Management (One-click actions, silent refresh, single-column layout)
 
 ---
 
