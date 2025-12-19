@@ -36,6 +36,9 @@ export async function Header() {
                     <Link href="/assessment" className="hover:text-primary transition-colors whitespace-nowrap">
                         買取査定
                     </Link>
+                    <Link href="/reviews" className="hover:text-primary transition-colors whitespace-nowrap">
+                        レビュー
+                    </Link>
                     <Link href="/contact" className="hover:text-primary transition-colors whitespace-nowrap">
                         お問い合わせ
                     </Link>

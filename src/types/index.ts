@@ -38,6 +38,25 @@ export type Tag = {
   created_at: string;
 };
 
+export type Review = {
+  id: number;
+  star: number;
+  comment: string | null;
+  game_title: string | null;
+  manual_stock_no: string | null;
+  manual_price: number | null;
+  review_date: string | null;
+  /**
+   * Published status. If false, it's a pending user submission or draft.
+   */
+  is_published: boolean;
+  user_id: string | null;
+  user?: {
+    username: string;
+  } | null;
+  created_at: string;
+};
+
 export type AssessmentRule = {
   id: string;
   rule_type: 'range' | 'boolean';
@@ -75,6 +94,11 @@ export type Database = {
         Row: AppConfig;
         Insert: Omit<AppConfig, 'updated_at'>;
         Update: Partial<Omit<AppConfig, 'updated_at'>>;
+      };
+      reviews: {
+        Row: Review;
+        Insert: Omit<Review, 'id' | 'created_at'>;
+        Update: Partial<Omit<Review, 'id' | 'created_at'>>;
       };
     };
     Views: {

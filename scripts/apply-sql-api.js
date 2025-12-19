@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 
 const PROJECT_REF = 'vmpjaoylbulirsjxhklw'; // From previous context
-const ACCESS_TOKEN = 'sbp_f47db80c5fe8fc4745f0bf18ac97d74914521b12'; // Provided by user
+const ACCESS_TOKEN = 'sbp_0c073b707128ac056ca76664453c459c53ec03b4'; // Provided by user
 
-const MIGRATION_FILE = path.join(__dirname, '../supabase/migrations/20250101000030_fix_app_config_rls.sql');
+const MIGRATION_FILE = path.join(__dirname, '../supabase/migrations/20250101000130_add_dummy_reviews.sql');
 
 async function run() {
     if (!fs.existsSync(MIGRATION_FILE)) {

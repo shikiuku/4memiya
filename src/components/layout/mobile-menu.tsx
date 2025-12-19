@@ -36,6 +36,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
     const navItems = [
         { href: '/', label: '在庫一覧', icon: Package },
         { href: '/assessment', label: '買取査定', icon: FileText },
+        { href: '/reviews', label: 'レビュー', icon: MessageSquare },
         { href: '/contact', label: 'お問い合わせ', icon: MessageSquare },
         { href: '/terms', label: '利用規約', icon: FileText },
     ];

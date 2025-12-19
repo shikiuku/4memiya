@@ -30,6 +30,10 @@ export function AdminHeader() {
                         <FileText className="w-4 h-4" />
                         買取査定
                     </Link>
+                    <Link href="/dev/reviews" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
+                        <MessageSquare className="w-4 h-4" />
+                        レビュー
+                    </Link>
                     <Link href="/dev/inquiries" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
                         <MessageSquare className="w-4 h-4" />
                         お問い合わせ
