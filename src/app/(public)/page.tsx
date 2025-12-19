@@ -1,9 +1,7 @@
-import { getProducts, getAllUniqueTags } from '@/actions/product';
+import { getProducts } from '@/actions/product';
 import { ProductListContainer } from '@/components/features/product-list-container';
 import { ProductSearch } from '@/components/features/search/product-search';
-
-// Force dynamic rendering since we are fetching data based on search
-export const dynamic = 'force-dynamic';
+import { HeroCarousel } from '@/components/features/top/hero-carousel';
 
 export default async function Home({
   searchParams,
@@ -12,20 +10,33 @@ export default async function Home({
 }) {
   const params = await searchParams;
   const query = typeof params.q === 'string' ? params.q : undefined;
-  // tag support remains in logic but UI is gone
   const tag = typeof params.tag === 'string' ? params.tag : undefined;
 
+  // Fetch data for list
   const products = await getProducts({
     query: query,
     tags: tag ? [tag] : undefined
   });
 
+  // Fetch data for carousel (Latest 3)
+  const latestProducts = await getProducts({ limit: 3 });
+
   return (
-    <div className="container mx-auto px-4 pt-2 pb-20 max-w-5xl">
+    <div className="container mx-auto px-4 pt-4 pb-20 max-w-5xl space-y-8">
+
+      {/* Hero Carousel (Only show on top page proper, maybe hide if searching? optional) */}
+      {!query && !tag && (
+        <section>
+          <HeroCarousel latestProducts={latestProducts} />
+        </section>
+      )}
+
       {/* Page Title & Search (Header area) */}
-      <div className="flex flex-row flex-wrap items-start justify-between gap-4 mb-8">
-        <h1 className="text-xl font-bold text-slate-800 shrink-0 mt-2">在庫一覧</h1>
-        <ProductSearch />
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <h1 className="text-xl font-bold text-slate-800 self-start sm:self-auto">在庫一覧</h1>
+        <div className="w-full sm:w-auto">
+          <ProductSearch />
+        </div>
       </div>
 
       <ProductListContainer products={products} />

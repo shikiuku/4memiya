@@ -17,41 +17,52 @@
 
 ```text
 .
-├── public/                  # 静的画像ファイル (logo, favicon)
+├── public/                  # 静的画像ファイル (logo, favicon), sw.js (Service Worker)
 ├── src/
-│   ├── app/                 # ページルーティング (App Router)
-│   │   ├── layout.tsx       # 全体レイアウト
-│   │   ├── globals.css      # 全体スタイル定義
-│   │   ├── page.tsx         # トップページ
-│   │   ├── products/        # 商品関連
-│   │   │   ├── page.tsx     # 一覧 (検索・フィルタ)
-│   │   │   └── [id]/page.tsx# 詳細 (要認証/PW)
-│   │   ├── assessment/      # 買取査定
-│   │   │   └── page.tsx
-│   │   ├── admin/           # 管理者画面
-│   │   │   ├── layout.tsx   # 管理画面専用レイアウト
-│   │   │   ├── dashboard/   # ダッシュボード
-│   │   │   ├── inventory/   # 在庫管理(CRUD)
-│   │   │   └── config/      # サイト設定(PW変更等)
-│   │   └── auth/            # 認証関連 (Login, Signup)
-│   ├── components/          # UIコンポーネント
-│   │   ├── ui/              # ボタン、入力欄などの最小単位パーツ (shadcn/ui like)
-│   │   ├── features/        # 機能単位のパーツ (ProductCard, AssessmentForm)
-│   │   └── layout/          # Header, Footer, BottomNav
-│   ├── lib/                 # ライブラリ設定
-│   │   ├── supabase/        # Supabase Client (Client/Server)
-│   │   └── utils.ts         # classNames結合などのユーティリティ
-│   ├── actions/             # Server Actions (DB操作などのバックエンドロジック)
-│   │   ├── product.ts       # 商品のCRUD処理
-│   │   ├── assessment.ts    # 査定計算ロジック
-│   │   └── auth.ts          # ログイン・登録処理
-│   ├── types/               # 型定義
-│   │   └── index.ts         # Database型など
-│   └── constants/           # 定数管理
-│       └── config.ts        # サイト設定、査定の基準値など
+│   ├── actions/             # Server Actions (Backend Logic)
+│   │   ├── admin/           # 管理者用アクション (account, assessment, product, settings, tags, upload)
+│   │   ├── account.ts       # ユーザーアカウント設定
+│   │   ├── auth.ts          # 認証 (Login, Logout, Register)
+│   │   ├── notification.ts  # プッシュ通知・通知センター
+│   │   └── product.ts       # 公開側商品データ取得
+│   ├── app/                 # App Router
+│   │   ├── (public)/        # 公開ページ (Route Group)
+│   │   │   ├── account/     # ユーザー設定
+│   │   │   ├── assessment/  # 買取査定
+│   │   │   ├── campaign/    # キャンペーン詳細
+│   │   │   ├── contact/     # お問い合わせ
+│   │   │   ├── login/       # ログイン
+│   │   │   ├── products/    # 商品一覧・詳細
+│   │   │   ├── register/    # 新規登録
+│   │   │   └── terms/       # 利用規約
+│   │   ├── dev/             # 管理者画面 (Protected Routes)
+│   │   │   ├── account/     # 管理者アカウント設定
+│   │   │   ├── assessment/  # 査定ルール管理
+│   │   │   ├── config/      # サイト設定 (キャンペーン等)
+│   │   │   ├── inquiries/   # お問い合わせ管理
+│   │   │   ├── products/    # 在庫管理 (CRUD)
+│   │   │   └── terms/       # 規約編集
+│   │   ├── layout.tsx       # Root Layout (NotificationBanner含む)
+│   │   └── globals.css      # 全体スタイル
+│   ├── components/          # UI Components
+│   │   ├── features/        # 機能単位コンポーネント
+│   │   │   ├── account/     # アカウントフォーム
+│   │   │   ├── admin/       # 管理画面用パーツ
+│   │   │   ├── assessment/  # 査定フォーム
+│   │   │   ├── notifications/# 通知センター, バナー
+│   │   │   ├── products/    # 商品カード, 検索, 画像ギャラリー
+│   │   │   └── search/      # 検索関連
+│   │   ├── layout/          # Header, Footer, MobileMenu
+│   │   └── ui/              # 共通UIパーツ (Button, Input, etc.)
+│   ├── lib/                 # Libraries
+│   │   ├── supabase/        # Supabase Client
+│   │   └── utils.ts         # Utility functions
+│   ├── types/               # TypeScript Definitions
+│   └── constants/           # Constants
 ├── project.md               # 本仕様書
+├── task.md                  # タスク管理 (TO-DOリスト)
 └── next.config.js
-4. ページ詳細・デザイン仕様 (/dev details)
+```4. ページ詳細・デザイン仕様 (/dev details)
 src/app/globals.css
 Theme: 背景は白(#ffffff)または極めて薄いグレー(#f5f7fa)。アクセントカラーは鮮やかなブルー(#007bff)。
 
