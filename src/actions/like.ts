@@ -67,7 +67,7 @@ export async function toggleLike(productId: string) {
 
     if (isLiked) {
         // Unlike: Delete found like(s)
-        const ids = existingLikes?.map((l: { id: string }) => l.id) || [];
+        const ids = (existingLikes as any[])?.map(l => l.id) || [];
         const { error } = await supabase
             .from('likes')
             .delete()
@@ -167,17 +167,12 @@ export async function getLikedProducts() {
         query = query.eq('guest_id', guestId);
     }
 
-    // If userId exists (logged in), we usually only care about user likes unless we want to merge.
-    // User requested "My Page should show liked products".
-    // If I liked as guest, then logged in, I expect to see them? 
-    // Yes, the query.or handles this.
-
     const { data: likes } = await query.order('created_at', { ascending: false });
 
     if (!likes || likes.length === 0) return [];
 
-    // Deduplicate product IDs
-    const productIds = Array.from(new Set(likes.map(l => l.product_id)));
+    // Deduplicate product IDs. Explicitly cast likes to allow access to product_id if inference fails.
+    const productIds = Array.from(new Set((likes as any[]).map(l => l.product_id)));
 
     // Fetch products
     const { data: products, error } = await supabase
@@ -191,10 +186,12 @@ export async function getLikedProducts() {
     }
 
     // Sort by like order (recent first)
-    const productsMap = new Map(products.map(p => [p.id, p]));
-    const result = productIds.map(id => productsMap.get(id)).filter(Boolean);
+    const productsMap = new Map((products as any[]).map(p => [p.id, p]));
 
-    return result.map(item => ({
+    // Map and filter, ensuring we return valid objects
+    const result = productIds.map(id => productsMap.get(id)).filter(item => item !== undefined);
+
+    return (result as any[]).map(item => ({
         ...item,
         status: item.status as 'draft' | 'on_sale' | 'sold_out',
     }));
