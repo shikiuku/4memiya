@@ -296,7 +296,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
 
                     {/* DM Consultation (Primary Prominence) */}
                     <a
-                        href="https://twitter.com/direct_messages/create/AJAJDNW"
+                        href="https://x.com/direct_messages/create/AJAJDNW"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block w-full pt-2"
