@@ -58,8 +58,8 @@ export async function Header() {
                         利用規約
                     </Link>
                     {user && (
-                        <Link href="/account" className="hover:text-primary transition-colors whitespace-nowrap">
-                            設定
+                        <Link href="/mypage" className="hover:text-primary transition-colors whitespace-nowrap">
+                            マイページ
                         </Link>
                     )}
                 </nav>

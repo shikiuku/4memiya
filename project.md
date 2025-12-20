@@ -212,6 +212,15 @@ key (Text, PK):
 
 value (Text): 設定値の実体
 
+likes Table
+ゲストユーザー対応のため、guest_id (cookie) と user_id (auth) の両方を保持可能にする。
+
+id (UUID, PK)
+user_id (UUID, Nullable): ログインユーザーID
+guest_id (UUID, Nullable): ゲストユーザーID (Cookie)
+product_id (UUID, FK): 商品ID
+created_at (Timestamptz)
+
 6. ユーザーフロー (Logic Flow)
 コード スニペット
 

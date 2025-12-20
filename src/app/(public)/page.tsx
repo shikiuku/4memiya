@@ -14,11 +14,13 @@ export default async function Home({
   const params = await searchParams;
   const query = typeof params.q === 'string' ? params.q : undefined;
   const tag = typeof params.tag === 'string' ? params.tag : undefined;
+  const sort = typeof params.sort === 'string' ? params.sort : undefined;
 
   // Fetch data for list
   const products = await getProducts({
     query: query,
-    tags: tag ? [tag] : undefined
+    tags: tag ? [tag] : undefined,
+    sort: sort
   });
 
   // Fetch data for carousel (Latest 3)

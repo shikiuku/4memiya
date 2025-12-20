@@ -67,6 +67,14 @@ export type AssessmentRule = {
   created_at: string;
 };
 
+export type Like = {
+  id: string;
+  user_id: string | null;
+  guest_id: string | null;
+  product_id: string;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -99,6 +107,11 @@ export type Database = {
         Row: Review;
         Insert: Omit<Review, 'id' | 'created_at'>;
         Update: Partial<Omit<Review, 'id' | 'created_at'>>;
+      };
+      likes: {
+        Row: Like;
+        Insert: Omit<Like, 'id' | 'created_at'>;
+        Update: Partial<Omit<Like, 'id' | 'created_at'>>;
       };
     };
     Views: {

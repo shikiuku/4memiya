@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Heart } from 'lucide-react';
 import { getProductById } from '@/actions/product';
+import { checkIsLiked, getLikeCount } from '@/actions/like';
 import { ProductHeader } from '@/components/features/products/product-header';
 import { StickyFooter } from '@/components/features/products/sticky-footer';
 import { ImageGallery } from '@/components/features/products/image-gallery';
@@ -12,6 +13,8 @@ import { FAQAccordion } from '@/components/features/products/faq-accordion';
 import { ReadMoreSection } from '@/components/features/products/read-more-section';
 import { Button } from '@/components/ui/button';
 
+import { LikeButton } from '@/components/features/products/like-button';
+
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const product = await getProductById(id);
@@ -19,6 +22,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     if (!product) {
         notFound();
     }
+
+    // SSR Like Data
+    const [isLiked, likeCount] = await Promise.all([
+        checkIsLiked(product.id),
+        getLikeCount(product.id)
+    ]);
 
     // Map DB fields to specs array
     const specs = [
@@ -58,7 +67,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                 <span className="text-3xl font-bold text-[#e60012]">¥{product.price.toLocaleString()}</span>
                                 <span className="text-sm text-slate-600 mb-1">円(税込)</span>
                             </div>
-
+                            <LikeButton
+                                productId={product.id}
+                                initialIsLiked={isLiked}
+                                initialLikeCount={likeCount}
+                            />
                         </div>
 
                         {/* Large CTA Button (Screenshot Style) */}

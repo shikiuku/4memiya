@@ -15,13 +15,32 @@ export async function getProducts(options?: {
     limit?: number;
     query?: string;
     tags?: string[];
+    sort?: string;
 }): Promise<Product[]> {
     const supabase = await createClient();
 
     let query = supabase
         .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*');
+
+    // Sorting
+    switch (options?.sort) {
+        case 'price_desc':
+            query = query.order('price', { ascending: false });
+            break;
+        case 'price_asc':
+            query = query.order('price', { ascending: true });
+            break;
+        case 'likes':
+            // TODO: Implement likes sorting when "likes" feature is available
+            // For now, fallback to default (Newest)
+            query = query.order('created_at', { ascending: false });
+            break;
+        case 'latest':
+        default:
+            query = query.order('created_at', { ascending: false });
+            break;
+    }
 
     // Filter by Keyword (Title)
     // Filter by Keyword (Title or Tags)
