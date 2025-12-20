@@ -3,7 +3,12 @@ import Image from 'next/image';
 
 export function SellerInfo() {
     return (
-        <div className="flex items-center gap-4 py-2">
+        <a
+            href="https://x.com/AJAJDNW"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-4 py-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
+        >
             <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200">
                 <Image src="/logo.png" alt="Seller Icon" fill className="object-cover" />
             </div>
@@ -14,6 +19,6 @@ export function SellerInfo() {
                 </div>
                 <div className="text-xs text-slate-500">@AJAJDNW</div>
             </div>
-        </div>
+        </a>
     );
 }

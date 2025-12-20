@@ -320,9 +320,9 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                             </div>
                         </div>
 
-                        <Button className="w-full bg-[#007bff] hover:bg-[#0069d9] text-white font-bold rounded-full h-14 text-lg shadow-md animate-pulse">
+                        <div className="w-full bg-[#007bff] hover:bg-[#0069d9] text-white font-bold rounded-full h-14 text-lg shadow-md animate-pulse flex items-center justify-center">
                             アカウント売却の相談 (DM)
-                        </Button>
+                        </div>
                     </a>
                 </div>
             </div>
