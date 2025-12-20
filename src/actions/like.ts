@@ -62,12 +62,12 @@ export async function toggleLike(productId: string) {
     // Filter by product
     query = query.eq('product_id', productId);
 
-    const { data: existingLikes } = await query;
+    const { data: existingLikes } = await query.select('id');
     const isLiked = existingLikes && existingLikes.length > 0;
 
     if (isLiked) {
         // Unlike: Delete found like(s)
-        const ids = existingLikes.map(l => l.id);
+        const ids = existingLikes?.map((l: { id: string }) => l.id) || [];
         const { error } = await supabase
             .from('likes')
             .delete()

@@ -4,7 +4,7 @@ const path = require('path');
 const PROJECT_REF = 'vmpjaoylbulirsjxhklw'; // From previous context
 const ACCESS_TOKEN = 'sbp_f92cc8adbcd38475a087dba1d8c7cdd9f038af55'; // Provided by user
 
-const MIGRATION_FILE = path.join(__dirname, '../supabase/migrations/20250101000150_guest_likes.sql');
+const MIGRATION_FILE = path.join(__dirname, '../supabase/migrations/20250101000200_add_likes_count.sql');
 
 async function run() {
     if (!fs.existsSync(MIGRATION_FILE)) {

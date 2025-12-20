@@ -32,9 +32,7 @@ export async function getProducts(options?: {
             query = query.order('price', { ascending: true });
             break;
         case 'likes':
-            // TODO: Implement likes sorting when "likes" feature is available
-            // For now, fallback to default (Newest)
-            query = query.order('created_at', { ascending: false });
+            query = query.order('likes_count', { ascending: false });
             break;
         case 'latest':
         default:

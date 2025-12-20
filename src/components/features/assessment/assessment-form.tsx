@@ -6,9 +6,10 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ShieldCheck, Check } from 'lucide-react';
+import { ShieldCheck, Check, BadgeCheck } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { AssessmentRule } from '@/types';
 
@@ -277,7 +278,8 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                     </Link>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
+                    {/* Share Button (Less Prominent) */}
                     <Button
                         type="button"
                         onClick={handleShare}
@@ -286,13 +288,39 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                         Xで査定結果をシェア
                     </Button>
 
+                    <div className="relative py-2">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t border-slate-200" />
+                        </div>
+                    </div>
+
+                    {/* DM Consultation (Primary Prominence) */}
                     <a
                         href="https://twitter.com/direct_messages/create/AJAJDNW"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block w-full"
+                        className="block w-full pt-2"
                     >
-                        <Button variant="outline" type="button" className="w-full font-bold rounded-full border-slate-300 h-10">
+                        {/* User Profile for Trust */}
+                        <div className="flex items-center justify-center gap-3 mb-3">
+                            <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200">
+                                <Image
+                                    src="/amamiya_icon.png"
+                                    alt="雨宮"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                            <div className="text-left">
+                                <div className="flex items-center gap-1">
+                                    <span className="text-sm font-bold text-slate-900 leading-tight">雨宮 【モンスト垢 買取/販売/代行】</span>
+                                    <BadgeCheck className="w-4 h-4 text-[#007bff] fill-[#007bff] text-white" />
+                                </div>
+                                <div className="text-xs text-slate-500 font-medium">@AJAJDNW</div>
+                            </div>
+                        </div>
+
+                        <Button className="w-full bg-[#007bff] hover:bg-[#0069d9] text-white font-bold rounded-full h-14 text-lg shadow-md animate-pulse">
                             アカウント売却の相談 (DM)
                         </Button>
                     </a>
