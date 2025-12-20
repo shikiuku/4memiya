@@ -129,8 +129,8 @@ export function HeroCarousel({ latestProducts, reviewStats }: HeroCarouselProps)
                     {/* Slide 1: Notification Promo */}
                     <div className="flex-[0_0_100%] min-w-0 relative">
                         <div className="bg-yellow-50 h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full flex flex-col items-center justify-center text-yellow-900 p-6 text-center">
-                            <div className="mb-2 sm:mb-4 bg-white/50 p-3 sm:p-4 rounded-full backdrop-blur-sm shadow-sm">
-                                <Bell className="w-6 h-6 sm:w-12 sm:h-12 text-yellow-600 animate-pulse" />
+                            <div className="mb-2 sm:mb-4 bg-white/50 p-3 sm:p-4 rounded-full backdrop-blur-sm shadow-sm animate-bounce">
+                                <Bell className="w-6 h-6 sm:w-12 sm:h-12 text-yellow-600" />
                             </div>
                             <h2 className="text-base sm:text-2xl md:text-3xl font-bold mb-2">新着情報をいち早くGET！</h2>
                             <p className="text-yellow-800 text-xs sm:text-base mb-4 max-w-md font-medium">
@@ -149,7 +149,7 @@ export function HeroCarousel({ latestProducts, reviewStats }: HeroCarouselProps)
                     {/* Slide 2: Reviews Promo */}
                     <div className="flex-[0_0_100%] min-w-0 relative">
                         <div className="bg-[#555555] h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full flex flex-col items-center justify-center text-white p-6 text-center border-l-4 border-transparent">
-                            <div className="mb-2 sm:mb-4 bg-white/10 p-3 sm:p-4 rounded-full backdrop-blur-sm">
+                            <div className="mb-2 sm:mb-4 bg-white/10 p-3 sm:p-4 rounded-full backdrop-blur-sm animate-bounce">
                                 <MessageSquareQuote className="w-8 h-8 sm:w-12 sm:h-12 text-white" />
                             </div>
                             <div className="flex items-end gap-2 mb-2 justify-center">

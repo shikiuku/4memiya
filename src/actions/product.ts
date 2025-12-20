@@ -26,9 +26,17 @@ export async function getProducts(options?: {
     // Filter by Keyword (Title)
     // Filter by Keyword (Title or Tags)
     if (options?.query) {
-        // Search in title AND tags (casting arrays to text for simple search)
-        // Syntax: column.operator.value,column.operator.value
-        query = query.or(`title.ilike.%${options.query}%,tags.ilike.%${options.query}%`);
+        // Search in title AND seq_id if numeric
+        // Note: ilike on array column (tags) caused crash, avoiding that.
+        const isNumeric = /^\d+$/.test(options.query);
+
+        if (isNumeric) {
+            // Search Title OR Description OR SeqID
+            query = query.or(`title.ilike.%${options.query}%,description_points.ilike.%${options.query}%,seq_id.eq.${options.query}`);
+        } else {
+            // Search Title OR Description
+            query = query.or(`title.ilike.%${options.query}%,description_points.ilike.%${options.query}%`);
+        }
     }
 
     // Filter by Tags (Array contains)

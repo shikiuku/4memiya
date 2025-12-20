@@ -3,8 +3,9 @@
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useTransition } from 'react';
+import React, { useTransition } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+import { Button } from '@/components/ui/button';
 
 interface Props { }
 
@@ -12,8 +13,9 @@ export function ProductSearch({ }: Props) {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const [isPending, startTransition] = useTransition();
+    const [term, setTerm] = React.useState(searchParams.get('q')?.toString() || '');
 
-    const handleSearch = useDebouncedCallback((term: string) => {
+    const handleSearch = () => {
         const params = new URLSearchParams(searchParams);
         if (term) {
             params.set('q', term);
@@ -23,26 +25,35 @@ export function ProductSearch({ }: Props) {
         params.delete('page'); // Reset page
 
         startTransition(() => {
-            replace(`/?${params.toString()}`);
+            replace(`/?${params.toString()}`, { scroll: false });
         });
-    }, 300);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
 
     return (
-        <div className="flex flex-col gap-3 items-end">
+        <div className="flex flex-row gap-2 items-center">
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
-                    placeholder="キーワードで検索"
-                    className="pl-10 w-[280px] md:w-[300px]"
-                    onChange={(e) => handleSearch(e.target.value)}
-                    defaultValue={searchParams.get('q')?.toString()}
+                    placeholder="キーワードやIDNo.で検索"
+                    className="pl-10 w-[200px] md:w-[300px]"
+                    value={term}
+                    onChange={(e) => setTerm(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
-                {isPending && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        <div className="w-4 h-4 border-2 border-slate-300 border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                )}
             </div>
+            <Button
+                onClick={handleSearch}
+                disabled={isPending}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
+            >
+                {isPending ? '検索中...' : '検索'}
+            </Button>
         </div>
     );
 }

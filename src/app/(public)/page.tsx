@@ -28,12 +28,10 @@ export default async function Home({
   return (
     <div className="container mx-auto px-4 pt-4 pb-20 max-w-5xl space-y-8">
 
-      {/* Hero Carousel (Only show on top page proper, maybe hide if searching? optional) */}
-      {!query && !tag && (
-        <section>
-          <HeroCarousel latestProducts={latestProducts} reviewStats={reviewStats} />
-        </section>
-      )}
+      {/* Hero Carousel - Always show */}
+      <section>
+        <HeroCarousel latestProducts={latestProducts} reviewStats={reviewStats} />
+      </section>
 
       {/* Page Title & Search (Header area) */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
