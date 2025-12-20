@@ -17,9 +17,10 @@ interface HeroCarouselProps {
         count: number;
         average: number;
     };
+    isLoggedIn?: boolean;
 }
 
-export function HeroCarousel({ latestProducts, reviewStats }: HeroCarouselProps) {
+export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }: HeroCarouselProps) {
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
         Autoplay({ delay: 5000, stopOnInteraction: false })
     ]);
@@ -274,7 +275,10 @@ export function HeroCarousel({ latestProducts, reviewStats }: HeroCarouselProps)
                         orderedSlides.push(assessmentSlide);
                         orderedSlides.push(reviewsSlide);
                         orderedSlides.push(...productSlides);
-                        orderedSlides.push(registrationSlide);
+                        // Hide registration slide if logged in
+                        if (!isLoggedIn) {
+                            orderedSlides.push(registrationSlide);
+                        }
                         if (isSubscribed) orderedSlides.push(notificationSlide);
 
                         return orderedSlides;

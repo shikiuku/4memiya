@@ -4,6 +4,8 @@ import { ProductListContainer } from '@/components/features/product-list-contain
 import { ProductSearch } from '@/components/features/search/product-search';
 import { HeroCarousel } from '@/components/features/top/hero-carousel';
 
+import { createClient } from '@/lib/supabase/server';
+
 export default async function Home({
   searchParams,
 }: {
@@ -25,12 +27,16 @@ export default async function Home({
   // Fetch review stats
   const reviewStats = await getReviewStats();
 
+  // Check login status
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <div className="container mx-auto px-4 pt-4 pb-20 max-w-5xl space-y-8">
 
       {/* Hero Carousel - Always show */}
       <section>
-        <HeroCarousel latestProducts={latestProducts} reviewStats={reviewStats} />
+        <HeroCarousel latestProducts={latestProducts} reviewStats={reviewStats} isLoggedIn={!!user} />
       </section>
 
       {/* Page Title & Search (Header area) */}

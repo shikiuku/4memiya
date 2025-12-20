@@ -72,16 +72,24 @@ export function ProductCard({ product, viewMode = 'grid', customHref }: ProductC
                     </div>
 
                     {isList && (
-                        <div className="shrink-0 ml-2">
-                            {product.status === 'on_sale' ? (
-                                <span className="bg-[#007bff] text-white text-xs font-bold px-3 py-1 rounded inline-block whitespace-nowrap">
-                                    販売中
-                                </span>
-                            ) : (
-                                <span className="bg-slate-400 text-white text-xs font-bold px-3 py-1 rounded inline-block whitespace-nowrap">
-                                    売り切れ
-                                </span>
-                            )}
+                        <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+                            <div className="hidden sm:flex items-center gap-2 text-[10px] sm:text-xs text-slate-500 font-medium">
+                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">ランク: {product.rank ?? '-'}</span>
+                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">運極: {product.luck_max ?? '-'}</span>
+                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">ガチャ限: {product.gacha_charas ?? '-'}</span>
+                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">紋章力: {product.badge_power ?? '-'}</span>
+                            </div>
+                            <div className="shrink-0">
+                                {product.status === 'on_sale' ? (
+                                    <span className="bg-[#007bff] text-white text-xs font-bold px-3 py-1 rounded inline-block whitespace-nowrap">
+                                        販売中
+                                    </span>
+                                ) : (
+                                    <span className="bg-slate-400 text-white text-xs font-bold px-3 py-1 rounded inline-block whitespace-nowrap">
+                                        売り切れ
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>

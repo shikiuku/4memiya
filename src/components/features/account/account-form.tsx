@@ -57,8 +57,7 @@ export function AccountForm({ currentUsername, currentDisplayName }: AccountForm
                                 id="newUsername"
                                 name="newUsername"
                                 type="text"
-                                placeholder={currentDisplayName || "表示名を入力"}
-                                defaultValue={currentDisplayName}
+                                placeholder="新しい表示名を入力"
                             />
                         </div>
 
@@ -69,8 +68,7 @@ export function AccountForm({ currentUsername, currentDisplayName }: AccountForm
                                 id="newLoginId"
                                 name="newLoginId"
                                 type="text"
-                                placeholder={currentUsername || "半角英数字"}
-                                defaultValue={currentUsername}
+                                placeholder="新しいログインID（半角英数字）"
                             />
                         </div>
 
