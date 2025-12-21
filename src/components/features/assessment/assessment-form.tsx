@@ -52,9 +52,9 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
 
     // Pre-calculate defaults for available categories to ensure inputs work immediately
     const initialDynamicRanges = useMemo(() => {
-        const ranges: Record<string, number> = {};
+        const ranges: Record<string, any> = {};
         rules.filter(r => r.rule_type === 'range' && !['rank', 'luck_max', 'gacha_charas'].includes(r.category))
-            .forEach(r => { ranges[r.category] = 0; });
+            .forEach(r => { ranges[r.category] = undefined; });
         return ranges;
     }, [rules]);
 
@@ -168,70 +168,39 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                     </div>
                 </div>
 
-                {/* Numeric Inputs Grid */}
+                {/* Numeric Inputs Grid - Dynamic Ordering */}
                 <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-1">
-                        <Label htmlFor="rank" className="text-xs">ランク</Label>
-                        <div className="relative">
-                            <Input
-                                id="rank"
-                                type="number"
-                                min="0"
-                                placeholder="1500"
-                                className="pr-10"
-                                {...register('rank')}
-                            />
-                            <div className="absolute right-3 top-2.5 text-xs text-slate-400">ランク</div>
-                        </div>
-                    </div>
+                    {/* Render inputs in the order they appear in rules (which is sorted by DB sort_order) */}
+                    {Array.from(new Set(rangeRules.map(r => r.category))).map(cat => {
+                        // Determine props based on category
+                        let inputProps = {
+                            name: `dynamicRanges.${cat}` as any,
+                            label: rangeRules.find(r => r.category === cat)?.label || cat,
+                            placeholder: '0',
+                            unit: '値'
+                        };
 
-                    <div className="space-y-1">
-                        <Label htmlFor="luckMax" className="text-xs">運極数</Label>
-                        <div className="relative">
-                            <Input
-                                id="luckMax"
-                                type="number"
-                                min="0"
-                                placeholder="500"
-                                className="pr-8"
-                                {...register('luckMax')}
-                            />
-                            <div className="absolute right-3 top-2.5 text-xs text-slate-400">体</div>
-                        </div>
-                    </div>
+                        if (cat === 'rank') {
+                            inputProps = { name: 'rank', label: 'ランク', placeholder: '1500', unit: 'ランク' };
+                        } else if (cat === 'luck_max') {
+                            inputProps = { name: 'luckMax', label: '運極数', placeholder: '500', unit: '体' };
+                        } else if (cat === 'gacha_charas') {
+                            inputProps = { name: 'gachaLimit', label: 'ガチャ限数', placeholder: '1000', unit: '体' };
+                        }
 
-                    <div className="space-y-1">
-                        <Label htmlFor="gachaLimit" className="text-xs">ガチャ限数</Label>
-                        <div className="relative">
-                            <Input
-                                id="gachaLimit"
-                                type="number"
-                                min="0"
-                                placeholder="1000"
-                                className="pr-8"
-                                {...register('gachaLimit')}
-                            />
-                            <div className="absolute right-3 top-2.5 text-xs text-slate-400">体</div>
-                        </div>
-                    </div>
-
-                    {/* Dynamic Range Inputs within same grid */}
-                    {extraRangeCategories.map(cat => {
-                        // Find a rule for this category to get the label
-                        const displayLabel = rangeRules.find(r => r.category === cat)?.label || cat;
                         return (
                             <div key={cat} className="space-y-1">
-                                <Label htmlFor={`dynamicRanges.${cat}`} className="text-xs">{displayLabel}</Label>
+                                <Label htmlFor={inputProps.name} className="capitalize text-xs">{inputProps.label}</Label>
                                 <div className="relative">
                                     <Input
-                                        id={`dynamicRanges.${cat}`}
+                                        id={inputProps.name}
                                         type="number"
                                         min="0"
-                                        placeholder="100"
-                                        className="pr-8"
-                                        {...register(`dynamicRanges.${cat}` as any)}
+                                        placeholder={inputProps.placeholder}
+                                        className="pr-10"
+                                        {...register(inputProps.name)}
                                     />
-                                    <div className="absolute right-3 top-2.5 text-xs text-slate-400">値</div>
+                                    <div className="absolute right-3 top-2.5 text-xs text-slate-400">{inputProps.unit}</div>
                                 </div>
                             </div>
                         );

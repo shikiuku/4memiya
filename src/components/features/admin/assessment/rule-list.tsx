@@ -3,9 +3,26 @@
 import { AssessmentRule } from '@/types';
 import { RuleFormDialog } from './rule-form-dialog';
 import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
-import { deleteAssessmentRule } from '@/actions/admin/assessment';
-import { useTransition } from 'react';
+import { Trash2, GripVertical } from 'lucide-react';
+import { deleteAssessmentRule, updateCategoryOrder } from '@/actions/admin/assessment';
+import { useTransition, useState, useEffect } from 'react';
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragEndEvent,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+    useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface RuleListProps {
     rules: AssessmentRule[];
@@ -16,11 +33,11 @@ const CATEGORY_LABELS: Record<string, string> = {
     'luck_max': '運極数',
     'gacha_charas': 'ガチャ限数',
     'character': 'キャラクター',
-    // Add defaults for others if needed
 };
 
 export function RuleList({ rules }: RuleListProps) {
-    // Group rules by category
+    // Compute initial grouped rules
+    // Note: rules are already sorted by sort_order from the server
     const groupedRules = rules.reduce((acc, rule) => {
         const cat = rule.category;
         if (!acc[cat]) acc[cat] = [];
@@ -28,51 +45,112 @@ export function RuleList({ rules }: RuleListProps) {
         return acc;
     }, {} as Record<string, AssessmentRule[]>);
 
-    const categories = Object.keys(groupedRules).sort((a, b) => {
-        const order = ['rank', 'luck_max', 'gacha_charas'];
-        const aIndex = order.indexOf(a);
-        const bIndex = order.indexOf(b);
+    // Initial categories order based on the rules array order (which is sorted by DB)
+    // We use a Set to keep unique categories in order of appearance
+    const initialCategories = Array.from(new Set(rules.map(r => r.category)));
 
-        // If both are in the priority list, sort by index
-        if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-        // If only a is in priority, it comes first
-        if (aIndex !== -1) return -1;
-        // If only b is in priority, it comes first
-        if (bIndex !== -1) return 1;
+    const [items, setItems] = useState(initialCategories);
+    const [isSavingOrder, startOrderTransition] = useTransition();
 
-        // 'character' should be last
-        if (a === 'character') return 1;
-        if (b === 'character') return -1;
+    // Sync state if server data changes (e.g. initial load or revalidation)
+    useEffect(() => {
+        setItems(Array.from(new Set(rules.map(r => r.category))));
+    }, [rules]);
 
-        // Default alphabetical for others
-        return a.localeCompare(b);
-    });
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    function handleDragEnd(event: DragEndEvent) {
+        const { active, over } = event;
+
+        if (over && active.id !== over.id) {
+            const oldIndex = items.indexOf(active.id as string);
+            const newIndex = items.indexOf(over.id as string);
+            const newOrder = arrayMove(items, oldIndex, newIndex);
+
+            setItems(newOrder);
+
+            // Save new order to DB
+            startOrderTransition(async () => {
+                await updateCategoryOrder(newOrder);
+            });
+        }
+    }
 
     return (
         <div className="space-y-8">
-            {categories.map(category => (
-                <div key={category} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                    <div className="flex items-center justify-between border-b pb-4 mb-4">
-                        <h2 className="text-lg font-bold capitalize text-slate-800">
-                            {CATEGORY_LABELS[category] || category}
-                        </h2>
-                        {/* Add Rule Button for this category */}
-                        <RuleFormDialog defaultCategory={category} />
-                    </div>
+            <div className="flex justify-end">
+                {isSavingOrder && <span className="text-xs text-slate-500 animate-pulse">並び順を保存中...</span>}
+            </div>
 
-                    <div className="space-y-2">
-                        {groupedRules[category].map(rule => (
-                            <RuleItem key={rule.id} rule={rule} />
-                        ))}
-                    </div>
-                </div>
-            ))}
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+            >
+                <SortableContext
+                    items={items}
+                    strategy={verticalListSortingStrategy}
+                >
+                    {items.map(category => (
+                        <SortableCategoryItem
+                            key={category}
+                            category={category}
+                            rules={groupedRules[category] || []}
+                        />
+                    ))}
+                </SortableContext>
+            </DndContext>
 
-            {categories.length === 0 && (
+            {items.length === 0 && (
                 <div className="text-center py-12 text-slate-500 bg-slate-50 rounded-lg">
                     まだルールがありません。「新規ルール追加」から作成してください。
                 </div>
             )}
+        </div>
+    );
+}
+
+// Sub-component for Sortable Item
+function SortableCategoryItem({ category, rules }: { category: string, rules: AssessmentRule[] }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({ id: category });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
+    return (
+        <div ref={setNodeRef} style={style} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 relative group">
+            <div className="flex items-center justify-between border-b pb-4 mb-4">
+                <div className="flex items-center gap-3">
+                    {/* Drag Handle */}
+                    <div {...attributes} {...listeners} className="cursor-grab hover:text-slate-700 text-slate-400 p-1 rounded hover:bg-slate-100">
+                        <GripVertical className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-lg font-bold capitalize text-slate-800">
+                        {CATEGORY_LABELS[category] || category}
+                    </h2>
+                </div>
+                {/* Add Rule Button for this category */}
+                <RuleFormDialog defaultCategory={category} />
+            </div>
+
+            <div className="space-y-2">
+                {rules.map(rule => (
+                    <RuleItem key={rule.id} rule={rule} />
+                ))}
+            </div>
         </div>
     );
 }
@@ -88,6 +166,10 @@ function RuleItem({ rule }: { rule: AssessmentRule }) {
         });
     };
 
+    const label = rule.rule_type === 'range'
+        ? rule.label
+        : rule.label;
+
     return (
         <div className="flex items-center justify-between p-3 bg-slate-50 rounded border border-slate-100 hover:bg-slate-100 transition-colors">
             <div className="flex-1">
@@ -96,6 +178,8 @@ function RuleItem({ rule }: { rule: AssessmentRule }) {
                         <span>
                             <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded mr-2">数値</span>
                             {rule.threshold?.toLocaleString()} 以上
+                            {/* Show label if present for range rules */}
+                            {rule.label && <span className="ml-2 text-xs text-slate-500">({rule.label})</span>}
                         </span>
                     ) : (
                         <span>

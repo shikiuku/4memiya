@@ -17,8 +17,10 @@ export async function getAssessmentRules() {
     const { data, error } = await supabase
         .from('assessment_rules')
         .select('*')
+        .select('*')
+        .order('sort_order', { ascending: true }) // Primary sort by manual order
         .order('category', { ascending: true })
-        .order('threshold', { ascending: true }); // Secondary sort
+        .order('threshold', { ascending: true }); // Tertiary sort
 
     if (error) {
         console.error('Error fetching assessment rules:', {
@@ -135,6 +137,47 @@ export async function deleteAssessmentRule(id: string) {
     if (error) {
         return { error: '削除に失敗しました: ' + error.message };
     }
+
+    revalidatePath('/dev/assessment');
+    return { success: true };
+}
+
+/**
+ * Update the sort order of categories
+ */
+export async function updateCategoryOrder(categories: string[]) {
+    // 1. Verify Authentication
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+        return { error: '認証エラー: ログインしてください。' };
+    }
+
+    // 2. Perform Admin Action
+    const supabaseAdmin = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false
+            }
+        }
+    );
+
+    // Update each category's sort_order
+    // We update ALL rules with that category to have the same order index.
+    const updates = categories.map((cat, index) => {
+        // Use index * 10 to allow space for future insertion if needed
+        const sortOrder = (index + 1) * 10;
+        return supabaseAdmin
+            .from('assessment_rules')
+            .update({ sort_order: sortOrder })
+            .eq('category', cat);
+    });
+
+    await Promise.all(updates);
 
     revalidatePath('/dev/assessment');
     return { success: true };
