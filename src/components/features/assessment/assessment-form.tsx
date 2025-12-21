@@ -206,22 +206,26 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                     </div>
 
                     {/* Dynamic Range Inputs within same grid */}
-                    {extraRangeCategories.map(cat => (
-                        <div key={cat} className="space-y-1">
-                            <Label htmlFor={`dynamicRanges.${cat}`} className="capitalize text-xs">{cat}</Label>
-                            <div className="relative">
-                                <Input
-                                    id={`dynamicRanges.${cat}`}
-                                    type="number"
-                                    min="0"
-                                    placeholder="100"
-                                    className="pr-8"
-                                    {...register(`dynamicRanges.${cat}` as any)}
-                                />
-                                <div className="absolute right-3 top-2.5 text-xs text-slate-400">値</div>
+                    {extraRangeCategories.map(cat => {
+                        // Find a rule for this category to get the label
+                        const displayLabel = rangeRules.find(r => r.category === cat)?.label || cat;
+                        return (
+                            <div key={cat} className="space-y-1">
+                                <Label htmlFor={`dynamicRanges.${cat}`} className="capitalize text-xs">{displayLabel}</Label>
+                                <div className="relative">
+                                    <Input
+                                        id={`dynamicRanges.${cat}`}
+                                        type="number"
+                                        min="0"
+                                        placeholder="100"
+                                        className="pr-8"
+                                        {...register(`dynamicRanges.${cat}` as any)}
+                                    />
+                                    <div className="absolute right-3 top-2.5 text-xs text-slate-400">値</div>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 {/* Boolean Rules (Checkboxes) - Compact Grid */}
