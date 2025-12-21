@@ -221,7 +221,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                         const displayLabel = rangeRules.find(r => r.category === cat)?.label || cat;
                         return (
                             <div key={cat} className="space-y-1">
-                                <Label htmlFor={`dynamicRanges.${cat}`} className="capitalize text-xs">{displayLabel}</Label>
+                                <Label htmlFor={`dynamicRanges.${cat}`} className="text-xs">{displayLabel}</Label>
                                 <div className="relative">
                                     <Input
                                         id={`dynamicRanges.${cat}`}

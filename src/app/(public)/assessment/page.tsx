@@ -18,13 +18,6 @@ export default async function AssessmentPage() {
             <main className="container mx-auto max-w-xl px-4 py-8">
                 <AssessmentForm rules={rules} />
 
-                {/* DEBUG: Temporary Rule/Category Dump */}
-                <div className="mt-8 p-4 bg-slate-100 rounded text-[10px] font-mono whitespace-pre-wrap opacity-50">
-                    <p>Debug Info:</p>
-                    <p>Rules Loaded: {rules.length}</p>
-                    <p>Categories: {JSON.stringify(Array.from(new Set(rules.map(r => r.category))), null, 2)}</p>
-                </div>
-
 
             </main>
         </div>
