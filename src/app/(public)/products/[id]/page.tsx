@@ -14,6 +14,8 @@ import { ReadMoreSection } from '@/components/features/products/read-more-sectio
 import { Button } from '@/components/ui/button';
 
 import { LikeButton } from '@/components/features/products/like-button';
+import { getRandomProducts } from '@/actions/product';
+import { ProductCard } from '@/components/features/product-card';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -122,7 +124,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     {/* 6. Transaction Details */}
                     <section className="bg-slate-50 -mx-4 px-4 py-8 mt-8 border-t border-slate-100">
                         <h3 className="font-bold text-base border-l-4 border-[#007bff] pl-3 mb-6">
-                            取引中のやりとりについて
+                            安心して取引するために
                         </h3>
                         <SafetyChecklist />
                     </section>
@@ -149,6 +151,22 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                             よくある質問
                         </h3>
                         <FAQAccordion />
+                    </section>
+
+                    {/* 8. Other Products */}
+                    <section className="border-t border-dashed pt-6">
+                        <h3 className="font-bold text-base border-l-4 border-[#007bff] pl-3 mb-4">
+                            その他商品
+                        </h3>
+                        <div className="space-y-0">
+                            {(await getRandomProducts(3, product.id)).map((otherProduct) => (
+                                <ProductCard
+                                    key={otherProduct.id}
+                                    product={otherProduct}
+                                    viewMode="list"
+                                />
+                            ))}
+                        </div>
                     </section>
                 </div>
             </main>

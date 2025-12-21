@@ -121,3 +121,35 @@ export async function getAllUniqueTags(): Promise<string[]> {
     // Dedup
     return Array.from(new Set(allTags)).sort();
 }
+
+export async function getRandomProducts(limit: number, excludeId: string): Promise<Product[]> {
+    const supabase = await createClient();
+
+    // Fetch more items than needed to shuffle (e.g., 3x limit), excluding current
+    const fetchLimit = limit * 4;
+
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .neq('id', excludeId)
+        .eq('status', 'on_sale') // Only sellable items
+        .limit(fetchLimit);
+
+    if (error) {
+        console.error('Error fetching random products:', error);
+        return [];
+    }
+
+    if (!data || data.length === 0) return [];
+
+    // Shuffle array
+    const shuffled = (data as any[]).sort(() => 0.5 - Math.random());
+
+    // Take top N
+    const selected = shuffled.slice(0, limit);
+
+    return selected.map(item => ({
+        ...(item as any),
+        status: item.status as 'draft' | 'on_sale' | 'sold_out',
+    })) as Product[];
+}

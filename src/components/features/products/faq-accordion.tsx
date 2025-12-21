@@ -15,6 +15,7 @@ export function FAQAccordion() {
                     <ul className="list-disc pl-5">
                         <li>PayPay</li>
                         <li>銀行振込</li>
+                        <li>コンビニ払い(セブン/ローソン)</li>
                     </ul>
                     <p>などからご案内します。詳細はDMで個別にお伝えします。</p>
                 </AccordionContent>
