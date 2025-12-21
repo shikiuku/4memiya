@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, LogIn, UserPlus, Settings, LogOut, Package, FileText, MessageSquare, Home } from 'lucide-react';
+import { Menu, X, LogIn, UserPlus, Settings, LogOut, Package, FileText, MessageSquare, Home, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { logout } from '@/actions/auth';
@@ -43,7 +43,7 @@ export function MobileMenu({ user, username }: MobileMenuProps) {
     ];
 
     if (user) {
-        navItems.push({ href: '/account', label: '設定', icon: Settings });
+        navItems.push({ href: '/mypage', label: 'マイページ', icon: User });
     }
 
     return (
