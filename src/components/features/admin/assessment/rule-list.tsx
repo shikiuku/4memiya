@@ -145,6 +145,14 @@ function SortableCategoryItem({ category, rules }: { category: string, rules: As
         transition,
     };
 
+    // Determine display name for the category
+    let displayName = CATEGORY_LABELS[category];
+    if (!displayName) {
+        // For dynamic categories, use the label from the first rule that has one
+        const ruleWithLabel = rules.find(r => r.label);
+        displayName = ruleWithLabel?.label || category;
+    }
+
     return (
         <div ref={setNodeRef} style={style} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 relative group">
             <div className="flex items-center justify-between border-b pb-4 mb-4">
@@ -154,7 +162,7 @@ function SortableCategoryItem({ category, rules }: { category: string, rules: As
                         <GripVertical className="w-5 h-5" />
                     </div>
                     <h2 className="text-lg font-bold capitalize text-slate-800">
-                        {CATEGORY_LABELS[category] || category}
+                        {displayName}
                     </h2>
                 </div>
                 {/* Add Rule Button for this category */}
