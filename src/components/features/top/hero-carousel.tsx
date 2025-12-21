@@ -5,7 +5,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Bell, ChevronLeft, ChevronRight, MessageSquareQuote, Sparkles, BadgeDollarSign, UserPlus } from 'lucide-react';
+import { Bell, ChevronLeft, ChevronRight, MessageSquareQuote, Sparkles, BadgeDollarSign, UserPlus, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types/index';
 import { Badge } from '@/components/ui/badge';
@@ -141,6 +141,21 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
                                     <p className="text-yellow-800 text-xs sm:text-base mb-4 max-w-md font-medium">
                                         ブラウザ通知をオンにすると、新しい在庫やキャンペーン情報がすぐに届きます。
                                     </p>
+
+                                    {/* iPhone Instructions */}
+                                    <div className="bg-yellow-100/80 p-3 rounded-lg text-left max-w-sm mb-4 border border-yellow-200">
+                                        <h3 className="font-bold text-yellow-900 text-sm mb-2 border-l-4 border-yellow-600 pl-2">
+                                            【iPhoneでの追加方法】
+                                        </h3>
+                                        <ul className="text-xs text-yellow-800 space-y-1.5 leading-relaxed">
+                                            <li>① Safariでこのページを開いていることを確認</li>
+                                            <li className="flex items-center flex-wrap gap-1">
+                                                ② 画面下の「共有」<Share className="w-3.5 h-3.5" />をタップ
+                                            </li>
+                                            <li>③ 下にスクロールして「ホーム画面に追加」をタップ</li>
+                                            <li>④ 右上の「追加」を押すと完了です</li>
+                                        </ul>
+                                    </div>
                                     <Button
                                         onClick={handleEnableNotifications}
                                         disabled={isSubscribed}
