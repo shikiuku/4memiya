@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -8,9 +9,10 @@ type ProductCardProps = {
     product: Partial<Product>;
     viewMode?: 'grid' | 'list';
     customHref?: string;
+    compactStats?: boolean; // New prop for conditional styling
 };
 
-export function ProductCard({ product, viewMode = 'grid', customHref }: ProductCardProps) {
+export function ProductCard({ product, viewMode = 'grid', customHref, compactStats = false }: ProductCardProps) {
     const isList = viewMode === 'list';
     const imageSrc = product.images?.[0];
     const linkHref = customHref || `/products/${product.id}`;
@@ -73,11 +75,24 @@ export function ProductCard({ product, viewMode = 'grid', customHref }: ProductC
 
                     {isList && (
                         <div className="flex items-center gap-2 sm:gap-4 ml-auto">
-                            <div className="hidden sm:flex items-center gap-2 text-[10px] sm:text-xs text-slate-500 font-medium">
-                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">ランク: {product.rank ?? '-'}</span>
-                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">運極: {product.luck_max ?? '-'}</span>
-                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">ガチャ限: {product.gacha_charas ?? '-'}</span>
-                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">紋章力: {product.badge_power ?? '-'}</span>
+                            {/* Stats */}
+                            <div className={`hidden sm:flex flex-wrap items-center font-medium text-slate-500
+                                ${compactStats
+                                    ? 'gap-1.5 text-[10px]'
+                                    : 'gap-2 text-[10px] sm:text-xs'
+                                }`}>
+                                <span className={`bg-slate-100 rounded text-slate-600 border border-slate-200 whitespace-nowrap ${compactStats ? 'px-1 py-0.5' : 'px-1.5 py-0.5'}`}>
+                                    ランク:{product.rank ?? '-'}
+                                </span>
+                                <span className={`bg-slate-100 rounded text-slate-600 border border-slate-200 whitespace-nowrap ${compactStats ? 'px-1 py-0.5' : 'px-1.5 py-0.5'}`}>
+                                    運極:{product.luck_max ?? '-'}
+                                </span>
+                                <span className={`bg-slate-100 rounded text-slate-600 border border-slate-200 whitespace-nowrap ${compactStats ? 'px-1 py-0.5' : 'px-1.5 py-0.5'}`}>
+                                    ガチャ限:{product.gacha_charas ?? '-'}
+                                </span>
+                                <span className={`bg-slate-100 rounded text-slate-600 border border-slate-200 whitespace-nowrap ${compactStats ? 'px-1 py-0.5' : 'px-1.5 py-0.5'}`}>
+                                    紋章力:{product.badge_power ?? '-'}
+                                </span>
                             </div>
                             <div className="shrink-0">
                                 {product.status === 'on_sale' ? (

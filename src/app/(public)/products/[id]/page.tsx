@@ -164,6 +164,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                     key={otherProduct.id}
                                     product={otherProduct}
                                     viewMode="list"
+                                    compactStats={true}
                                 />
                             ))}
                         </div>
