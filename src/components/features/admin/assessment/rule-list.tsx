@@ -3,7 +3,7 @@
 import { AssessmentRule } from '@/types';
 import { RuleFormDialog } from './rule-form-dialog';
 import { Button } from '@/components/ui/button';
-import { Trash2, GripVertical } from 'lucide-react';
+import { Trash2, GripVertical, Plus } from 'lucide-react';
 import { deleteAssessmentRule, updateCategoryOrder } from '@/actions/admin/assessment';
 import { useTransition, useState, useEffect } from 'react';
 import {
@@ -36,6 +36,8 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export function RuleList({ rules }: RuleListProps) {
+    const [isMounted, setIsMounted] = useState(false);
+
     // Compute initial grouped rules
     // Note: rules are already sorted by sort_order from the server
     const groupedRules = rules.reduce((acc, rule) => {
@@ -54,6 +56,7 @@ export function RuleList({ rules }: RuleListProps) {
 
     // Sync state if server data changes (e.g. initial load or revalidation)
     useEffect(() => {
+        setIsMounted(true);
         setItems(Array.from(new Set(rules.map(r => r.category))));
     }, [rules]);
 
@@ -81,9 +84,21 @@ export function RuleList({ rules }: RuleListProps) {
         }
     }
 
+    if (!isMounted) {
+        return <div className="p-8 text-center text-slate-500">Loading editor...</div>;
+    }
+
     return (
         <div className="space-y-8">
-            <div className="flex justify-end">
+            <div className="flex justify-between items-center">
+                <RuleFormDialog
+                    trigger={
+                        <Button>
+                            <Plus className="w-4 h-4 mr-2" />
+                            新規カテゴリ追加
+                        </Button>
+                    }
+                />
                 {isSavingOrder && <span className="text-xs text-slate-500 animate-pulse">並び順を保存中...</span>}
             </div>
 

@@ -34,10 +34,33 @@ export function RuleFormDialog({ existingRule, defaultCategory, defaultRuleType 
     const [open, setOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ruleType, setRuleType] = useState<'range' | 'boolean'>(existingRule?.rule_type || defaultRuleType);
-    const [category, setCategory] = useState(existingRule?.category || defaultCategory || 'rank');
+    // Fix: Default to empty string instead of 'rank' so we detect when it's a new custom category
+    const [category, setCategory] = useState(existingRule?.category || defaultCategory || '');
 
     async function handleSubmit(formData: FormData) {
         setIsSubmitting(true);
+
+        // Auto-generate category ID if creating a new category and none specified
+        let finalCategory = formData.get('category') as string;
+
+        if (!finalCategory) {
+            // Check if we have a default category passed in props
+            if (defaultCategory) {
+                finalCategory = defaultCategory;
+            } else {
+                // Generate ID from label if possible (e.g. "MyCategory" -> "mycategory")
+                const label = formData.get('label') as string;
+                if (label && /^[a-zA-Z0-9_-]+$/.test(label)) {
+                    finalCategory = label.toLowerCase();
+                } else {
+                    // Fallback to timestamp for Japanese/complex labels
+                    finalCategory = `cat_${Date.now()}`;
+                }
+            }
+
+            formData.set('category', finalCategory);
+        }
+
         const result = await saveAssessmentRule(null, formData);
         setIsSubmitting(false);
 
@@ -45,6 +68,10 @@ export function RuleFormDialog({ existingRule, defaultCategory, defaultRuleType 
             alert(result.error);
         } else {
             setOpen(false);
+            // Reset form for next use if not editing
+            if (!existingRule) {
+                setCategory('');
+            }
         }
     }
 
@@ -84,20 +111,15 @@ export function RuleFormDialog({ existingRule, defaultCategory, defaultRuleType 
                         </Select>
                     </div>
 
-                    {/* Category Selection */}
-                    <div className="space-y-2">
-                        <Label>システムID (カテゴリ)</Label>
-                        <Input
-                            name="category"
-                            placeholder="例: rank, monshoryoku"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            required
-                        />
-                        <p className="text-xs text-slate-500">
-                            計算ロジック識別のためのIDです (半角英数推奨)。同じIDはグループ化されます。
-                        </p>
-                    </div>
+                    {/* Category Selection - Hidden for simplification */}
+                    {/* User only sees this if explicitly editing an existing rule's category, which is rare/not recommended via this UI anyway */}
+                    <input
+                        type="hidden"
+                        name="category"
+                        value={category}
+                    />
+
+                    {/* Debug/Advanced toggle could go here, but for now we fully hide it as requested */}
 
                     {/* Label (Always visible now to allow overriding display name) */}
                     <div className="space-y-2">
