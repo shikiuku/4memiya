@@ -155,6 +155,68 @@ export async function deleteProduct(id: string) {
         }
     );
 
+    const { data: product, error: fetchError } = await supabaseAdmin
+        .from('products')
+        .select('images, movies')
+        .eq('id', id)
+        .single();
+
+    if (product) {
+        const filesToDelete: string[] = [];
+
+        // Extract paths from images
+        if (product.images && Array.isArray(product.images)) {
+            product.images.forEach((url: string) => {
+                // Assuming URL format: .../storage/v1/object/public/products/path/to/file
+                // or just "path/to/file" if relative? Based on uploader, we store full URL?
+                // check uploadImageAction: return { url: data.publicUrl } -> full URL.
+                // We need to extract the path relative to the bucket.
+
+                try {
+                    const urlObj = new URL(url);
+                    // Standard Supabase URL: /storage/v1/object/public/products/filename
+                    // We need 'filename'
+                    const pathParts = urlObj.pathname.split('/products/');
+                    if (pathParts.length > 1) {
+                        // pathParts[1] is the file path inside the bucket
+                        // Need to decode URI component in case of spaces etc?
+                        filesToDelete.push(decodeURIComponent(pathParts[1]));
+                    }
+                } catch (e) {
+                    console.error('Error parsing image URL:', url, e);
+                }
+            });
+        }
+
+        // Extract paths from movies
+        if (product.movies && Array.isArray(product.movies)) {
+            product.movies.forEach((url: string) => {
+                try {
+                    const urlObj = new URL(url);
+                    // Expected: .../products/videos/filename
+                    const pathParts = urlObj.pathname.split('/products/');
+                    if (pathParts.length > 1) {
+                        filesToDelete.push(decodeURIComponent(pathParts[1]));
+                    }
+                } catch (e) {
+                    console.error('Error parsing video URL:', url, e);
+                }
+            });
+        }
+
+        if (filesToDelete.length > 0) {
+            console.log('Deleting storage files:', filesToDelete);
+            const { error: storageError } = await supabaseAdmin.storage
+                .from('products')
+                .remove(filesToDelete);
+
+            if (storageError) {
+                console.error('Error cleaning up storage files:', storageError);
+                // Don't block DB deletion, just log it.
+            }
+        }
+    }
+
     const { error } = await supabaseAdmin.from('products').delete().eq('id', id);
 
     if (error) {
