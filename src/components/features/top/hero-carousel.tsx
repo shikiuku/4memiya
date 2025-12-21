@@ -3,6 +3,7 @@
 import React, { useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Bell, ChevronLeft, ChevronRight, MessageSquareQuote, Sparkles, BadgeDollarSign, UserPlus, Share } from 'lucide-react';
@@ -21,6 +22,7 @@ interface HeroCarouselProps {
 }
 
 export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }: HeroCarouselProps) {
+    const router = useRouter();
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
         Autoplay({ delay: 5000, stopOnInteraction: false })
     ]);
@@ -56,7 +58,14 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
             const permission = await Notification.requestPermission();
 
             if (permission !== 'granted') {
-                alert('通知権限が許可されませんでした。ブラウザの設定を確認してください。');
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                if (isIOS) {
+                    if (confirm('iPhoneで通知を受け取るには、ホーム画面に追加する必要があります。\n設定方法のページへ移動しますか？')) {
+                        router.push('/guide/notifications');
+                    }
+                } else {
+                    alert('通知権限が許可されませんでした。ブラウザの設定を確認してください。');
+                }
                 return;
             }
 
@@ -70,7 +79,14 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
             alert('通知設定をオンにしました！');
         } catch (error) {
             console.error('Error enabling notifications:', error);
-            alert('通知設定の有効化に失敗しました。');
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            if (isIOS) {
+                if (confirm('iPhoneで通知を受け取るには、ホーム画面に追加する必要があります。\n設定方法のページへ移動しますか？')) {
+                    router.push('/guide/notifications');
+                }
+            } else {
+                alert('通知設定の有効化に失敗しました。');
+            }
         }
     };
 
@@ -138,7 +154,7 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
                                         <Bell className="w-6 h-6 sm:w-12 sm:h-12 text-yellow-600" />
                                     </div>
                                     <h2 className="text-base sm:text-2xl md:text-3xl font-bold mb-2">新着情報をいち早くGET！</h2>
-                                    <p className="text-yellow-800 text-xs sm:text-base mb-2 max-w-md font-medium">
+                                    <p className="text-yellow-800 text-xs sm:text-base mb-0 max-w-md font-medium">
                                         ブラウザ通知をオンにすると、新しい在庫やキャンペーン情報がすぐに届きます。<br />
                                         <span className="text-xs text-yellow-700 mt-1 block">
                                             ※iPhoneの方は「ホーム画面に追加」してから設定ボタンを押してください
