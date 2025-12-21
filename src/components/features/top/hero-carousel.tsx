@@ -49,6 +49,13 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
 
     const handleEnableNotifications = async () => {
         if (!('serviceWorker' in navigator)) {
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                if (confirm('iPhoneで通知を受け取るには、ホーム画面に追加する必要があります。\n設定方法のページへ移動しますか？')) {
+                    router.push('/guide/notifications');
+                }
+                return;
+            }
             alert('お使いのブラウザはプッシュ通知に対応していません。');
             return;
         }
