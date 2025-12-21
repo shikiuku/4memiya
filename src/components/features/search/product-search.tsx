@@ -82,7 +82,7 @@ export function ProductSearch({ }: Props) {
             <Button
                 onClick={handleSearch}
                 disabled={isPending}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                className="bg-[#1852FF] hover:bg-[#1442CC] text-white font-bold"
             >
                 {isPending ? '検索中...' : '検索'}
             </Button>
