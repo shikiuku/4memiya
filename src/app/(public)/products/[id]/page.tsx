@@ -45,7 +45,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
             <main className="mx-auto max-w-lg">
                 {/* 1. Image Gallery */}
-                <ImageGallery images={product.images || []} movies={product.movies} />
+                <ImageGallery images={product.images || []} />
 
                 <div className="px-4 py-4 space-y-8">
                     {/* 2. Title & Price Area */}

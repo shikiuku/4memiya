@@ -77,9 +77,6 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
     });
 
     // Watch values explicitly for better performance/reliability
-    const rank = watch('rank');
-    const luckMax = watch('luckMax');
-    const gachaLimit = watch('gachaLimit');
     const customRules = watch('customRules');
     const dynamicRanges = watch('dynamicRanges'); // Explicit watch
 
@@ -114,14 +111,12 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
         Object.entries(rangesByCategory).forEach(([category, catRules]) => {
             const sorted = catRules.sort((a, b) => (b.threshold || 0) - (a.threshold || 0));
 
-            let inputValue = 0;
-            if (category === 'rank') inputValue = Number(rank);
-            else if (category === 'luck_max') inputValue = Number(luckMax);
-            else if (category === 'gacha_charas') inputValue = Number(gachaLimit);
-            else {
-                // Dynamic category value - Ensure we check BOTH structure and flat access if RHF behaves oddly
-                inputValue = Number(dynamicRanges?.[category] || 0);
-            }
+            // Unified input retrieval: All inputs are now mapped to dynamicRanges[category]
+            let inputValue = Number(dynamicRanges?.[category] || 0);
+
+            // Fallback for legacy top-level fields if dynamicRanges is empty (though inputs write to dynamicRanges now)
+            // This might not be needed if we stick to one source of truth, but safe to remove if we are sure.
+            // Actually, let's strictly use dynamicRanges since the UI renders inputs as dynamicRanges.*
 
             const match = sorted.find(r => inputValue >= (r.threshold || 0));
             if (match) {
@@ -138,7 +133,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
         });
 
         return price;
-    }, [rangeRules, booleanRules, rank, luckMax, gachaLimit, JSON.stringify(customRules), JSON.stringify(dynamicRanges)]);
+    }, [rangeRules, booleanRules, JSON.stringify(customRules), JSON.stringify(dynamicRanges)]);
 
     const handleShare = () => {
         const text = `モンストのアカウントが${currentPrice.toLocaleString()}円で査定されました！！\n\n自動査定はこちら✔︎\nhttps://4memiya.com/assessment\n\nモンスト在庫の確認はこちら✔︎\nhttps://4memiya.com\n\nアカウント売却依頼は @AJAJDNW まで \n\n#モンスト #モンスト買取 #雨宮査定`;
