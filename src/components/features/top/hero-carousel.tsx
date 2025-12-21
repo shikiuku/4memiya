@@ -269,7 +269,7 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
                                     </p>
                                     <Link href="/register">
                                         <Button
-                                            className="bg-white text-indigo-700 hover:bg-indigo-50 font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-lg"
+                                            className="bg-white text-slate-900 hover:bg-slate-50 font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-lg"
                                         >
                                             今すぐ登録する
                                         </Button>
