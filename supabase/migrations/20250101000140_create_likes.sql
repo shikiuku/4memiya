@@ -10,14 +10,17 @@ create table if not exists public.likes (
 -- RLS
 alter table public.likes enable row level security;
 
+DROP POLICY IF EXISTS "Users can view their own likes" ON public.likes;
 create policy "Users can view their own likes"
   on public.likes for select
   using (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can create their own likes" ON public.likes;
 create policy "Users can create their own likes"
   on public.likes for insert
   with check (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can delete their own likes" ON public.likes;
 create policy "Users can delete their own likes"
   on public.likes for delete
   using (auth.uid() = user_id);

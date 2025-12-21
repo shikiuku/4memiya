@@ -58,11 +58,7 @@ export function ReviewCard({ review, currentUserId, isAdmin = false, onDelete, o
                 <div className="flex flex-wrap items-center gap-2 text-sm md:text-base">
                     <StarRating rating={review.star} size="sm" />
                     <span className="font-bold text-slate-800">{review.nickname || '名無し'}</span>
-                    {review.request_type && (
-                        <Badge variant="secondary" className="text-xs">
-                            {review.request_type === 'buyback' ? '買取' : '購入'}
-                        </Badge>
-                    )}
+
                     {isNew && (
                         <Badge className="bg-[#EAB308] hover:bg-[#CA8A04] text-white font-bold text-xs rounded-sm px-1.5 py-0.5 border-none">
                             NEW
@@ -74,6 +70,11 @@ export function ReviewCard({ review, currentUserId, isAdmin = false, onDelete, o
                         </Badge>
                     )}
                 </div>
+                {review.request_type && (
+                    <Badge variant="secondary" className="absolute top-4 right-4 text-xs">
+                        {review.request_type === 'buyback' ? '買取' : '購入'}
+                    </Badge>
+                )}
             </div>
 
             {/* Actions: Absolute Top Right, Vertical Stack */}

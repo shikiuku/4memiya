@@ -2,11 +2,13 @@
 ALTER TABLE app_config ENABLE ROW LEVEL SECURITY;
 
 -- Policy for public read access
+DROP POLICY IF EXISTS "Public read access for app_config" ON app_config;
 CREATE POLICY "Public read access for app_config"
 ON app_config FOR SELECT
 USING (true);
 
 -- Policy for admin write access (using user_metadata)
+DROP POLICY IF EXISTS "Admin write access for app_config" ON app_config;
 CREATE POLICY "Admin write access for app_config"
 ON app_config FOR ALL
 USING (

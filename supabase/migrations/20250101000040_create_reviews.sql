@@ -14,5 +14,8 @@ create table if not exists public.reviews (
 alter table public.reviews enable row level security;
 
 -- Policies
+DROP POLICY IF EXISTS "Allow public read" ON public.reviews;
 create policy "Allow public read" on public.reviews for select using (true);
+
+DROP POLICY IF EXISTS "Allow admin all" ON public.reviews;
 create policy "Allow admin all" on public.reviews for all using (auth.role() = 'service_role');
