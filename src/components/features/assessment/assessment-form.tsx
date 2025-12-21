@@ -172,21 +172,42 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                 <div className="grid grid-cols-2 gap-3">
                     {/* Render inputs in the order they appear in rules (which is sorted by DB sort_order) */}
                     {Array.from(new Set(rangeRules.map(r => r.category))).map(cat => {
+                        // Find a rule for this category to get label and placeholder
+                        // We use the first rule that has these values
+                        const representativeRule = rangeRules.find(r => r.category === cat);
+
                         // Determine props based on category
                         let inputProps = {
                             name: `dynamicRanges.${cat}` as any,
-                            label: rangeRules.find(r => r.category === cat)?.label || cat,
-                            placeholder: '0',
+                            label: representativeRule?.label || cat,
+                            placeholder: representativeRule?.input_placeholder || '0',
                             unit: '値'
                         };
 
-                        if (cat === 'rank') {
-                            inputProps = { name: 'rank', label: 'ランク', placeholder: '1500', unit: 'ランク' };
-                        } else if (cat === 'luck_max') {
-                            inputProps = { name: 'luckMax', label: '運極数', placeholder: '500', unit: '体' };
-                        } else if (cat === 'gacha_charas') {
-                            inputProps = { name: 'gachaLimit', label: 'ガチャ限数', placeholder: '1000', unit: '体' };
+                        // Optional: Keep hardcoded defaults if DB value is missing, for backward compatibility or better defaults
+                        if (!representativeRule?.input_placeholder) {
+                            if (cat === 'rank') {
+                                inputProps.placeholder = '1500';
+                                inputProps.unit = 'ランク';
+                            } else if (cat === 'luck_max') {
+                                inputProps.placeholder = '500';
+                                inputProps.unit = '体';
+                            } else if (cat === 'gacha_charas') {
+                                inputProps.placeholder = '1000';
+                                inputProps.unit = '体';
+                            }
+                        } else {
+                            // If DB has placeholder, just set proper units
+                            if (cat === 'rank') inputProps.unit = 'ランク';
+                            else if (cat === 'luck_max') inputProps.unit = '体';
+                            else if (cat === 'gacha_charas') inputProps.unit = '体';
                         }
+
+                        // Override label if standard category (optional, but cleaner if we trust DB label now)
+                        if (cat === 'rank') inputProps.label = 'ランク';
+                        else if (cat === 'luck_max') inputProps.label = '運極数';
+                        else if (cat === 'gacha_charas') inputProps.label = 'ガチャ限数';
+
 
                         return (
                             <div key={cat} className="space-y-1">

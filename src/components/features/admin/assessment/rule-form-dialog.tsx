@@ -136,16 +136,32 @@ export function RuleFormDialog({ existingRule, defaultCategory, defaultRuleType 
 
                     {/* Conditional Fields */}
                     {ruleType === 'range' && (
-                        <div className="space-y-2">
-                            <Label>～以上</Label>
-                            <Input
-                                name="threshold"
-                                type="number"
-                                placeholder="例: 1000"
-                                defaultValue={existingRule?.threshold ?? ''}
-                                required
-                            />
-                            <p className="text-xs text-slate-500">この数値以上の場合に適用されます。</p>
+                        <div className="space-y-4 border-t pt-4">
+                            <div className="space-y-2">
+                                <Label>～以上</Label>
+                                <Input
+                                    name="threshold"
+                                    type="number"
+                                    placeholder="例: 1000"
+                                    defaultValue={existingRule?.threshold ?? ''}
+                                    required
+                                />
+                                <p className="text-xs text-slate-500">この数値以上の場合に適用されます。</p>
+                            </div>
+
+                            {/* Added Input Placeholder Configuration */}
+                            <div className="space-y-2">
+                                <Label>入力欄の初期値 (プレースホルダー)</Label>
+                                <Input
+                                    name="input_placeholder"
+                                    placeholder="例: 0, 1500"
+                                    defaultValue={existingRule?.input_placeholder ?? ''}
+                                />
+                                <p className="text-xs text-slate-500">
+                                    ユーザー入力画面に最初から表示されている薄い文字（数値）です。<br />
+                                    ※同じカテゴリ内のルールであれば、どれか1つに設定すれば適用されます。
+                                </p>
+                            </div>
                         </div>
                     )}
 

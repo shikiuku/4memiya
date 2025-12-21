@@ -54,6 +54,7 @@ export async function saveAssessmentRule(currentState: any, formData: FormData) 
 
     // Optional fields
     const label = formData.get('label') as string; // For boolean rules
+    const input_placeholder = formData.get('input_placeholder') as string; // For range rules (category default)
     const thresholdRaw = formData.get('threshold') as string;
     const threshold = thresholdRaw ? parseInt(thresholdRaw) : null;
 
@@ -81,7 +82,8 @@ export async function saveAssessmentRule(currentState: any, formData: FormData) 
         category,
         label: label || null,
         threshold,
-        price_adjustment
+        price_adjustment,
+        input_placeholder: input_placeholder || null
     };
 
     if (id) {
