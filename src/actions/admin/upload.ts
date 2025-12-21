@@ -51,3 +51,46 @@ export async function uploadImageAction(formData: FormData) {
 
     return { url: data.publicUrl };
 }
+
+export async function uploadVideoAction(formData: FormData) {
+    const file = formData.get('file') as File;
+    if (!file) {
+        return { error: 'No file provided' };
+    }
+
+    // Initialize Admin Client
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false
+        }
+    });
+
+    const fileExt = file.name.split('.').pop();
+    const fileName = `video-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    // Convert File to ArrayBuffer for upload
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Using same bucket 'products' for now.
+    // Ensure bucket settings on Supabase allow video/* mime types.
+    const { error: uploadError } = await supabaseAdmin.storage
+        .from('products')
+        .upload(filePath, buffer, {
+            contentType: file.type,
+            upsert: false
+        });
+
+    if (uploadError) {
+        console.error('Upload error:', uploadError);
+        return { error: uploadError.message };
+    }
+
+    const { data } = supabaseAdmin.storage
+        .from('products')
+        .getPublicUrl(filePath);
+
+    return { url: data.publicUrl };
+}

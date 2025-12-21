@@ -21,6 +21,7 @@ export type Product = {
   created_at: string;
   updated_at: string;
   seq_id: number;
+  movies?: string[] | null;
 };
 
 

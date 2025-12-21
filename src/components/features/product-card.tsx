@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types';
-import { Image as ImageIcon } from 'lucide-react';
+import { Image as ImageIcon, Video as VideoIcon } from 'lucide-react';
 
 type ProductCardProps = {
     product: Partial<Product>;
@@ -38,6 +38,13 @@ export function ProductCard({ product, viewMode = 'grid', customHref, compactSta
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs">
                         No Image
+                    </div>
+                )}
+
+                {/* Video Indicator */}
+                {product.movies && product.movies.length > 0 && (
+                    <div className="absolute top-2 right-2 bg-black/60 text-white p-1 rounded-full z-10">
+                        <VideoIcon className="w-3 h-3" />
                     </div>
                 )}
 

@@ -17,6 +17,10 @@ export async function saveProduct(currentState: any, formData: FormData) {
     const tagsRaw = formData.get('tags') as string;
     const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
+    // Handle movies
+    const moviesRaw = formData.get('movies') as string;
+    const movies = moviesRaw ? moviesRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+
     // Specs
     const rank = parseInt(formData.get('rank') as string) || 0;
     const badge_power = parseInt(formData.get('badge_power') as string) || 0;
@@ -66,6 +70,10 @@ export async function saveProduct(currentState: any, formData: FormData) {
             description_points: description_points || null,
             description_recommend: description_recommend || null,
         };
+
+        // Movies added to updateData
+        updateData.movies = movies;
+
         if (seq_id !== undefined) updateData.seq_id = seq_id;
 
         const { error: updateError } = await supabaseAdmin.from('products').update(updateData).eq('id', id);
@@ -83,7 +91,8 @@ export async function saveProduct(currentState: any, formData: FormData) {
             gacha_charas,
             description_points: description_points || null,
             description_recommend: description_recommend || null,
-            status: 'on_sale' // Default status
+            status: 'on_sale', // Default status
+            movies: movies // Defined above in previous edit block? No, variable scope issue.
         };
         if (seq_id !== undefined) insertData.seq_id = seq_id;
 

@@ -5,7 +5,8 @@ import { saveProduct } from '@/actions/admin/product';
 import { Button } from '@/components/ui/button';
 import { TagSelector } from '@/components/features/admin/products/tag-selector';
 import { ImageUploader } from '@/components/features/admin/products/image-uploader';
-import { ImagePlus, Save } from 'lucide-react';
+import { VideoUploader } from '@/components/features/admin/products/video-uploader';
+import { ImagePlus, Save, Video } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/types';
 
@@ -191,7 +192,23 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                         </div>
                         <ImageUploader
                             initialImages={initialData?.images || []}
-                            onImagesChange={() => { }} // State handled internally via hidden input for form submission
+                            onImagesChange={() => { }}
+                        />
+                    </div>
+
+                    {/* Videos */}
+                    <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 space-y-4">
+                        <h2 className="font-bold text-lg text-slate-800 border-b pb-2 mb-4 flex items-center">
+                            <Video className="w-5 h-5 mr-2" />
+                            紹介動画
+                        </h2>
+
+                        <div className="text-sm text-slate-500 mb-2">
+                            プレイ動画などをアップロードできます（50MB以下推奨）。
+                        </div>
+                        <VideoUploader
+                            initialVideos={initialData?.movies || []}
+                            onVideosChange={() => { }}
                         />
                     </div>
                 </div>
