@@ -29,7 +29,8 @@ export async function submitReview(data: Omit<ReviewInput, 'is_published' | 'man
     const submissionData = {
         star: data.star,
         comment: data.comment,
-        game_title: data.game_title,
+        nickname: data.nickname,
+        request_type: data.request_type,
         manual_stock_no: data.manual_stock_no,
         is_published: true,
         review_date: new Date().toISOString().split('T')[0],
@@ -188,7 +189,8 @@ export async function updateReviewContent(id: number, data: Omit<ReviewInput, 'm
         .update({
             star: data.star,
             comment: data.comment,
-            game_title: data.game_title,
+            nickname: data.nickname,
+            request_type: data.request_type,
             manual_stock_no: data.manual_stock_no,
             is_published: data.is_published
         })

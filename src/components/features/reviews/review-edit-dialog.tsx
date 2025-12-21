@@ -25,9 +25,10 @@ export function ReviewEditDialog({ open, onOpenChange, review, onUpdate, isAdmin
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         star: review.star.toString(),
-        game_title: review.game_title || '',
+        nickname: review.nickname || '',
         comment: review.comment || '',
         manual_stock_no: review.manual_stock_no?.replace('No.', '') || '',
+        request_type: review.request_type || 'buyback',
         is_published: review.is_published ?? true
     });
 
@@ -43,8 +44,9 @@ export function ReviewEditDialog({ open, onOpenChange, review, onUpdate, isAdmin
             const result = await updateReviewContent(review.id, {
                 star: parseInt(formData.star),
                 comment: formData.comment,
-                game_title: formData.game_title,
-                manual_stock_no: formData.manual_stock_no ? `No.${formData.manual_stock_no}` : null,
+                nickname: formData.nickname,
+                request_type: formData.request_type as 'buyback' | 'purchase',
+                manual_stock_no: formData.request_type === 'purchase' && formData.manual_stock_no ? `No.${formData.manual_stock_no}` : null,
                 is_published: formData.is_published
             });
 
@@ -78,13 +80,28 @@ export function ReviewEditDialog({ open, onOpenChange, review, onUpdate, isAdmin
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 pt-4">
                     <div className="space-y-2">
-                        <Label htmlFor="edit_game_title">タイトル</Label>
+                        <Label>依頼内容</Label>
+                        <Select
+                            value={formData.request_type || ''}
+                            onValueChange={(v) => handleChange('request_type', v)}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="買取 or購入を選択" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="buyback">買取 (売却)</SelectItem>
+                                <SelectItem value="purchase">購入</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="edit_nickname">ニックネーム</Label>
                         <Input
-                            id="edit_game_title"
-                            placeholder="例: 迅速な対応ありがとうございました"
-                            required
-                            value={formData.game_title}
-                            onChange={(e) => handleChange('game_title', e.target.value)}
+                            id="edit_nickname"
+                            placeholder="あなたのニックネームを入力"
+                            value={formData.nickname}
+                            onChange={(e) => handleChange('nickname', e.target.value)}
                         />
                     </div>
 
@@ -109,20 +126,22 @@ export function ReviewEditDialog({ open, onOpenChange, review, onUpdate, isAdmin
                         </Select>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="edit_manual_stock_no">商品番号 (数字のみ)</Label>
-                        <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-500">No.</span>
-                            <Input
-                                id="edit_manual_stock_no"
-                                type="number"
-                                placeholder="123"
-                                required
-                                value={formData.manual_stock_no}
-                                onChange={(e) => handleChange('manual_stock_no', e.target.value)}
-                            />
+                    {formData.request_type === 'purchase' && (
+                        <div className="space-y-2">
+                            <Label htmlFor="edit_manual_stock_no">商品番号 (数字のみ)</Label>
+                            <div className="flex items-center gap-2">
+                                <span className="font-bold text-slate-500">No.</span>
+                                <Input
+                                    id="edit_manual_stock_no"
+                                    type="number"
+                                    placeholder="123"
+                                    required
+                                    value={formData.manual_stock_no}
+                                    onChange={(e) => handleChange('manual_stock_no', e.target.value)}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <div className="space-y-2">
                         <Label htmlFor="edit_comment">感想・コメント</Label>

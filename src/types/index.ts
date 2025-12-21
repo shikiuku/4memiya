@@ -42,7 +42,8 @@ export type Review = {
   id: number;
   star: number;
   comment: string | null;
-  game_title: string | null;
+  nickname: string | null;
+  request_type: 'buyback' | 'purchase' | null;
   manual_stock_no: string | null;
   manual_price: number | null;
   review_date: string | null;

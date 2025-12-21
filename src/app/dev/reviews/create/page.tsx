@@ -18,7 +18,8 @@ export default function CreateReviewPage() {
     const [formData, setFormData] = useState({
         star: '5',
         comment: '',
-        game_title: 'モンスト',
+        nickname: '',
+        request_type: 'buyback',
         manual_stock_no: '',
         manual_price: '',
         review_date: new Date().toISOString().split('T')[0]
@@ -36,8 +37,9 @@ export default function CreateReviewPage() {
             const result = await createReview({
                 star: parseInt(formData.star),
                 comment: formData.comment,
-                game_title: formData.game_title,
-                manual_stock_no: formData.manual_stock_no || null,
+                nickname: formData.nickname,
+                request_type: formData.request_type as 'buyback' | 'purchase',
+                manual_stock_no: formData.request_type === 'purchase' && formData.manual_stock_no ? (formData.manual_stock_no.startsWith('No.') ? formData.manual_stock_no : `No.${formData.manual_stock_no}`) : null,
                 manual_price: formData.manual_price ? parseInt(formData.manual_price) : null,
                 review_date: formData.review_date,
                 is_published: true,
@@ -112,28 +114,47 @@ export default function CreateReviewPage() {
                             />
                         </div>
 
-                        {/* Game Title */}
+                        {/* Request Type */}
                         <div className="space-y-2">
-                            <Label htmlFor="game_title">ゲームタイトル</Label>
+                            <Label>依頼内容</Label>
+                            <Select
+                                value={formData.request_type || ''}
+                                onValueChange={(v) => handleChange('request_type', v)}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="買取 or購入を選択" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="buyback">買取 (売却)</SelectItem>
+                                    <SelectItem value="purchase">購入</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* Nickname */}
+                        <div className="space-y-2">
+                            <Label htmlFor="nickname">ニックネーム</Label>
                             <Input
-                                id="game_title"
-                                value={formData.game_title}
-                                onChange={(e) => handleChange('game_title', e.target.value)}
-                                placeholder="モンスト"
+                                id="nickname"
+                                value={formData.nickname}
+                                onChange={(e) => handleChange('nickname', e.target.value)}
+                                placeholder="あなたのニックネームを入力"
                             />
                         </div>
 
                         {/* Manual Stock No / Price */}
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="manual_stock_no">在庫番号 (任意)</Label>
-                                <Input
-                                    id="manual_stock_no"
-                                    value={formData.manual_stock_no}
-                                    onChange={(e) => handleChange('manual_stock_no', e.target.value)}
-                                    placeholder="No.123"
-                                />
-                            </div>
+                            {formData.request_type === 'purchase' && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="manual_stock_no">在庫番号 (購入時のみ)</Label>
+                                    <Input
+                                        id="manual_stock_no"
+                                        value={formData.manual_stock_no}
+                                        onChange={(e) => handleChange('manual_stock_no', e.target.value)}
+                                        placeholder="No.123"
+                                    />
+                                </div>
+                            )}
                             <div className="space-y-2">
                                 <Label htmlFor="manual_price">買取価格 (任意)</Label>
                                 <Input
