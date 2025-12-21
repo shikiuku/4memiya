@@ -77,12 +77,7 @@ export function ReviewCard({ review, currentUserId, isAdmin = false, onDelete, o
                 {review.request_type && (
                     <Badge
                         variant="outline"
-                        className={`
-                            px-2.5 py-0.5 text-xs font-bold border
-                            ${review.request_type === 'buyback'
-                                ? 'bg-orange-50 text-orange-600 border-orange-200'
-                                : 'bg-blue-50 text-blue-600 border-blue-200'}
-                        `}
+                        className="px-2.5 py-0.5 text-xs font-medium border rounded-md bg-slate-50 text-slate-600 border-slate-200"
                     >
                         {review.request_type === 'buyback' ? '買取' : '購入'}
                     </Badge>
