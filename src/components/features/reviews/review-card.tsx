@@ -31,7 +31,6 @@ export function ReviewCard({ review, currentUserId, isAdmin = false, onDelete, o
 
     // Check ownership OR admin status
     const canEdit = isAdmin || (currentUserId && review.user_id === currentUserId);
-    // Note: delete is same as edit permission for now in UI
 
     const router = useRouter();
 
@@ -70,37 +69,50 @@ export function ReviewCard({ review, currentUserId, isAdmin = false, onDelete, o
                         </Badge>
                     )}
                 </div>
+            </div>
+
+            {/* Top Right Zone: Type Badge & Actions */}
+            <div className="absolute top-4 right-3 flex items-start gap-3 z-10">
+                {/* Request Type Badge */}
                 {review.request_type && (
-                    <Badge variant="secondary" className="absolute top-4 right-4 text-xs">
+                    <Badge
+                        variant="outline"
+                        className={`
+                            px-2.5 py-0.5 text-xs font-bold border
+                            ${review.request_type === 'buyback'
+                                ? 'bg-orange-50 text-orange-600 border-orange-200'
+                                : 'bg-blue-50 text-blue-600 border-blue-200'}
+                        `}
+                    >
                         {review.request_type === 'buyback' ? '買取' : '購入'}
                     </Badge>
                 )}
+
+                {/* Actions (Edit/Delete) */}
+                {canEdit && (
+                    <div className="flex flex-col gap-3">
+                        <button
+                            className="flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-700 transition-colors group"
+                            onClick={() => setEditOpen(true)}
+                        >
+                            <div className="border border-slate-300 rounded p-1 group-hover:bg-slate-50">
+                                <Pencil className="w-4 h-4" />
+                            </div>
+                            <span className="text-[10px] font-bold">編集</span>
+                        </button>
+
+                        <button
+                            className="flex flex-col items-center gap-0.5 text-red-500 hover:text-red-600 transition-colors group"
+                            onClick={handleDelete}
+                        >
+                            <div className="border border-red-200 rounded p-1 group-hover:bg-red-50">
+                                <Trash2 className="w-4 h-4" />
+                            </div>
+                            <span className="text-[10px] font-bold">削除</span>
+                        </button>
+                    </div>
+                )}
             </div>
-
-            {/* Actions: Absolute Top Right, Vertical Stack */}
-            {canEdit && (
-                <div className="absolute top-4 right-3 flex flex-col gap-3">
-                    <button
-                        className="flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-700 transition-colors group"
-                        onClick={() => setEditOpen(true)}
-                    >
-                        <div className="border border-slate-300 rounded p-1 group-hover:bg-slate-50">
-                            <Pencil className="w-4 h-4" />
-                        </div>
-                        <span className="text-[10px] font-bold">編集</span>
-                    </button>
-
-                    <button
-                        className="flex flex-col items-center gap-0.5 text-red-500 hover:text-red-600 transition-colors group"
-                        onClick={handleDelete}
-                    >
-                        <div className="border border-red-200 rounded p-1 group-hover:bg-red-50">
-                            <Trash2 className="w-4 h-4" />
-                        </div>
-                        <span className="text-[10px] font-bold">削除</span>
-                    </button>
-                </div>
-            )}
 
             {/* Comment */}
             <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap pr-12">
