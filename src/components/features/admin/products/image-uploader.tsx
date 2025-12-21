@@ -14,8 +14,17 @@ interface ImageUploaderProps {
 
 export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploaderProps) {
     const [images, setImages] = useState<string[]>(initialImages);
+    const [imageSizes, setImageSizes] = useState<Record<string, number>>({});
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const formatSize = (bytes: number) => {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    };
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
@@ -23,6 +32,7 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
         setIsUploading(true);
         const files = Array.from(e.target.files);
         const newUrls: string[] = [];
+        const newSizes: Record<string, number> = {};
 
         try {
             for (const file of files) {
@@ -36,7 +46,7 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
                 let compressedFile = file;
                 try {
                     compressedFile = await imageCompression(file, options);
-                    console.log(`Compressed: ${file.size / 1024 / 1024}MB -> ${compressedFile.size / 1024 / 1024}MB`);
+                    console.log(`Compressed: ${file.size} -> ${compressedFile.size}`);
                 } catch (error) {
                     console.error('Compression failed:', error);
                     // Continue with original file if compression fails
@@ -54,11 +64,13 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
 
                 if (result.url) {
                     newUrls.push(result.url);
+                    newSizes[result.url] = compressedFile.size;
                 }
             }
 
             const updatedImages = [...images, ...newUrls];
             setImages(updatedImages);
+            setImageSizes(prev => ({ ...prev, ...newSizes }));
             onImagesChange(updatedImages);
         } catch (error: any) {
             console.error('Upload error:', error);
@@ -73,7 +85,13 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
 
     const removeImage = (indexToRemove: number) => {
         const updatedImages = images.filter((_, index) => index !== indexToRemove);
+        const urlToRemove = images[indexToRemove];
         setImages(updatedImages);
+        setImageSizes(prev => {
+            const newSizes = { ...prev };
+            delete newSizes[urlToRemove];
+            return newSizes;
+        });
         onImagesChange(updatedImages);
     };
 
@@ -95,6 +113,11 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
                         >
                             <X className="w-3 h-3" />
                         </button>
+                        {imageSizes[url] && (
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] py-0.5 text-center font-mono">
+                                {formatSize(imageSizes[url])}
+                            </div>
+                        )}
                     </div>
                 ))}
 
