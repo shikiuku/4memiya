@@ -89,8 +89,8 @@ export function ReviewEditDialog({ open, onOpenChange, review, onUpdate, isAdmin
                                 <SelectValue placeholder="買取 or購入を選択" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="buyback">買取</SelectItem>
                                 <SelectItem value="purchase">購入</SelectItem>
+                                <SelectItem value="buyback">買取</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

@@ -19,7 +19,7 @@ export default function CreateReviewPage() {
         star: '5',
         comment: '',
         nickname: '',
-        request_type: 'buyback',
+        request_type: 'purchase',
         manual_stock_no: '',
         manual_price: '',
         review_date: new Date().toISOString().split('T')[0]
@@ -125,8 +125,8 @@ export default function CreateReviewPage() {
                                     <SelectValue placeholder="買取 or購入を選択" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="buyback">買取</SelectItem>
                                     <SelectItem value="purchase">購入</SelectItem>
+                                    <SelectItem value="buyback">買取</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

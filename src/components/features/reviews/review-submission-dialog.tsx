@@ -18,7 +18,7 @@ export function ReviewSubmissionDialog() {
         nickname: '',
         comment: '',
         manual_stock_no: '',
-        request_type: 'buyback' // Default
+        request_type: 'purchase' // Default
     });
 
     const handleChange = (field: string, value: string) => {
@@ -41,7 +41,7 @@ export function ReviewSubmissionDialog() {
             if (result.success) {
                 alert('レビューを投稿しました。');
                 setOpen(false);
-                setFormData({ star: '5', nickname: '', comment: '', manual_stock_no: '', request_type: 'buyback' });
+                setFormData({ star: '5', nickname: '', comment: '', manual_stock_no: '', request_type: 'purchase' });
                 // Optional: refresh page to see it
                 window.location.reload();
             } else {
@@ -82,8 +82,8 @@ export function ReviewSubmissionDialog() {
                                 <SelectValue placeholder="買取 or購入を選択" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="buyback">買取</SelectItem>
                                 <SelectItem value="purchase">購入</SelectItem>
+                                <SelectItem value="buyback">買取</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
