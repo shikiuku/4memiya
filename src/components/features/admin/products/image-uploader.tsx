@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ImagePlus, X, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { uploadImageAction } from '@/actions/admin/upload';
+import imageCompression from 'browser-image-compression';
 
 interface ImageUploaderProps {
     initialImages?: string[];
@@ -25,9 +26,25 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
 
         try {
             for (const file of files) {
+                // Compress image
+                const options = {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 1920,
+                    useWebWorker: true,
+                };
+
+                let compressedFile = file;
+                try {
+                    compressedFile = await imageCompression(file, options);
+                    console.log(`Compressed: ${file.size / 1024 / 1024}MB -> ${compressedFile.size / 1024 / 1024}MB`);
+                } catch (error) {
+                    console.error('Compression failed:', error);
+                    // Continue with original file if compression fails
+                }
+
                 // Use Server Action for upload to bypass RLS
                 const formData = new FormData();
-                formData.append('file', file);
+                formData.append('file', compressedFile);
 
                 const result = await uploadImageAction(formData);
 
