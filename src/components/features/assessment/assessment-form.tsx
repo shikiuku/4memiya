@@ -181,33 +181,26 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                             name: `dynamicRanges.${cat}` as any,
                             label: representativeRule?.label || cat,
                             placeholder: representativeRule?.input_placeholder || '0',
-                            unit: '値'
+                            unit: representativeRule?.input_unit || '値'
                         };
 
                         // Optional: Keep hardcoded defaults if DB value is missing, for backward compatibility or better defaults
-                        if (!representativeRule?.input_placeholder) {
-                            if (cat === 'rank') {
-                                inputProps.placeholder = '1500';
-                                inputProps.unit = 'ランク';
-                            } else if (cat === 'luck_max') {
-                                inputProps.placeholder = '500';
-                                inputProps.unit = '体';
-                            } else if (cat === 'gacha_charas') {
-                                inputProps.placeholder = '1000';
-                                inputProps.unit = '体';
-                            }
-                        } else {
-                            // If DB has placeholder, just set proper units
-                            if (cat === 'rank') inputProps.unit = 'ランク';
-                            else if (cat === 'luck_max') inputProps.unit = '体';
-                            else if (cat === 'gacha_charas') inputProps.unit = '体';
+                        // Only apply defaults if BOTH placeholder and unit are missing? Or independently?
+                        // Let's apply independently but check specific categories.
+                        if (cat === 'rank') {
+                            if (!representativeRule?.input_placeholder) inputProps.placeholder = '1500';
+                            if (!representativeRule?.input_unit) inputProps.unit = 'ランク';
+                            // Label override for standard categories if not set in DB (or strictly enforce "Rank" vs "rank")
+                            if (!representativeRule?.label) inputProps.label = 'ランク';
+                        } else if (cat === 'luck_max') {
+                            if (!representativeRule?.input_placeholder) inputProps.placeholder = '500';
+                            if (!representativeRule?.input_unit) inputProps.unit = '体';
+                            if (!representativeRule?.label) inputProps.label = '運極数';
+                        } else if (cat === 'gacha_charas') {
+                            if (!representativeRule?.input_placeholder) inputProps.placeholder = '1000';
+                            if (!representativeRule?.input_unit) inputProps.unit = '体';
+                            if (!representativeRule?.label) inputProps.label = 'ガチャ限数';
                         }
-
-                        // Override label if standard category (optional, but cleaner if we trust DB label now)
-                        if (cat === 'rank') inputProps.label = 'ランク';
-                        else if (cat === 'luck_max') inputProps.label = '運極数';
-                        else if (cat === 'gacha_charas') inputProps.label = 'ガチャ限数';
-
 
                         return (
                             <div key={cat} className="space-y-1">

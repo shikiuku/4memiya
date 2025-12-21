@@ -2,6 +2,7 @@
 
 import { AssessmentRule } from '@/types';
 import { RuleFormDialog } from './rule-form-dialog';
+import { CategorySettingsDialog } from './category-settings-dialog';
 import { Button } from '@/components/ui/button';
 import { Trash2, GripVertical, Plus } from 'lucide-react';
 import { deleteAssessmentRule, updateCategoryOrder } from '@/actions/admin/assessment';
@@ -153,6 +154,11 @@ function SortableCategoryItem({ category, rules }: { category: string, rules: As
         displayName = ruleWithLabel?.label || category;
     }
 
+    // Determine current settings (placeholder/unit) from representative rule
+    const representativeRule = rules.find(r => r.input_placeholder || r.input_unit) || rules[0];
+    const currentPlaceholder = representativeRule?.input_placeholder || '';
+    const currentUnit = representativeRule?.input_unit || '';
+
     return (
         <div ref={setNodeRef} style={style} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 relative group">
             <div className="flex items-center justify-between border-b pb-4 mb-4">
@@ -161,9 +167,17 @@ function SortableCategoryItem({ category, rules }: { category: string, rules: As
                     <div {...attributes} {...listeners} className="cursor-grab hover:text-slate-700 text-slate-400 p-1 rounded hover:bg-slate-100">
                         <GripVertical className="w-5 h-5" />
                     </div>
-                    <h2 className="text-lg font-bold capitalize text-slate-800">
-                        {displayName}
-                    </h2>
+                    <div>
+                        <h2 className="text-lg font-bold capitalize text-slate-800 flex items-center gap-2">
+                            {displayName}
+                            <CategorySettingsDialog
+                                category={category}
+                                currentLabel={displayName}
+                                currentPlaceholder={currentPlaceholder}
+                                currentUnit={currentUnit}
+                            />
+                        </h2>
+                    </div>
                 </div>
                 {/* Add Rule Button for this category */}
                 <RuleFormDialog defaultCategory={category} />

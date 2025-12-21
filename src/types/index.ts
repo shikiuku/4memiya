@@ -65,6 +65,9 @@ export type AssessmentRule = {
   label: string | null;
   threshold: number | null;
   price_adjustment: number;
+  input_placeholder?: string | null;
+  input_unit?: string | null;
+  sort_order: number;
   created_at: string;
 };
 

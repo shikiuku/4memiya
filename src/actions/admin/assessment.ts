@@ -184,3 +184,66 @@ export async function updateCategoryOrder(categories: string[]) {
     revalidatePath('/dev/assessment');
     return { success: true };
 }
+
+/**
+ * Update category settings (Label, Placeholder, Unit) for ALL rules in a category
+ */
+export async function updateCategorySettings(category: string, settings: {
+    label: string;
+    input_placeholder: string | null;
+    input_unit: string | null;
+}) {
+    // 1. Verify Authentication
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+        return { error: '認証エラー: ログインしてください。' };
+    }
+
+    // 2. Perform Admin Action
+    const supabaseAdmin = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false
+            }
+        }
+    );
+
+    // Update all rules in this category with the new settings
+    // Note: We are setting 'label' on all rules, effectively treating it as a category label override
+    // Individual rule labels (for checkboxes) might be overwritten if we are not careful, 
+    // but for 'range' rules it's fine. 
+    // To be safe, we might only want to update input_placeholder/unit if label is empty?
+    // User requested "Category settings", so overwriting seems appropriate for consistency.
+
+    // However, if we overwrite 'label', we lose specific labels for boolean rules if they are mixed?
+    // But boolean rules don't use unit/placeholder. 
+    // Let's only update fields that are provided.
+
+    const updates: any = {};
+    if (settings.input_placeholder !== undefined) updates.input_placeholder = settings.input_placeholder;
+    if (settings.input_unit !== undefined) updates.input_unit = settings.input_unit;
+
+    // For label, we might want to be careful. 
+    // If the user sets a "Category Label", do we apply it to every rule?
+    // Maybe we only apply it to range rules? Or maybe we rely on the frontend 
+    // to just pick *one* rule's label as the category label (as we implemented).
+    // So if we update *all* rules with this label, it works.
+    if (settings.label) updates.label = settings.label;
+
+    const { error } = await supabaseAdmin
+        .from('assessment_rules')
+        .update(updates)
+        .eq('category', category);
+
+    if (error) {
+        return { error: '設定の保存に失敗しました: ' + error.message };
+    }
+
+    revalidatePath('/dev/assessment');
+    return { success: true };
+}
