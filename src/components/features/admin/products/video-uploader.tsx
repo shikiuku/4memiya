@@ -113,7 +113,7 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                     ) : (
                         <>
                             <Video className="w-8 h-8 text-slate-400 mb-2" />
-                            <span className="text-sm font-bold text-slate-500">動画を追加 (MP4, WebM equivalent)</span>
+                            <span className="text-sm font-bold text-slate-500 text-center px-4">動画を追加 (MP4など)</span>
                             <span className="text-xs text-slate-400 mt-1">推奨: 50MB以下</span>
                         </>
                     )}
