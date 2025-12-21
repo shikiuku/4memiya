@@ -141,9 +141,9 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
         <form className="space-y-6 bg-white p-6 rounded-md border border-slate-200" onSubmit={(e) => e.preventDefault()}>
 
             {/* Live Price Display */}
-            <div className="bg-slate-50 border border-slate-200 text-slate-900 p-6 rounded-md text-center transform transition-all duration-300">
+            <div className="sticky top-20 z-10 shadow-sm bg-slate-50 border border-slate-200 text-slate-900 p-4 rounded-md text-center transform transition-all duration-300">
                 <p className="text-slate-500 text-xs mb-1">現在の査定金額</p>
-                <div className="text-4xl font-bold tracking-tight mb-4">
+                <div className="text-4xl font-bold tracking-tight">
                     ¥{currentPrice.toLocaleString()}
                 </div>
 
