@@ -46,72 +46,8 @@ export default async function ConfigPage() {
                         設定を保存
                     </Button>
                 </form>
+                {/* Storage Maintenance Section Removed */}
             </div>
-
-            {/* Storage Maintenance Section */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mt-8">
-                <h2 className="font-bold text-lg text-slate-800 border-b pb-2 mb-4">
-                    ストレージ管理
-                </h2>
-                <div className="space-y-4">
-                    <p className="text-sm text-slate-600">
-                        データベースに紐付いていない不要な画像・動画ファイルを検索して削除します。<br />
-                        ※実行には数秒かかる場合があります。
-                    </p>
-                    <MaintenanceButton />
-                </div>
-            </div>
-        </div>
-    );
-}
-
-import { cleanupOrphanFilesAction } from '@/actions/admin/maintenance';
-import { Trash2 } from 'lucide-react';
-import { useState } from 'react';
-
-function MaintenanceButton() {
-    'use client';
-    const [isLoading, setIsLoading] = useState(false);
-    const [result, setResult] = useState<string | null>(null);
-
-    const handleCleanup = async () => {
-        if (!confirm('不要なファイルを削除しますか？\n（現在使用中のファイルは削除されません）')) return;
-
-        setIsLoading(true);
-        setResult(null);
-        try {
-            const res = await cleanupOrphanFilesAction();
-            setResult(
-                `完了: 全${res.totalFiles}ファイル中、${res.activeFiles}個が使用中。\n` +
-                `${res.orphanedFiles}個の不要ファイルを検出し、${res.deletedFiles}個を削除しました。` +
-                (res.errors.length > 0 ? `\nエラー: ${res.errors.length}件` : '')
-            );
-        } catch (e: any) {
-            setResult('エラーが発生しました: ' + e.message);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    return (
-        <div className="space-y-3">
-            <Button
-                onClick={handleCleanup}
-                disabled={isLoading}
-                variant="destructive"
-            >
-                {isLoading ? '処理中...' : (
-                    <>
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        不要ファイルを削除する
-                    </>
-                )}
-            </Button>
-            {result && (
-                <div className="bg-slate-100 p-3 rounded text-sm whitespace-pre-wrap font-mono border border-slate-200">
-                    {result}
-                </div>
-            )}
         </div>
     );
 }
