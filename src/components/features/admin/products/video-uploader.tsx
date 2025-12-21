@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Video, X, Loader2 } from 'lucide-react';
-import { uploadVideoAction } from '@/actions/admin/upload'; // We will create this
+import { createClient } from '@/lib/supabase/client';
 
 interface VideoUploaderProps {
     initialVideos?: string[];
@@ -23,25 +23,37 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
         const newUrls: string[] = [];
 
         try {
+            const supabase = createClient();
+
             for (const file of files) {
-                // Check file size (approx 50MB limit by default in many configs, user asked for 42MB)
+                // Check file size (recommend 50MB, but Supabase limit might be higher or project dependent)
+                // Vercel limit doesn't apply here.
                 if (file.size > 50 * 1024 * 1024) {
                     alert(`ファイルサイズが大きすぎます: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)\n50MB以下の動画を選択してください。`);
                     continue;
                 }
 
-                const formData = new FormData();
-                formData.append('file', file);
+                // Generate unique filename
+                const fileExt = file.name.split('.').pop();
+                const fileName = `videos/${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
 
-                const result = await uploadVideoAction(formData);
+                const { data, error } = await supabase.storage
+                    .from('products')
+                    .upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
 
-                if (result.error) {
-                    throw new Error(result.error);
+                if (error) {
+                    throw error;
                 }
 
-                if (result.url) {
-                    newUrls.push(result.url);
-                }
+                // Get public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('products')
+                    .getPublicUrl(fileName);
+
+                newUrls.push(publicUrl);
             }
 
             const updatedVideos = [...videos, ...newUrls];
@@ -102,7 +114,7 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                         <>
                             <Video className="w-8 h-8 text-slate-400 mb-2" />
                             <span className="text-sm font-bold text-slate-500">動画を追加 (MP4, WebM equivalent)</span>
-                            <span className="text-xs text-slate-400 mt-1">推奨: 40MB以下</span>
+                            <span className="text-xs text-slate-400 mt-1">推奨: 50MB以下</span>
                         </>
                     )}
                 </div>
