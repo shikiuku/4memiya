@@ -1,9 +1,17 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { ChevronLeft } from 'lucide-react';
 
 export default function CampaignPage() {
     return (
         <div className="min-h-screen bg-slate-50 pb-20">
+            <div className="container mx-auto px-4 py-4">
+                <Link href="/" className="inline-flex items-center text-slate-500 hover:text-slate-800 text-sm">
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    トップページに戻る
+                </Link>
+            </div>
+
             {/* Header */}
             <div className="bg-white border-b border-slate-100 py-6 px-4 text-center">
                 <h1 className="text-xl font-bold text-slate-900 mb-2">
