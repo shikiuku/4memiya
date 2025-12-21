@@ -38,8 +38,8 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
             for (const file of files) {
                 // Compress image
                 const options = {
-                    maxSizeMB: 1,
-                    maxWidthOrHeight: 1920,
+                    maxSizeMB: 0.5,
+                    maxWidthOrHeight: 1280,
                     useWebWorker: true,
                 };
 
