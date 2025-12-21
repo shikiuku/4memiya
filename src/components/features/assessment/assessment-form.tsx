@@ -131,7 +131,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
     }, [rangeRules, booleanRules, rank, luckMax, gachaLimit, JSON.stringify(customRules), dynamicRanges]);
 
     const handleShare = () => {
-        const text = `モンストアカウントが${currentPrice.toLocaleString()}円で査定されました！\n#モンスト買取 #雨宮査定`;
+        const text = `モンストのアカウントが${currentPrice.toLocaleString()}円で査定されました！！\n\n自動査定はこちら✔︎\nhttps://4memiya.com/assessment\n\nモンスト在庫の確認はこちら✔︎\nhttps://4memiya.com\n\nアカウント売却依頼は @AJAJDNW まで \n\n#モンスト #モンスト買取 #雨宮査定`;
         const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank');
     };
