@@ -1,6 +1,8 @@
 import { getAssessmentRules } from '@/actions/admin/assessment';
 import { AssessmentForm } from '@/components/features/assessment/assessment-form';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AssessmentPage() {
     // Fetch rules from DB
     const rules = await getAssessmentRules();
