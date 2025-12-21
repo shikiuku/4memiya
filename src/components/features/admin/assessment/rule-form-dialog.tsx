@@ -86,21 +86,34 @@ export function RuleFormDialog({ existingRule, defaultCategory, defaultRuleType 
 
                     {/* Category Selection */}
                     <div className="space-y-2">
-                        <Label>名前</Label>
+                        <Label>システムID (カテゴリ)</Label>
                         <Input
                             name="category"
-                            placeholder="例: rank, luck_max, character, option..."
+                            placeholder="例: rank, monshoryoku"
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                             required
                         />
                         <p className="text-xs text-slate-500">
-                            システム識別用のIDです (例: rank, badge_power)。同じカテゴリはまとまって表示されます。
+                            計算ロジック識別のためのIDです (半角英数推奨)。同じIDはグループ化されます。
+                        </p>
+                    </div>
+
+                    {/* Label (Always visible now to allow overriding display name) */}
+                    <div className="space-y-2">
+                        <Label>表示名 (ラベル)</Label>
+                        <Input
+                            name="label"
+                            placeholder="例: 平均紋章力, ルシファー運極"
+                            defaultValue={existingRule?.label ?? ''}
+                        />
+                        <p className="text-xs text-slate-500">
+                            画面に表示される項目名です。空欄の場合はIDが表示されます。
                         </p>
                     </div>
 
                     {/* Conditional Fields */}
-                    {ruleType === 'range' ? (
+                    {ruleType === 'range' && (
                         <div className="space-y-2">
                             <Label>～以上</Label>
                             <Input
@@ -111,17 +124,6 @@ export function RuleFormDialog({ existingRule, defaultCategory, defaultRuleType 
                                 required
                             />
                             <p className="text-xs text-slate-500">この数値以上の場合に適用されます。</p>
-                        </div>
-                    ) : (
-                        <div className="space-y-2">
-                            <Label>表示ラベル (項目名)</Label>
-                            <Input
-                                name="label"
-                                placeholder="例: ルシファー所持, 禁止区域解放済み"
-                                defaultValue={existingRule?.label ?? ''}
-                                required
-                            />
-                            <p className="text-xs text-slate-500">チェックボックスの横に表示される名前です。</p>
                         </div>
                     )}
 
