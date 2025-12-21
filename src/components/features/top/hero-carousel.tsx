@@ -138,23 +138,17 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
                                         <Bell className="w-6 h-6 sm:w-12 sm:h-12 text-yellow-600" />
                                     </div>
                                     <h2 className="text-base sm:text-2xl md:text-3xl font-bold mb-2">新着情報をいち早くGET！</h2>
-                                    <p className="text-yellow-800 text-xs sm:text-base mb-4 max-w-md font-medium">
-                                        ブラウザ通知をオンにすると、新しい在庫やキャンペーン情報がすぐに届きます。
+                                    <p className="text-yellow-800 text-xs sm:text-base mb-2 max-w-md font-medium">
+                                        ブラウザ通知をオンにすると、新しい在庫やキャンペーン情報がすぐに届きます。<br />
+                                        <span className="text-xs text-yellow-700 mt-1 block">
+                                            ※iPhoneの方は「ホーム画面に追加」してから設定ボタンを押してください
+                                        </span>
                                     </p>
 
-                                    {/* iPhone Instructions */}
-                                    <div className="bg-yellow-100/80 p-3 rounded-lg text-left max-w-sm mb-4 border border-yellow-200">
-                                        <h3 className="font-bold text-yellow-900 text-sm mb-2 border-l-4 border-yellow-600 pl-2">
-                                            【iPhoneでの追加方法】
-                                        </h3>
-                                        <ul className="text-xs text-yellow-800 space-y-1.5 leading-relaxed">
-                                            <li>① Safariでこのページを開いていることを確認</li>
-                                            <li className="flex items-center flex-wrap gap-1">
-                                                ② 画面下の「共有」<Share className="w-3.5 h-3.5" />をタップ
-                                            </li>
-                                            <li>③ 下にスクロールして「ホーム画面に追加」をタップ</li>
-                                            <li>④ 右上の「追加」を押すと完了です</li>
-                                        </ul>
+                                    <div className="mb-2">
+                                        <Link href="/guide/notifications" className="text-xs text-blue-600 underline hover:text-blue-800">
+                                            詳細なiPhoneでの追加方法はこちら
+                                        </Link>
                                     </div>
                                     <Button
                                         onClick={handleEnableNotifications}

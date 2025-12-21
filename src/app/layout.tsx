@@ -4,6 +4,15 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "在庫一覧",
   description: "ゲームアカウント売買プラットフォーム",
+  icons: {
+    icon: "/amamiya_icon.png",
+    apple: "/amamiya_icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "在庫一覧",
+  },
 };
 
 export default function RootLayout({
