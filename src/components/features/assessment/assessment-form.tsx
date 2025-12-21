@@ -50,6 +50,14 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
         return diffDays;
     }, []);
 
+    // Pre-calculate defaults for available categories to ensure inputs work immediately
+    const initialDynamicRanges = useMemo(() => {
+        const ranges: Record<string, number> = {};
+        rules.filter(r => r.rule_type === 'range' && !['rank', 'luck_max', 'gacha_charas'].includes(r.category))
+            .forEach(r => { ranges[r.category] = 0; });
+        return ranges;
+    }, [rules]);
+
     const {
         register,
         handleSubmit,
@@ -64,12 +72,16 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
             luckMax: undefined as any,
             gachaLimit: undefined as any,
             customRules: {},
-            dynamicRanges: {},
+            dynamicRanges: initialDynamicRanges,
         },
     });
 
-    const watchedValues = watch();
-    const { rank, luckMax, gachaLimit, customRules, dynamicRanges } = watchedValues;
+    // Watch values explicitly for better performance/reliability
+    const rank = watch('rank');
+    const luckMax = watch('luckMax');
+    const gachaLimit = watch('gachaLimit');
+    const customRules = watch('customRules');
+    const dynamicRanges = watch('dynamicRanges'); // Explicit watch
 
     // Separate rules by type
     const { rangeRules, booleanRules, extraRangeCategories } = useMemo(() => {
@@ -93,16 +105,13 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
         let price = 0;
 
         // 1. Range Rules (Highest Threshold Wins per Category)
-        // Group by category first
         const rangesByCategory = rangeRules.reduce((acc, rule) => {
             if (!acc[rule.category]) acc[rule.category] = [];
             acc[rule.category].push(rule);
             return acc;
         }, {} as Record<string, AssessmentRule[]>);
 
-        // Evaluate each category
         Object.entries(rangesByCategory).forEach(([category, catRules]) => {
-            // Sort by threshold descending to find the highest match easily
             const sorted = catRules.sort((a, b) => (b.threshold || 0) - (a.threshold || 0));
 
             let inputValue = 0;
@@ -110,12 +119,13 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
             else if (category === 'luck_max') inputValue = Number(luckMax);
             else if (category === 'gacha_charas') inputValue = Number(gachaLimit);
             else {
-                // Dynamic category value
+                // Dynamic category value - Ensure we check BOTH structure and flat access if RHF behaves oddly
                 inputValue = Number(dynamicRanges?.[category] || 0);
             }
 
             const match = sorted.find(r => inputValue >= (r.threshold || 0));
             if (match) {
+                // console.log(`Matched ${category}: input=${inputValue} >= threshold=${match.threshold} (+${match.price_adjustment})`);
                 price += match.price_adjustment;
             }
         });
