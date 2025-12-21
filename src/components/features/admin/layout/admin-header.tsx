@@ -51,10 +51,6 @@ export async function AdminHeader() {
                         <MessageSquare className="w-4 h-4" />
                         レビュー
                     </Link>
-                    <Link href="/dev/inquiries" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
-                        <MessageSquare className="w-4 h-4" />
-                        お問い合わせ
-                    </Link>
                     <Link href="/dev/terms" className="flex items-center gap-2 hover:text-blue-300 transition-colors whitespace-nowrap">
                         <FileText className="w-4 h-4" />
                         利用規約

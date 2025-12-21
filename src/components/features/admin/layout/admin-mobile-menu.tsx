@@ -38,7 +38,7 @@ export function AdminMobileMenu({ user, username }: AdminMobileMenuProps) {
     const navItems = [
         { href: '/dev/products', label: '在庫管理', icon: Package },
         { href: '/dev/assessment', label: '買取査定', icon: FileText },
-        { href: '/dev/inquiries', label: 'お問い合わせ', icon: MessageSquare },
+
         { href: '/dev/terms', label: '利用規約', icon: FileText },
         { href: '/dev/config', label: 'サイト設定', icon: Settings },
         { href: '/dev/account', label: '設定', icon: Settings },

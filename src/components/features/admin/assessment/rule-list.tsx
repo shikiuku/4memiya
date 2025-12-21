@@ -147,12 +147,12 @@ function SortableCategoryItem({ category, rules }: { category: string, rules: As
     };
 
     // Determine display name for the category
-    let displayName = CATEGORY_LABELS[category];
-    if (!displayName) {
-        // For dynamic categories, use the label from the first rule that has one
-        const ruleWithLabel = rules.find(r => r.label);
-        displayName = ruleWithLabel?.label || category;
-    }
+    // 1. Try to find a dynamic label from the rules (user settings)
+    const ruleWithLabel = rules.find(r => r.label);
+
+    // 2. Fallback to hardcoded defaults (for standard categories if no label set)
+    // 3. Fallback to raw category key
+    const displayName = ruleWithLabel?.label || CATEGORY_LABELS[category] || category;
 
     // Determine current settings (placeholder/unit) from representative rule
     const representativeRule = rules.find(r => r.input_placeholder || r.input_unit) || rules[0];
