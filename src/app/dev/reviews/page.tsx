@@ -12,6 +12,8 @@ import { ReviewCard } from '@/components/features/reviews/review-card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
+import LoadingSkeleton from './loading';
+
 export default function AdminReviewListPage() {
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState(true);
@@ -58,6 +60,10 @@ export default function AdminReviewListPage() {
         ? (reviews.reduce((acc, r) => acc + r.star, 0) / reviews.length).toFixed(1)
         : '0.0';
 
+    if (loading) {
+        return <LoadingSkeleton />;
+    }
+
     return (
         <div className="container mx-auto px-4 py-8 max-w-2xl space-y-6">
             <div className="flex items-center justify-between bg-[#555] text-white p-3 rounded-sm shadow-sm">
@@ -77,9 +83,7 @@ export default function AdminReviewListPage() {
                 </div>
             </div>
 
-            {loading ? (
-                <div className="text-center py-10 text-slate-500">読み込み中...</div>
-            ) : reviews.length === 0 ? (
+            {reviews.length === 0 ? (
                 <div className="text-center py-10 text-slate-500">レビューがありません。</div>
             ) : (
                 <div className="max-w-2xl mx-auto space-y-4">
