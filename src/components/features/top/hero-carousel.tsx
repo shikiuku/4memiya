@@ -107,7 +107,7 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
     };
 
     return (
-        <div className="relative group px-12 md:px-16">
+        <div className="relative group px-1 sm:px-12 md:px-16">
             <div className="overflow-hidden rounded-xl bg-slate-100 shadow-sm border border-slate-200" ref={emblaRef}>
                 <div className="flex h-full">
                     {(() => {
@@ -322,18 +322,18 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
             <Button
                 variant="ghost"
                 size="icon"
-                className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-800 hover:bg-slate-100 hover:text-slate-900 rounded-full"
+                className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-800 hover:bg-slate-100 hover:text-slate-900 rounded-full z-10"
                 onClick={scrollPrev}
             >
-                <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10" />
+                <ChevronLeft className="w-6 h-6 sm:w-10 sm:h-10" />
             </Button>
             <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-slate-800 hover:bg-slate-100 hover:text-slate-900 rounded-full"
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-slate-800 hover:bg-slate-100 hover:text-slate-900 rounded-full z-10"
                 onClick={scrollNext}
             >
-                <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10" />
+                <ChevronRight className="w-6 h-6 sm:w-10 sm:h-10" />
             </Button>
         </div>
     );
