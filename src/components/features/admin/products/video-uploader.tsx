@@ -2,8 +2,11 @@
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Video, X, Loader2, Info } from 'lucide-react';
+import { Video, X, Loader2, Info, Settings2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { compressVideoTo480p } from '@/lib/utils/video-compression';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 interface VideoUploaderProps {
     initialVideos?: string[];
@@ -13,6 +16,8 @@ interface VideoUploaderProps {
 export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploaderProps) {
     const [videos, setVideos] = useState<string[]>(initialVideos);
     const [isUploading, setIsUploading] = useState(false);
+    const [compressionStatus, setCompressionStatus] = useState<string | null>(null);
+    const [useCompression, setUseCompression] = useState(true);
     const [videoSizes, setVideoSizes] = useState<Record<string, number>>({});
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -28,21 +33,36 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
             const supabase = createClient();
 
             for (const file of files) {
+                let fileToUpload: File | Blob = file;
+
+                if (useCompression) {
+                    setCompressionStatus(`圧縮中: ${file.name}`);
+                    try {
+                        fileToUpload = await compressVideoTo480p(file);
+                    } catch (err) {
+                        console.error('Compression failed:', err);
+                        // Fallback to original if compression fails
+                    }
+                }
+
+                setCompressionStatus(`アップロード中: ${file.name}`);
+
                 // Check file size (Supabase Free limit is 50MB)
-                if (file.size > 50 * 1024 * 1024) {
-                    alert(`ファイルサイズが大きすぎます: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)\n50MB以下の動画を選択してください。`);
+                if (fileToUpload.size > 50 * 1024 * 1024) {
+                    alert(`ファイルサイズが大きすぎます: ${file.name} (${(fileToUpload.size / 1024 / 1024).toFixed(1)}MB)\n50MB以下の動画を選択してください。`);
                     continue;
                 }
 
                 // Generate unique filename
-                const fileExt = file.name.split('.').pop();
+                const fileExt = fileToUpload.type.split('/').pop() || 'webm';
                 const fileName = `videos/${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
 
                 const { data, error } = await supabase.storage
                     .from('products')
-                    .upload(fileName, file, {
+                    .upload(fileName, fileToUpload, {
                         cacheControl: '3600',
-                        upsert: false
+                        upsert: false,
+                        contentType: fileToUpload.type
                     });
 
                 if (error) {
@@ -55,7 +75,7 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                     .getPublicUrl(fileName);
 
                 newUrls.push(publicUrl);
-                newSizes[publicUrl] = file.size;
+                newSizes[publicUrl] = fileToUpload.size;
             }
 
             const updatedVideos = [...videos, ...newUrls];
@@ -67,6 +87,7 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
             alert('動画のアップロードに失敗しました: ' + (error.message || '不明なエラー'));
         } finally {
             setIsUploading(false);
+            setCompressionStatus(null);
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
@@ -88,6 +109,18 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
 
     return (
         <div className="space-y-4">
+            <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                <Checkbox
+                    id="compression-toggle"
+                    checked={useCompression}
+                    onCheckedChange={(checked) => setUseCompression(!!checked)}
+                />
+                <div className="flex items-center gap-2">
+                    <Settings2 className="w-4 h-4 text-slate-500" />
+                    <Label htmlFor="compression-toggle" className="text-sm font-medium text-slate-700 cursor-pointer">自動で480pに圧縮する (試作版)</Label>
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 gap-3">
                 {videos.map((url, index) => (
                     <div key={index} className="relative aspect-video rounded-lg overflow-hidden border border-slate-200 group bg-slate-900">
@@ -126,7 +159,7 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                     {isUploading ? (
                         <div className="flex flex-col items-center gap-2">
                             <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                            <span className="text-xs text-slate-500">アップロード中...</span>
+                            <span className="text-xs text-slate-500">{compressionStatus || '処理中...'}</span>
                         </div>
                     ) : (
                         <>
