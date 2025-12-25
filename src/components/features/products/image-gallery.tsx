@@ -16,10 +16,21 @@ export function ImageGallery({ images, movies }: ImageGalleryProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
-    const mediaItems = [
-        ...(images || []).map(url => ({ type: 'image' as const, url })),
-        ...(movies || []).map(url => ({ type: 'video' as const, url }))
-    ];
+    const mediaItems = (images || []).map(url => {
+        const isVideo = url.includes('/videos/') || url.includes('video-') || url.match(/\.(mp4|webm|ogg|mov)$/i);
+        return {
+            type: (isVideo ? 'video' : 'image') as 'video' | 'image',
+            url
+        };
+    });
+
+    if (movies && movies.length > 0) {
+        movies.forEach(movieUrl => {
+            if (!mediaItems.some(item => item.url === movieUrl)) {
+                mediaItems.push({ type: 'video', url: movieUrl });
+            }
+        });
+    }
 
     const onSelect = useCallback(() => {
         if (!emblaApi) return;

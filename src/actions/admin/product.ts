@@ -9,17 +9,19 @@ export async function saveProduct(currentState: any, formData: FormData) {
     const id = formData.get('id') as string;
     const title = formData.get('title') as string;
     const price = parseInt(formData.get('price') as string);
-    // Handle images: if empty string, make it empty array
+    // Unified Media: the 'images' field now contains all media URLs in order
     const imagesRaw = formData.get('images') as string;
-    const images = imagesRaw ? imagesRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+    const allMedia = imagesRaw ? imagesRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+    const images = allMedia; // We store full ordered list in images
+
+    // Compatibility: Extract videos for the 'movies' column
+    const movies = allMedia.filter(url =>
+        url.includes('/videos/') || url.includes('video-') || url.match(/\.(mp4|webm|ogg|mov)$/i)
+    );
 
     // Handle tags
     const tagsRaw = formData.get('tags') as string;
     const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
-
-    // Handle movies
-    const moviesRaw = formData.get('movies') as string;
-    const movies = moviesRaw ? moviesRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
 
     // Specs
     const rank = parseInt(formData.get('rank') as string) || 0;
