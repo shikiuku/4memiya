@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, Video, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type ImageGalleryProps = {
@@ -13,11 +14,30 @@ type ImageGalleryProps = {
 
 export function ImageGallery({ images, movies }: ImageGalleryProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
     const mediaItems = [
         ...(images || []).map(url => ({ type: 'image' as const, url })),
         ...(movies || []).map(url => ({ type: 'video' as const, url }))
     ];
+
+    const onSelect = useCallback(() => {
+        if (!emblaApi) return;
+        setCurrentIndex(emblaApi.selectedScrollSnap());
+    }, [emblaApi]);
+
+    useEffect(() => {
+        if (!emblaApi) return;
+        onSelect();
+        emblaApi.on('select', onSelect);
+        return () => {
+            emblaApi.off('select', onSelect);
+        };
+    }, [emblaApi, onSelect]);
+
+    const scrollTo = useCallback((index: number) => {
+        if (emblaApi) emblaApi.scrollTo(index);
+    }, [emblaApi]);
 
     // If no media, show placeholder
     if (mediaItems.length === 0) {
@@ -29,38 +49,43 @@ export function ImageGallery({ images, movies }: ImageGalleryProps) {
     }
 
     const nextImage = () => {
-        setCurrentIndex((prev) => (prev + 1) % mediaItems.length);
+        if (emblaApi) emblaApi.scrollNext();
     };
 
     const prevImage = () => {
-        setCurrentIndex((prev) => (prev - 1 + mediaItems.length) % mediaItems.length);
+        if (emblaApi) emblaApi.scrollPrev();
     };
-
-    const currentItem = mediaItems[currentIndex];
 
     return (
         <div className="w-full">
             {/* Main Media Stage */}
             <div className="relative w-full aspect-square bg-slate-900 group">
-                {currentItem.type === 'image' ? (
-                    <Image
-                        src={currentItem.url}
-                        alt={`Product Media ${currentIndex + 1}`}
-                        fill
-                        className="object-contain"
-                        priority
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-black">
-                        <video
-                            src={currentItem.url}
-                            className="w-full h-full object-contain"
-                            controls
-                            playsInline
-                        // autoPlay // Maybe don't autoplay to save data/annoyance
-                        />
+                <div className="overflow-hidden h-full" ref={emblaRef}>
+                    <div className="flex h-full">
+                        {mediaItems.map((item, idx) => (
+                            <div key={idx} className="flex-[0_0_100%] min-w-0 relative h-full">
+                                {item.type === 'image' ? (
+                                    <Image
+                                        src={item.url}
+                                        alt={`Product Media ${idx + 1}`}
+                                        fill
+                                        className="object-contain"
+                                        priority={idx === 0}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-black">
+                                        <video
+                                            src={item.url}
+                                            className="w-full h-full object-contain"
+                                            controls
+                                            playsInline
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        ))}
                     </div>
-                )}
+                </div>
 
                 {/* Navigation Buttons (only if multiple) */}
                 {mediaItems.length > 1 && (
@@ -95,7 +120,7 @@ export function ImageGallery({ images, movies }: ImageGalleryProps) {
                 {mediaItems.map((item, idx) => (
                     <button
                         key={idx}
-                        onClick={() => setCurrentIndex(idx)}
+                        onClick={() => scrollTo(idx)}
                         className={cn(
                             "relative w-16 h-16 rounded overflow-hidden border-2 transition-all flex-shrink-0 bg-black flex items-center justify-center",
                             idx === currentIndex ? "border-[#007bff] opacity-100" : "border-transparent opacity-50 hover:opacity-100"
