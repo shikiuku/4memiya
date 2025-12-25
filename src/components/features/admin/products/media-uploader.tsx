@@ -36,10 +36,6 @@ interface MediaUploaderProps {
     onMediaChange?: (items: MediaItem[]) => void;
 }
 
-function isVideoUrl(url: string) {
-    return url.includes('/videos/') || url.includes('video-') || url.match(/\.(mp4|webm|ogg|mov)$/i);
-}
-
 interface SortableMediaItemProps {
     id: string;
     item: MediaItem;
@@ -131,16 +127,28 @@ function SortableMediaItem({ id, item, index, onRemove, formatSize }: SortableMe
 }
 
 export function MediaUploader({ initialImages = [], initialVideos = [], onMediaChange }: MediaUploaderProps) {
-    // Combine initial items
-    const combinedInitial: MediaItem[] = [
-        ...initialImages.map(url => ({ url, type: 'image' as const })),
-        ...initialVideos.map(url => ({ url, type: 'video' as const }))
-    ];
+    const isVideoUrl = (url: string) => {
+        return url.includes('/videos/') || url.includes('video-') || url.match(/\.(mp4|webm|ogg|mov)$/i);
+    };
+
+    // Combine initial items carefully
+    const combinedInitial: MediaItem[] = (initialImages || []).map(url => ({
+        url,
+        type: isVideoUrl(url) ? 'video' as const : 'image' as const
+    }));
+
+    // Add movies if not already in images list (legacy)
+    if (initialVideos) {
+        initialVideos.forEach(vUrl => {
+            if (!combinedInitial.some(item => item.url === vUrl)) {
+                combinedInitial.push({ url: vUrl, type: 'video' as const });
+            }
+        });
+    }
 
     const [items, setItems] = useState<MediaItem[]>(combinedInitial);
     const [isUploading, setIsUploading] = useState(false);
-    const imageInputRef = useRef<HTMLInputElement>(null);
-    const videoInputRef = useRef<HTMLInputElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -175,7 +183,7 @@ export function MediaUploader({ initialImages = [], initialVideos = [], onMediaC
         }
     };
 
-    const handleFilesSelect = async (e: React.ChangeEvent<HTMLInputElement>, selectedType: 'image' | 'video') => {
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
 
         setIsUploading(true);
@@ -186,9 +194,10 @@ export function MediaUploader({ initialImages = [], initialVideos = [], onMediaC
             for (const file of files) {
                 let url = '';
                 let size = file.size;
+                const isImage = file.type.startsWith('image/');
+                const isVideo = file.type.startsWith('video/');
 
-                if (selectedType === 'image') {
-                    // Compress image
+                if (isImage) {
                     const options = {
                         maxSizeMB: 0.5,
                         maxWidthOrHeight: 1280,
@@ -207,8 +216,7 @@ export function MediaUploader({ initialImages = [], initialVideos = [], onMediaC
                     const result = await uploadImageAction(formData);
                     if (result.error) throw new Error(result.error);
                     url = result.url || '';
-                } else {
-                    // Video upload
+                } else if (isVideo) {
                     if (file.size > 50 * 1024 * 1024) {
                         alert(`動画サイズが制限(50MB)を超えています: ${file.name}`);
                         continue;
@@ -218,10 +226,12 @@ export function MediaUploader({ initialImages = [], initialVideos = [], onMediaC
                     const result = await uploadVideoAction(formData);
                     if (result.error) throw new Error(result.error);
                     url = result.url || '';
+                } else {
+                    continue;
                 }
 
                 if (url) {
-                    newItems.push({ url, type: selectedType, size });
+                    newItems.push({ url, type: isImage ? 'image' : 'video', size });
                 }
             }
 
@@ -233,8 +243,7 @@ export function MediaUploader({ initialImages = [], initialVideos = [], onMediaC
             alert('アップロードに失敗しました: ' + (error.message || '不明なエラー'));
         } finally {
             setIsUploading(false);
-            if (imageInputRef.current) imageInputRef.current.value = '';
-            if (videoInputRef.current) videoInputRef.current.value = '';
+            if (fileInputRef.current) fileInputRef.current.value = '';
         }
     };
 
@@ -267,26 +276,21 @@ export function MediaUploader({ initialImages = [], initialVideos = [], onMediaC
                             />
                         ))}
 
-                        {/* Mixed Add Buttons */}
-                        <div className="grid grid-cols-2 gap-2 h-full">
-                            <button
-                                type="button"
-                                onClick={() => imageInputRef.current?.click()}
-                                className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg hover:bg-slate-50 hover:border-blue-400 transition-colors py-4 px-2"
-                                disabled={isUploading}
-                            >
-                                <ImagePlus className="w-5 h-5 text-slate-400 mb-1" />
-                                <span className="text-[10px] font-bold text-slate-500">画像</span>
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => videoInputRef.current?.click()}
-                                className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg hover:bg-slate-50 hover:border-blue-400 transition-colors py-4 px-2"
-                                disabled={isUploading}
-                            >
-                                <Video className="w-5 h-5 text-slate-400 mb-1" />
-                                <span className="text-[10px] font-bold text-slate-500">動画</span>
-                            </button>
+                        {/* Unified Add Button */}
+                        <div
+                            onClick={() => fileInputRef.current?.click()}
+                            className={`
+                                aspect-square rounded-lg border-2 border-dashed border-slate-300 
+                                flex flex-col items-center justify-center cursor-pointer 
+                                hover:bg-slate-50 hover:border-blue-400 transition-colors
+                                ${isUploading ? 'opacity-50 pointer-events-none' : ''}
+                            `}
+                        >
+                            <div className="flex gap-1 mb-1">
+                                <ImagePlus className="w-5 h-5 text-slate-400" />
+                                <Video className="w-5 h-5 text-slate-400" />
+                            </div>
+                            <span className="text-[10px] font-bold text-slate-500">追加 (画像・動画)</span>
                         </div>
                     </div>
                 </SortableContext>
@@ -301,19 +305,11 @@ export function MediaUploader({ initialImages = [], initialVideos = [], onMediaC
 
             <input
                 type="file"
-                ref={imageInputRef}
+                ref={fileInputRef}
                 className="hidden"
-                accept="image/*"
+                accept="image/*,video/*"
                 multiple
-                onChange={(e) => handleFilesSelect(e, 'image')}
-            />
-            <input
-                type="file"
-                ref={videoInputRef}
-                className="hidden"
-                accept="video/*"
-                multiple
-                onChange={(e) => handleFilesSelect(e, 'video')}
+                onChange={handleFileSelect}
             />
 
             {/* Hidden Inputs for Form Submission */}
@@ -323,6 +319,7 @@ export function MediaUploader({ initialImages = [], initialVideos = [], onMediaC
                 readOnly
                 className="hidden"
             />
+            {/* Still keep movies separately for backend compatibility if it filters them there */}
             <textarea
                 name="movies"
                 value={items.filter(i => i.type === 'video').map(i => i.url).join('\n')}
