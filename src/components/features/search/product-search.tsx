@@ -21,6 +21,20 @@ export function ProductSearch({ }: Props) {
     const { replace } = useRouter();
     const [isPending, startTransition] = useTransition();
     const [term, setTerm] = React.useState(searchParams.get('q')?.toString() || '');
+    const [placeholder, setPlaceholder] = React.useState('検索');
+
+    React.useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 640) { // sm breakpoint
+                setPlaceholder('キーワードで検索');
+            } else {
+                setPlaceholder('検索');
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Get sort from URL or default to 'latest'
     const currentSort = searchParams.get('sort') || 'latest';
@@ -58,7 +72,7 @@ export function ProductSearch({ }: Props) {
     return (
         <div className="flex flex-row gap-2 items-center">
             <Select value={currentSort} onValueChange={handleSortChange}>
-                <SelectTrigger className="w-[130px] h-12 border-slate-200 bg-white focus:ring-0 focus:border-[#007bff]">
+                <SelectTrigger className="w-[110px] sm:w-[130px] h-12 border-slate-200 bg-white focus:ring-0 focus:border-[#007bff] shrink-0">
                     <SelectValue placeholder="新着順" />
                 </SelectTrigger>
                 <SelectContent>
@@ -69,11 +83,11 @@ export function ProductSearch({ }: Props) {
                 </SelectContent>
             </Select>
 
-            <div className="relative">
+            <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
-                    placeholder="キーワードで検索"
-                    className="pl-10 w-[200px] md:w-[300px]"
+                    placeholder={placeholder}
+                    className="pl-10 w-full"
                     value={term}
                     onChange={(e) => setTerm(e.target.value)}
                     onKeyDown={handleKeyDown}
