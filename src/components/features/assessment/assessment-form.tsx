@@ -261,7 +261,12 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
             {/* Campaign Banner & Actions - Moved to Bottom */}
             <div className="pt-6 border-t border-slate-100 space-y-4">
                 <div className="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-md p-3 text-center text-xs font-bold animate-pulse">
-                    <p>シェアで毎月10人にPayPay1,000円プレゼント！</p>
+                    <p>
+                        シェアで毎月
+                        <span className="text-red-600 text-sm mx-0.5">10</span>名に
+                        PayPay
+                        <span className="text-red-600 text-sm mx-0.5">1,000</span>円プレゼント！
+                    </p>
                     <p className="text-sm mt-1 mb-2">
                         当選発表まであと <span className="text-red-600 text-lg">{daysUntilAnnouncement}</span> 日
                     </p>
