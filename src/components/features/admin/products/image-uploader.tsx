@@ -71,9 +71,18 @@ function SortableImageItem({ id, url, index, size, onRemove, formatSize }: Sorta
             <div
                 {...attributes}
                 {...listeners}
-                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20 cursor-grab active:cursor-grabbing transition-opacity"
+                className="absolute inset-0 flex items-center justify-center opacity-0 sm:group-hover:opacity-100 bg-black/20 cursor-grab active:cursor-grabbing transition-opacity"
             >
                 <GripVertical className="w-8 h-8 text-white drop-shadow-md" />
+            </div>
+
+            {/* Mobile Drag Handle (Always visible on touch) */}
+            <div
+                {...attributes}
+                {...listeners}
+                className="absolute bottom-1 right-1 bg-white/80 p-1 rounded border border-slate-200 shadow-sm sm:hidden cursor-grab active:cursor-grabbing z-30"
+            >
+                <GripVertical className="w-4 h-4 text-slate-600" />
             </div>
 
             {/* Numbering Badge (Top-Left) */}
@@ -107,7 +116,10 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 5,
+                // For mobile, we use a delay so that vertical scrolling is still possible
+                // When you press and hold for 250ms, it starts dragging.
+                delay: 250,
+                tolerance: 5,
             },
         }),
         useSensor(KeyboardSensor, {

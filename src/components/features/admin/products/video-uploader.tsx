@@ -66,9 +66,18 @@ function SortableVideoItem({ id, url, index, size, onRemove }: SortableVideoItem
             <div
                 {...attributes}
                 {...listeners}
-                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20 cursor-grab active:cursor-grabbing transition-opacity"
+                className="absolute inset-0 flex items-center justify-center opacity-0 sm:group-hover:opacity-100 bg-black/20 cursor-grab active:cursor-grabbing transition-opacity"
             >
                 <GripVertical className="w-10 h-10 text-white drop-shadow-md" />
+            </div>
+
+            {/* Mobile Drag Handle (Always visible on touch) */}
+            <div
+                {...attributes}
+                {...listeners}
+                className="absolute bottom-2 right-8 bg-white/80 p-1.5 rounded border border-slate-200 shadow-sm sm:hidden cursor-grab active:cursor-grabbing z-30"
+            >
+                <GripVertical className="w-5 h-5 text-slate-600" />
             </div>
 
             {/* Numbering Badge (Top-Left) */}
@@ -103,7 +112,9 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 5,
+                // For mobile, we use a delay so that vertical scrolling is still possible
+                delay: 250,
+                tolerance: 5,
             },
         }),
         useSensor(KeyboardSensor, {
