@@ -41,7 +41,7 @@ export function ImageGallery({ images, movies }: ImageGalleryProps) {
     return (
         <div className="w-full">
             {/* Main Media Stage */}
-            <div className="relative w-full aspect-[3/4.5] bg-black group">
+            <div className="relative w-full aspect-square bg-slate-900 group">
                 {currentItem.type === 'image' ? (
                     <Image
                         src={currentItem.url}
