@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Video, X, Loader2 } from 'lucide-react';
+import { Video, X, Loader2, Info } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface VideoUploaderProps {
@@ -13,6 +13,7 @@ interface VideoUploaderProps {
 export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploaderProps) {
     const [videos, setVideos] = useState<string[]>(initialVideos);
     const [isUploading, setIsUploading] = useState(false);
+    const [videoSizes, setVideoSizes] = useState<Record<string, number>>({});
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,13 +22,13 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
         setIsUploading(true);
         const files = Array.from(e.target.files);
         const newUrls: string[] = [];
+        const newSizes: Record<string, number> = {};
 
         try {
             const supabase = createClient();
 
             for (const file of files) {
-                // Check file size (recommend 50MB, but Supabase limit might be higher or project dependent)
-                // Vercel limit doesn't apply here.
+                // Check file size (Supabase Free limit is 50MB)
                 if (file.size > 50 * 1024 * 1024) {
                     alert(`ファイルサイズが大きすぎます: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)\n50MB以下の動画を選択してください。`);
                     continue;
@@ -54,10 +55,12 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                     .getPublicUrl(fileName);
 
                 newUrls.push(publicUrl);
+                newSizes[publicUrl] = file.size;
             }
 
             const updatedVideos = [...videos, ...newUrls];
             setVideos(updatedVideos);
+            setVideoSizes(prev => ({ ...prev, ...newSizes }));
             onVideosChange(updatedVideos);
         } catch (error: any) {
             console.error('Upload error:', error);
@@ -71,8 +74,15 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
     };
 
     const removeVideo = (indexToRemove: number) => {
+        const urlToRemove = videos[indexToRemove];
         const updatedVideos = videos.filter((_, index) => index !== indexToRemove);
+
         setVideos(updatedVideos);
+        setVideoSizes(prev => {
+            const next = { ...prev };
+            delete next[urlToRemove];
+            return next;
+        });
         onVideosChange(updatedVideos);
     };
 
@@ -86,6 +96,14 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                             className="w-full h-full object-contain"
                             controls
                         />
+
+                        {/* Size Overlay */}
+                        {videoSizes[url] && (
+                            <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm pointer-events-none">
+                                {(videoSizes[url] / (1024 * 1024)).toFixed(2)} MB
+                            </div>
+                        )}
+
                         <button
                             type="button"
                             onClick={() => removeVideo(index)}
@@ -114,7 +132,10 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                         <>
                             <Video className="w-8 h-8 text-slate-400 mb-2" />
                             <span className="text-sm font-bold text-slate-500 text-center px-4">動画を追加 (MP4など)</span>
-                            <span className="text-xs text-slate-400 mt-1">推奨: 50MB以下</span>
+                            <div className="flex items-center gap-1.5 mt-1 text-slate-400">
+                                <Info className="w-3.5 h-3.5" />
+                                <span className="text-xs">無料枠制限: 50MB以下</span>
+                            </div>
                         </>
                     )}
                 </div>
