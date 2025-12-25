@@ -1,13 +1,14 @@
 'use client';
 
-import { useActionState } from 'react'; // or useFormState depending on version
+import { useActionState, useState, useMemo } from 'react'; // or useFormState depending on version
 import { saveProduct } from '@/actions/admin/product';
 import { Button } from '@/components/ui/button';
 import { TagSelector } from '@/components/features/admin/products/tag-selector';
-import { MediaUploader } from '@/components/features/admin/products/media-uploader';
-import { ImagePlus, Save, Video, Film } from 'lucide-react';
+import { MediaUploader, MediaItem } from '@/components/features/admin/products/media-uploader';
+import { Save, FileVideo, ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/types';
+import { useCallback } from 'react';
 
 const initialState = {
     error: '',
@@ -22,6 +23,25 @@ interface ProductFormProps {
 
 export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: ProductFormProps) {
     const [state, formAction, isPending] = useActionState(saveProduct, initialState);
+
+    // メディアの初期化（imagesカラムに全ての順序が保存されている前提）
+    const initialMedia: MediaItem[] = useMemo(() => {
+        if (!initialData?.images || initialData.images.length === 0) return [];
+        return initialData.images.map(url => {
+            const isVideo = url.toLowerCase().match(/\.(mp4|mov|webm|m4v)(\?.*)?$/);
+            return { url, type: isVideo ? 'video' as const : 'image' as const };
+        });
+    }, [initialData?.images]);
+
+    const [images, setImages] = useState<string[]>(initialData?.images || []);
+    const [movies, setMovies] = useState<string[]>(initialData?.movies || []);
+
+    const handleMediaChange = useCallback((items: MediaItem[]) => {
+        // 全てのメディアをimagesに保存（順序を維持）
+        setImages(items.map(i => i.url));
+        // 動画のみを別途抽出（互換性のため）
+        setMovies(items.filter(i => i.type === 'video').map(i => i.url));
+    }, []);
 
     return (
         <form action={formAction} className="space-y-8 max-w-4xl mx-auto pb-20">
@@ -179,23 +199,49 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
 
                 {/* Sidebar (Right: 1 col) */}
                 <div className="space-y-6 order-first lg:order-none">
-                    {/* Media Management (Unified) */}
-                    <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 space-y-4">
+                    {/* 統合メディアアップローダー */}
+                    <div className="bg-white p-6 rounded-lg border border-slate-200">
                         <h2 className="font-bold text-lg text-slate-800 border-b pb-2 mb-4 flex items-center">
-                            <Film className="w-5 h-5 mr-2" />
-                            商品画像・動画
+                            <ImageIcon className="w-5 h-5 mr-2" />
+                            商品メディア
                         </h2>
 
-                        <div className="text-sm text-slate-500 mb-2">
-                            商品に使用する画像や動画をアップロードし、並べ替えてください。
+                        <div className="text-sm text-slate-500 mb-4">
+                            画像と動画を自由にアップロード・並び替えできます。
                         </div>
+
                         <MediaUploader
-                            initialImages={initialData?.images || []}
-                            initialVideos={initialData?.movies || []}
+                            initialMedia={initialMedia}
+                            onMediaChange={handleMediaChange}
                         />
+
+                        <div className="flex items-center gap-4 mt-6 pt-4 border-t border-slate-100 text-[11px] text-slate-500 font-medium">
+                            <div className="flex items-center gap-1.5 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+                                <ImageIcon className="w-3.5 h-3.5" />
+                                <span>画像: {images.length}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+                                <FileVideo className="w-3.5 h-3.5" />
+                                <span>動画: {movies.length}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            {/* Hidden inputs to ensure persistence of ordered media */}
+            <textarea
+                name="images"
+                value={images.join('\n')}
+                readOnly
+                className="hidden"
+            />
+            <textarea
+                name="movies"
+                value={movies.join('\n')}
+                readOnly
+                className="hidden"
+            />
         </form>
     );
 }

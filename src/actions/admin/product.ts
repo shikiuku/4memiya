@@ -11,18 +11,24 @@ export async function saveProduct(currentState: any, formData: FormData) {
     const price = parseInt(formData.get('price') as string);
     // Unified Media: the 'images' field now contains all media URLs in order
     const imagesRaw = formData.get('images') as string;
-    const allMedia = imagesRaw ? imagesRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
-    const images = allMedia; // We store full ordered list in images
+    const images = imagesRaw ? imagesRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
 
     // Compatibility: Extract videos for the 'movies' column
-    const movies = allMedia.filter(url =>
-        url.includes('/videos/') || url.includes('video-') || url.match(/\.(mp4|webm|ogg|mov)$/i)
+    const movies = images.filter(url =>
+        url.toLowerCase().match(/\.(mp4|mov|webm|m4v|ogg)(\?.*)?$/i)
     );
 
     // Handle tags
     const tagsRaw = formData.get('tags') as string;
     const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
+    console.log('[saveProduct] Processing media:', {
+        id,
+        imageCount: images.length,
+        movieCount: movies.length,
+        firstImage: images[0],
+        firstMovie: movies[0]
+    });
     // Specs
     const rank = parseInt(formData.get('rank') as string) || 0;
     const badge_power = parseInt(formData.get('badge_power') as string) || 0;

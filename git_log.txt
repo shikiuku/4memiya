@@ -1,0 +1,50 @@
+6d91e84 - feat: optimize media D&D for mobile and add top-left numbering
+989d1b8 - feat: add drag-and-drop reordering and numbering to media uploaders
+380510a - Revert "feat: implement proof-of-concept for client-side 480p video compression"
+c37ccbe - feat: implement proof-of-concept for client-side 480p video compression
+c91e1f0 - feat: show uploaded video size in MB and update limit label
+e8470e6 - feat: add swipe support to product image gallery using Embla Carousel
+8360a7b - style: allow product titles to wrap to 2 lines in list view for better mobile readability
+167e1ff - style: make product search placeholder responsive for better mobile layout
+0cb5267 - style: adjust hero carousel padding and arrows for wider mobile layout
+e914779 - feat: make product image gallery aspect ratio square for more compact layout
+39dc315 - Fix syntax error in Config Page
+a60edea - Implement automated storage cleanup
+bcd2cd2 - Fix video uploader UI layout
+d5d2819 - Restore video support with client-side upload and storage fixes
+9b19df3 - Remove inquiries page and fix admin assessment category labels
+c652c27 - Fix build error: Add use client to image-gallery
+1412cd3 - Fix assessment calculation and next.config.ts syntax
+f179643 - Implement product video support
+d8d3a35 - Implement customizable category settings (placeholder, unit)
+f57ef54 - Implement customizable input placeholders
+dee36c1 - Show rule label as category header for dynamic categories
+970f888 - Fix new category creation bug
+bf6f03f - Fix dnd transition error and make assessment form order dynamic
+8519eca - Remove capitalize style from labels and cleanup debug info
+bb30aca - Add debug info to assessment page
+764061c - Ensure dynamicRanges initialization in AssessmentForm
+c538ffa - Clarify rule form inputs
+c638ec6 - Fix dynamicRanges reactivity and numeric coercion
+246f27d - Reseed all assessment rules and fix caching
+5676a38 - Fix hydration mismatch error
+905fcf7 - Fix average crest power calculation rule
+ab55e62 - Aggressive image compression: 0.5MB, 1280px
+8612b29 - Show image size after upload
+76f99f0 - Make image delete button always visible
+9c04ec3 - Add client-side image compression
+637a496 - Reorder request types: purchase first
+4274b90 - Use explicit skeleton loading in admin reviews client page
+e883704 - Add skeleton loading to admin reviews page
+e831012 - Add migration to clear all reviews
+0c655fb - Fix syntax error in ReviewCard
+ea8ffe5 - Refine review UI: remove text and move badge
+aeabd89 - Make nickname optional
+a7f344b - Update assessment share text
+ef5dbc0 - Fix TypeScript build errors for navigator type narrowing
+179360c - Fix TypeScript build errors in hero-carousel.tsx
+019ce3a - Handle browser not supported error for iOS notifications
+3580649 - Improve iOS detection for notification error handling
+ef87ff4 - Refine notification slide spacing and handle iPhone errors
+8b3629e - Fix build error in notification guide page
+4f8b607 - Update search button styling to #007bff

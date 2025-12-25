@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
@@ -16,21 +16,26 @@ export function ImageGallery({ images, movies }: ImageGalleryProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
-    const mediaItems = (images || []).map(url => {
-        const isVideo = url.includes('/videos/') || url.includes('video-') || url.match(/\.(mp4|webm|ogg|mov)$/i);
-        return {
-            type: (isVideo ? 'video' : 'image') as 'video' | 'image',
-            url
-        };
-    });
-
-    if (movies && movies.length > 0) {
-        movies.forEach(movieUrl => {
-            if (!mediaItems.some(item => item.url === movieUrl)) {
-                mediaItems.push({ type: 'video', url: movieUrl });
-            }
+    // Combine images and movies into a single list based on extensions if they are mixed in images.
+    // For backward compatibility, if a URL is only in movies, we add it.
+    const mediaItems = useMemo(() => {
+        // 1. Start with what's in 'images' (new truth for order)
+        const items = (images || []).map(url => {
+            const isVideo = url.toLowerCase().match(/\.(mp4|mov|webm|m4v|ogg)(\?.*)?$/i);
+            return { type: isVideo ? 'video' as const : 'image' as const, url };
         });
-    }
+
+        // 2. Add anything that's in 'movies' but NOT in 'images' (legacy/sync)
+        if (movies) {
+            movies.forEach(url => {
+                const exists = items.some(item => item.url === url);
+                if (!exists) {
+                    items.push({ type: 'video' as const, url });
+                }
+            });
+        }
+        return items;
+    }, [images, movies]);
 
     const onSelect = useCallback(() => {
         if (!emblaApi) return;

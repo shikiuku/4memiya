@@ -14,7 +14,11 @@ type ProductCardProps = {
 
 export function ProductCard({ product, viewMode = 'grid', customHref, compactStats = false }: ProductCardProps) {
     const isList = viewMode === 'list';
-    const imageSrc = product.images?.[0];
+    // Find the first actual image for the thumbnail
+    const imageSrc = product.images?.find(url => !url.toLowerCase().match(/\.(mp4|mov|webm|m4v)(\?.*)?$/));
+    // Check if there are any videos in either images or movies array
+    const hasVideo = (product.movies && product.movies.length > 0) ||
+        (product.images && product.images.some(url => url.toLowerCase().match(/\.(mp4|mov|webm|m4v)(\?.*)?$/)));
     const linkHref = customHref || `/products/${product.id}`;
 
     return (
@@ -42,7 +46,7 @@ export function ProductCard({ product, viewMode = 'grid', customHref, compactSta
                 )}
 
                 {/* Video Indicator */}
-                {product.movies && product.movies.length > 0 && (
+                {hasVideo && (
                     <div className="absolute top-2 right-2 bg-black/60 text-white p-1 rounded-full z-10">
                         <VideoIcon className="w-3 h-3" />
                     </div>
