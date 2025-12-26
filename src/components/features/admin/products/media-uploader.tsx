@@ -12,6 +12,7 @@ import {
     closestCenter,
     KeyboardSensor,
     PointerSensor,
+    TouchSensor,
     useSensor,
     useSensors,
     DragEndEvent,
@@ -60,6 +61,7 @@ function SortableMediaItem({ id, item, index, onRemove }: SortableMediaItemProps
         transform: CSS.Transform.toString(transform),
         transition,
         zIndex: isDragging ? 20 : 1,
+        touchAction: 'none' as const, // Android: Prevent scroll conflict during drag
     };
 
     const formatSize = (bytes: number) => {
@@ -101,7 +103,8 @@ function SortableMediaItem({ id, item, index, onRemove }: SortableMediaItemProps
             <div
                 {...attributes}
                 {...listeners}
-                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20 cursor-grab active:cursor-grabbing transition-opacity"
+                className={`absolute inset-0 flex items-center justify-center bg-black/20 cursor-grab active:cursor-grabbing transition-opacity ${isDragging ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'
+                    }`}
             >
                 <GripVertical className="w-10 h-10 text-white drop-shadow-md" />
             </div>
@@ -159,7 +162,14 @@ export function MediaUploader({ initialMedia = [], onMediaChange }: MediaUploade
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 8, // 8px動かしたらドラッグ開始（スクロールと混同しない程度）
+                distance: 8,
+            },
+        }),
+        useSensor(TouchSensor, {
+            // Android: Long press (250ms) to start dragging, preventing scroll conflict
+            activationConstraint: {
+                delay: 250,
+                tolerance: 5,
             },
         }),
         useSensor(KeyboardSensor, {
