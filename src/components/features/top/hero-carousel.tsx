@@ -210,7 +210,7 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
                                         <Button
                                             className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-lg"
                                         >
-                                            無料で査定を申し込む
+                                            買取査定ページ
                                         </Button>
                                     </Link>
                                 </div>
