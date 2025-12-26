@@ -245,7 +245,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                     <div className="bg-white p-6 rounded-lg border border-slate-200">
                         <h2 className="font-bold text-lg text-slate-800 border-b pb-2 mb-4 flex items-center">
                             <ImageIcon className="w-5 h-5 mr-2" />
-                            商品メディア
+                            画像・動画
                         </h2>
 
                         <div className="text-sm text-slate-500 mb-4">
