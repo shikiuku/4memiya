@@ -4,6 +4,7 @@ import { useActionState, useState, useMemo } from 'react'; // or useFormState de
 import { saveProduct } from '@/actions/admin/product';
 import { Button } from '@/components/ui/button';
 import { TagSelector } from '@/components/features/admin/products/tag-selector';
+import { AttributeTagSelector } from '@/components/features/admin/products/attribute-tag-selector';
 import { MediaUploader, MediaItem } from '@/components/features/admin/products/media-uploader';
 import { Save, FileVideo, ImageIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -17,11 +18,12 @@ const initialState = {
 
 interface ProductFormProps {
     suggestedTags?: string[];
+    suggestedCharacterTags?: Record<string, string[]>;
     initialData?: Product;
     defaultSeqId?: number;
 }
 
-export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: ProductFormProps) {
+export function ProductForm({ suggestedTags = [], suggestedCharacterTags = {}, initialData, defaultSeqId }: ProductFormProps) {
     const [state, formAction, isPending] = useActionState(saveProduct, initialState);
 
     // メージと動画の両方のカラムからメディアを初期化（不整合を防ぐ）
@@ -194,17 +196,18 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                 { key: 'dark', label: '闇属性', icon: '/images/icons/attributes/icon_dark.png' },
                             ].map((attr) => (
                                 <div key={attr.key} className="flex items-center gap-4">
-                                    <div className="flex items-center gap-2 w-28 shrink-0">
-                                        <div className="relative w-8 h-8">
-                                            <img src={attr.icon} alt={attr.label} className="object-contain" />
+                                    <div className="flex flex-col gap-2 w-28 shrink-0 py-2">
+                                        <div className="flex items-center gap-2">
+                                            <div className="relative w-8 h-8">
+                                                <img src={attr.icon} alt={attr.label} className="object-contain" />
+                                            </div>
+                                            <span className="text-sm font-bold text-slate-700">{attr.label}</span>
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700">{attr.label}</span>
                                     </div>
-                                    <input
-                                        name={`char_${attr.key}`}
-                                        defaultValue={(initialData?.attribute_characters as any)?.[attr.key] || ''}
-                                        className="flex-1 px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-                                        placeholder="キャラクター名を入力"
+                                    <AttributeTagSelector
+                                        attribute={attr.key}
+                                        initialValue={(initialData?.attribute_characters as any)?.[attr.key] || ''}
+                                        suggestedTags={suggestedCharacterTags[attr.key] || []}
                                     />
                                 </div>
                             ))}

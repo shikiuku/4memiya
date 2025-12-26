@@ -31,10 +31,39 @@ export default async function NewProductPage() {
 
     const nextSeqId = (maxSeqData?.seq_id ?? 0) + 1;
 
+    // Fetch Character Tags (Master)
+    const { data: charTagsData } = await supabase.from('character_tags').select('attribute, name').returns<{ attribute: string; name: string }[]>();
+    const charTags: Record<string, string[]> = {};
+
+    if (!charTagsData || charTagsData.length === 0) {
+        // Fallback: collect from existing products if master table is empty/missing
+        const { data: products } = await supabase.from('products').select('attribute_characters').returns<{ attribute_characters: any }[]>();
+        products?.forEach(p => {
+            const attrs = p.attribute_characters as any;
+            if (attrs) {
+                Object.entries(attrs).forEach(([attr, value]) => {
+                    if (typeof value === 'string') {
+                        const names = value.split(',').map(s => s.trim()).filter(Boolean);
+                        if (!charTags[attr]) charTags[attr] = [];
+                        names.forEach(name => {
+                            if (!charTags[attr].includes(name)) charTags[attr].push(name);
+                        });
+                    }
+                });
+            }
+        });
+    } else {
+        charTagsData.forEach(tag => {
+            if (!charTags[tag.attribute]) charTags[tag.attribute] = [];
+            charTags[tag.attribute].push(tag.name);
+        });
+    }
+
     return (
         <div className="container mx-auto px-4 py-8">
             <ProductForm
                 suggestedTags={allTags}
+                suggestedCharacterTags={charTags}
                 defaultSeqId={nextSeqId}
             />
         </div>
