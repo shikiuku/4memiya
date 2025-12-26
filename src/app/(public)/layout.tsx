@@ -1,16 +1,11 @@
-import { Header } from "@/components/layout/header";
-
 export default function PublicLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen pb-20">
-                {children}
-            </main>
-        </>
+        <main className="min-h-screen pb-20">
+            {children}
+        </main>
     );
 }
