@@ -102,11 +102,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
                     {/* Attribute Characters Section (New) */}
                     {product.attribute_characters && Object.values(product.attribute_characters).some(v => v) && (
-                        <section className="border-t border-dashed pt-6">
-                            <h3 className="font-bold text-base border-l-4 border-[#007bff] pl-3 mb-6">
+                        <section className="border-t border-dashed pt-4">
+                            <h3 className="font-bold text-base border-l-4 border-[#007bff] pl-3 mb-2">
                                 属性別主要キャラクター
                             </h3>
-                            <div className="space-y-4 px-1">
+                            <div className="space-y-2 px-1">
                                 {[
                                     { key: 'fire', label: '火属性', icon: '/images/icons/attributes/icon_fire.png' },
                                     { key: 'water', label: '水属性', icon: '/images/icons/attributes/icon_water.png' },
@@ -117,14 +117,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                     const chars = (product.attribute_characters as any)?.[attr.key];
                                     if (!chars) return null;
                                     return (
-                                        <div key={attr.key} className="flex items-start gap-4">
-                                            <div className="flex items-center gap-2 w-24 shrink-0 pt-0.5">
+                                        <div key={attr.key} className="flex items-center gap-4">
+                                            <div className="flex items-center gap-2 w-24 shrink-0">
                                                 <div className="relative w-7 h-7 shrink-0">
                                                     <img src={attr.icon} alt={attr.label} className="object-contain" />
                                                 </div>
                                                 <span className="text-sm font-bold text-slate-700 whitespace-nowrap">{attr.label}</span>
                                             </div>
-                                            <div className="flex-1 text-sm text-slate-800 leading-relaxed pt-1.5 font-medium">
+                                            <div className="flex-1 text-sm text-slate-800 font-medium">
                                                 {chars}
                                             </div>
                                         </div>
