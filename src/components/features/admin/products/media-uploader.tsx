@@ -119,7 +119,7 @@ function SortableMediaItem({ id, item, index, onRemove }: SortableMediaItemProps
             <button
                 type="button"
                 onClick={() => onRemove(index)}
-                className="absolute top-2 right-2 bg-black/60 hover:bg-red-500 text-white p-1.5 rounded-full transition-all z-20 opacity-0 group-hover:opacity-100"
+                className="absolute top-2 right-2 bg-black/60 hover:bg-red-500 text-white p-1.5 rounded-full transition-all z-20"
             >
                 <X className="w-3.5 h-3.5" />
             </button>
