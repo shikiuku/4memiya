@@ -97,7 +97,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                     defaultValue={initialData?.title}
                                     required
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="例: 【運極300】ルシファー運極 ガチャ限500体"
+                                    placeholder="商品名を入力"
                                 />
                             </div>
                             <div className="col-span-1">
@@ -120,7 +120,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                     defaultValue={initialData?.price}
                                     required
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="10000"
+                                    placeholder="価格を入力"
                                 />
                             </div>
                         </div>
@@ -146,7 +146,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                     type="number"
                                     defaultValue={initialData?.rank}
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="1500"
+                                    placeholder="数値を入力"
                                 />
                             </div>
                             <div>
@@ -156,7 +156,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                     type="number"
                                     defaultValue={initialData?.luck_max}
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="300"
+                                    placeholder="数値を入力"
                                 />
                             </div>
                             <div>
@@ -166,7 +166,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                     type="number"
                                     defaultValue={initialData?.gacha_charas}
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="500"
+                                    placeholder="数値を入力"
                                 />
                             </div>
                             <div>
@@ -176,7 +176,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                     type="number"
                                     defaultValue={initialData?.badge_power}
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="5000"
+                                    placeholder="数値を入力"
                                 />
                             </div>
                         </div>
@@ -204,7 +204,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                         name={`char_${attr.key}`}
                                         defaultValue={(initialData?.attribute_characters as any)?.[attr.key] || ''}
                                         className="flex-1 px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-                                        placeholder="パンサー　マナ　マサムネ"
+                                        placeholder="キャラクター名を入力"
                                     />
                                 </div>
                             ))}
@@ -222,7 +222,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                 defaultValue={initialData?.description_points || ''}
                                 rows={6}
                                 className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                                placeholder="轟絶運極多数！天魔制覇済み！..."
+                                placeholder="アカウントのポイントを入力してください"
                             ></textarea>
                         </div>
 
@@ -233,7 +233,7 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                                 defaultValue={initialData?.description_recommend || ''}
                                 rows={3}
                                 className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                                placeholder="高難易度をすぐに周回したい方におすすめです。"
+                                placeholder="おすすめの対象（ターゲット）を入力してください"
                             ></textarea>
                         </div>
                     </div>
