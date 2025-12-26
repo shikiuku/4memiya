@@ -52,72 +52,72 @@ export function ProductCard({ product, viewMode = 'grid', customHref, compactSta
                     </div>
                 )}
 
-                {/* Status Badge (Grid Only - List has button) */}
-                {!isList && product.status === 'sold_out' && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                {/* Sold Out Overlay (Keep for clarity) */}
+                {product.status === 'sold_out' && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
                         <span className="bg-red-600 text-white px-3 py-1 text-sm font-bold rounded">SOLD OUT</span>
                     </div>
                 )}
             </div>
 
             {/* Content */}
-            <div className={`flex flex-col ${isList ? 'flex-1 min-w-0 justify-between py-1' : 'p-4 md:p-5'}`}>
-                <div>
+            <div className={`flex flex-col min-w-0 ${isList ? 'flex-1 h-28 py-0' : 'p-4 md:p-5'}`}>
+                <div className="min-w-0">
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-1 mb-1.5">
+                    <div className="flex flex-wrap gap-1 mb-0.5">
                         {product.tags?.map((tag, i) => (
-                            <span key={i} className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">
+                            <span key={i} className="text-[9px] bg-slate-50 text-slate-500 px-1 py-0.5 rounded border border-slate-100">
                                 {tag}
                             </span>
                         ))}
                     </div>
 
-                    <h3 className={`font-bold text-slate-800 leading-snug group-hover:text-primary transition-colors ${isList ? 'text-sm mb-1 line-clamp-2' : 'text-sm line-clamp-2 mb-2'
+                    <h3 className={`font-bold text-slate-800 leading-snug group-hover:text-primary transition-colors ${isList ? 'text-[13px] mb-2 line-clamp-2' : 'text-sm line-clamp-2 mb-2'
                         }`}>
                         {product.seq_id && <span className="mr-1">【No.{product.seq_id}】</span>}
                         {product.title}
                     </h3>
                 </div>
 
-                <div className={`flex items-end justify-between ${!isList && 'mt-2'}`}>
-                    <div className="font-bold text-lg text-slate-900">
-                        {product.price?.toLocaleString()}<span className="text-xs font-normal ml-0.5">円</span>
-                    </div>
-
+                {/* Footer Group (Stats + Price) */}
+                <div className={isList ? 'mt-auto' : ''}>
+                    {/* Stats (Mobile Visible) */}
                     {isList && (
-                        <div className="flex items-center gap-2 sm:gap-4 ml-auto">
-                            {/* Stats */}
-                            <div className={`hidden sm:flex flex-wrap items-center font-medium text-slate-500
-                                ${compactStats
-                                    ? 'gap-1.5 text-[10px]'
-                                    : 'gap-2 text-[10px] sm:text-xs'
-                                }`}>
-                                <span className={`bg-slate-100 rounded text-slate-600 border border-slate-200 whitespace-nowrap ${compactStats ? 'px-1 py-0.5' : 'px-1.5 py-0.5'}`}>
-                                    ランク:{product.rank ?? '-'}
-                                </span>
-                                <span className={`bg-slate-100 rounded text-slate-600 border border-slate-200 whitespace-nowrap ${compactStats ? 'px-1 py-0.5' : 'px-1.5 py-0.5'}`}>
-                                    運極:{product.luck_max ?? '-'}
-                                </span>
-                                <span className={`bg-slate-100 rounded text-slate-600 border border-slate-200 whitespace-nowrap ${compactStats ? 'px-1 py-0.5' : 'px-1.5 py-0.5'}`}>
-                                    ガチャ限:{product.gacha_charas ?? '-'}
-                                </span>
-                                <span className={`bg-slate-100 rounded text-slate-600 border border-slate-200 whitespace-nowrap ${compactStats ? 'px-1 py-0.5' : 'px-1.5 py-0.5'}`}>
-                                    紋章力:{product.badge_power ?? '-'}
-                                </span>
-                            </div>
-                            <div className="shrink-0">
-                                {product.status === 'on_sale' ? (
-                                    <span className="bg-[#007bff] text-white text-xs font-bold px-3 py-1 rounded inline-block whitespace-nowrap">
-                                        販売中
-                                    </span>
-                                ) : (
-                                    <span className="bg-slate-400 text-white text-xs font-bold px-3 py-1 rounded inline-block whitespace-nowrap">
-                                        売り切れ
-                                    </span>
-                                )}
-                            </div>
+                        <div className={`flex flex-wrap items-center gap-1 font-medium text-slate-500 text-[10px] mb-1`}>
+                            <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
+                                ランク:{product.rank ?? '-'}
+                            </span>
+                            <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
+                                運極:{product.luck_max ?? '-'}
+                            </span>
+                            <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
+                                ガチャ限:{product.gacha_charas ?? '-'}
+                            </span>
+                            <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
+                                紋章力:{product.badge_power ?? '-'}
+                            </span>
                         </div>
                     )}
+
+                    <div className={`flex items-center justify-between ${!isList ? 'mt-2' : ''}`}>
+                        {/* Status Badge (Bottom Left) */}
+                        <div className="shrink-0">
+                            {product.status === 'on_sale' ? (
+                                <span className="bg-[#007bff] text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
+                                    販売中
+                                </span>
+                            ) : product.status === 'sold_out' && (
+                                <span className="bg-slate-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
+                                    売り切れ
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Price (Bottom Right) */}
+                        <div className="font-bold text-lg text-slate-900 leading-none">
+                            {product.price?.toLocaleString()}<span className="text-[10px] font-normal ml-0.5">円</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Link>
