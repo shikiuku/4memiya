@@ -43,12 +43,14 @@ export default async function Home({
 
       {/* Page Title & Search (Header area) */}
       {/* Page Title & Search (Header area) */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <h1 className="text-xl font-bold text-slate-800 text-left w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <h1 className="text-xl font-bold text-slate-800 shrink-0">
           在庫一覧
         </h1>
-        <div className="w-full sm:w-auto flex justify-end">
-          <ProductSearch />
+        <div className="w-full sm:flex-1 sm:max-w-3xl flex justify-end">
+          <div className="w-full">
+            <ProductSearch />
+          </div>
         </div>
       </div>
 
