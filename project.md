@@ -254,8 +254,9 @@ Wiring: UIとロジックを接続し、動的なサイトにする。
 
 ## 9. デプロイ履歴 (Deployment History)
 - **Vercel Production**: [https://4memiya-e853byr4w-shikiuku-5395s-projects.vercel.app](https://4memiya-e853byr4w-shikiuku-5395s-projects.vercel.app)
-- **最終更新**: 2025-12-16
+- **最終更新**: 2025-12-26
 - **主な修正**: 
+    - 属性別主要キャラの表示UIを改善（右寄せ・ドットリーダー追加）
     - Vercel環境変数 (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) の設定
 
 ## 10. 手動デプロイ (Manual Deployment)

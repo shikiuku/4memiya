@@ -107,29 +107,40 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                 属性別主要キャラクター
                             </h3>
                             <div className="space-y-2 px-1">
-                                {[
-                                    { key: 'fire', label: '火属性', icon: '/images/icons/attributes/icon_fire.png' },
-                                    { key: 'water', label: '水属性', icon: '/images/icons/attributes/icon_water.png' },
-                                    { key: 'wood', label: '木属性', icon: '/images/icons/attributes/icon_wood.png' },
-                                    { key: 'light', label: '光属性', icon: '/images/icons/attributes/icon_holy.png' },
-                                    { key: 'dark', label: '闇属性', icon: '/images/icons/attributes/icon_dark.png' },
-                                ].map((attr) => {
-                                    const chars = (product.attribute_characters as any)?.[attr.key];
-                                    if (!chars) return null;
-                                    return (
-                                        <div key={attr.key} className="flex items-center gap-4">
-                                            <div className="flex items-center gap-2 w-24 shrink-0">
-                                                <div className="relative w-7 h-7 shrink-0">
-                                                    <img src={attr.icon} alt={attr.label} className="object-contain" />
+                                {
+                                    [
+                                        { key: 'fire', label: '火属性', icon: '/images/icons/attributes/icon_fire.png' },
+                                        { key: 'water', label: '水属性', icon: '/images/icons/attributes/icon_water.png' },
+                                        { key: 'wood', label: '木属性', icon: '/images/icons/attributes/icon_wood.png' },
+                                        { key: 'light', label: '光属性', icon: '/images/icons/attributes/icon_holy.png' },
+                                        { key: 'dark', label: '闇属性', icon: '/images/icons/attributes/icon_dark.png' },
+                                    ].map((attr) => {
+                                        const chars = (product.attribute_characters as any)?.[attr.key];
+                                        if (!chars) return null;
+                                        return (
+                                            <div key={attr.key} className="flex items-center gap-2 group py-1">
+                                                <div className="flex items-center gap-1.5 shrink-0">
+                                                    <div className="relative w-5 h-5 shrink-0">
+                                                        <img src={attr.icon} alt={attr.label} className="object-contain" />
+                                                    </div>
+                                                    <span className="text-[13px] font-bold text-slate-500 whitespace-nowrap">{attr.label}</span>
                                                 </div>
-                                                <span className="text-sm font-bold text-slate-700 whitespace-nowrap">{attr.label}</span>
+                                                <div
+                                                    className="flex-1 h-[4px] min-w-[15px]"
+                                                    style={{
+                                                        backgroundImage: 'radial-gradient(circle, #e2e8f0 2px, transparent 2px)',
+                                                        backgroundSize: '11px 100%',
+                                                        backgroundPosition: 'left center',
+                                                        backgroundRepeat: 'repeat-x'
+                                                    }}
+                                                />
+                                                <div className="text-sm text-slate-700 font-bold text-right leading-tight">
+                                                    {chars}
+                                                </div>
                                             </div>
-                                            <div className="flex-1 text-sm text-slate-800 font-medium">
-                                                {chars}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    })
+                                }
                             </div>
                         </section>
                     )}
