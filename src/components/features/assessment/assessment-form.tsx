@@ -34,14 +34,23 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
     const [isSuccess, setIsSuccess] = useState(false);
     const [showCampaignPopup, setShowCampaignPopup] = useState(false);
 
-    // Show popup on mount
+    // Show popup on mount if not seen this session
     useEffect(() => {
+        const seen = sessionStorage.getItem('campaign_popup_seen');
+        if (seen) return;
+
         // Delay slightly for better feel
         const timer = setTimeout(() => {
             setShowCampaignPopup(true);
         }, 500);
         return () => clearTimeout(timer);
     }, []);
+
+    const dismissPopup = (action?: () => void) => {
+        sessionStorage.setItem('campaign_popup_seen', 'true');
+        setShowCampaignPopup(false);
+        if (action) action();
+    };
 
     // Calculate days until end of month (Announcement Date)
     const daysUntilAnnouncement = useMemo(() => {
@@ -166,7 +175,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
 
                         {/* Close Button */}
                         <button
-                            onClick={() => setShowCampaignPopup(false)}
+                            onClick={() => dismissPopup()}
                             className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors z-20"
                         >
                             <X className="w-5 h-5" />
@@ -211,14 +220,14 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
 
                             <div className="space-y-4 pt-2">
                                 <Button
-                                    onClick={() => setShowCampaignPopup(false)}
+                                    onClick={() => dismissPopup()}
                                     className="w-full h-14 bg-[#007bff] hover:bg-[#0069d9] text-white font-black rounded-2xl text-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     査定をスタート
                                 </Button>
                                 <Link
                                     href="/campaign"
-                                    onClick={() => setShowCampaignPopup(false)}
+                                    onClick={() => dismissPopup()}
                                     className="block text-xs text-slate-400 font-bold hover:text-slate-600 transition-colors underline underline-offset-4"
                                 >
                                     キャンペーンの詳細はこちら
