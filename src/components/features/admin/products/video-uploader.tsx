@@ -1,7 +1,10 @@
+'use client';
+
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Video, X, Loader2, Info, GripVertical } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { deleteFileAction, getSignedUploadUrlAction } from '@/actions/admin/upload';
 import {
     DndContext,
     closestCenter,
@@ -19,6 +22,7 @@ import {
     useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { Progress } from '@/components/ui/progress';
 
 interface VideoUploaderProps {
     initialVideos?: string[];
@@ -106,13 +110,13 @@ function SortableVideoItem({ id, url, index, size, onRemove }: SortableVideoItem
 export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploaderProps) {
     const [videos, setVideos] = useState<string[]>(initialVideos);
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [videoSizes, setVideoSizes] = useState<Record<string, number>>({});
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                // For mobile, we use a delay so that vertical scrolling is still possible
                 delay: 250,
                 tolerance: 5,
             },
@@ -139,6 +143,8 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
         if (!e.target.files || e.target.files.length === 0) return;
 
         setIsUploading(true);
+        setUploadProgress(0);
+
         const files = Array.from(e.target.files);
         const newUrls: string[] = [];
         const newSizes: Record<string, number> = {};
@@ -147,34 +153,42 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
             const supabase = createClient();
 
             for (const file of files) {
-                // Check file size (Supabase Free limit is 50MB)
-                if (file.size > 50 * 1024 * 1024) {
-                    alert(`ファイルサイズが大きすぎます: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)\n50MB以下の動画を選択してください。`);
+                if (file.size > 500 * 1024 * 1024) {
+                    alert(`ファイルサイズ制限超え: ${file.name}`);
                     continue;
                 }
 
-                // Generate unique filename
-                const fileExt = file.name.split('.').pop();
+                const fileExt = file.name.split('.').pop() || 'mp4';
                 const fileName = `videos/${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
 
-                const { data, error } = await supabase.storage
-                    .from('products')
-                    .upload(fileName, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
+                // 1. Get Signed URL
+                const { signedUrl, error: signError } = await getSignedUploadUrlAction(fileName);
+                if (signError) throw new Error(signError);
+                if (!signedUrl) throw new Error('Signed URL generated empty');
 
-                if (error) {
-                    throw error;
-                }
+                // 2. Upload via XHR
+                await new Promise<void>((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('PUT', signedUrl);
+                    xhr.upload.onprogress = (event) => {
+                        if (event.lengthComputable) {
+                            const percent = Math.round((event.loaded / event.total) * 100);
+                            setUploadProgress(percent);
+                        }
+                    };
+                    xhr.onload = () => {
+                        if (xhr.status >= 200 && xhr.status < 300) resolve();
+                        else reject(new Error(`Status ${xhr.status}`));
+                    };
+                    xhr.onerror = () => reject(new Error('Network error'));
+                    xhr.send(file);
+                });
 
-                // Get public URL
-                const { data: { publicUrl } } = supabase.storage
-                    .from('products')
-                    .getPublicUrl(fileName);
-
+                const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(fileName);
                 newUrls.push(publicUrl);
                 newSizes[publicUrl] = file.size;
+                setUploadProgress(100);
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
 
             const updatedVideos = [...videos, ...newUrls];
@@ -192,10 +206,22 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
         }
     };
 
-    const removeVideo = (indexToRemove: number) => {
+    const removeVideo = async (indexToRemove: number) => {
         const urlToRemove = videos[indexToRemove];
-        const updatedVideos = videos.filter((_, index) => index !== indexToRemove);
+        if (!urlToRemove) return;
 
+        try {
+            const url = new URL(urlToRemove);
+            const pathParts = url.pathname.split('/products/');
+            if (pathParts.length > 1) {
+                const storagePath = decodeURIComponent(pathParts[1]);
+                await deleteFileAction(storagePath);
+            }
+        } catch (error) {
+            console.error('Error extracting path for deletion:', error);
+        }
+
+        const updatedVideos = videos.filter((_, index) => index !== indexToRemove);
         setVideos(updatedVideos);
         setVideoSizes(prev => {
             const next = { ...prev };
@@ -238,9 +264,14 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                             `}
                         >
                             {isUploading ? (
-                                <div className="flex flex-col items-center gap-2">
-                                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                                    <span className="text-xs text-slate-500">アップロード中...</span>
+                                <div className="flex flex-col items-center gap-3 w-full px-6">
+                                    <div className="flex items-center gap-2">
+                                        <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
+                                        <span className="text-sm font-bold text-slate-700">
+                                            {uploadProgress === 100 ? '完了！' : `アップロード中... ${uploadProgress || 0}%`}
+                                        </span>
+                                    </div>
+                                    <Progress value={uploadProgress} className="h-2 w-full max-w-[200px]" />
                                 </div>
                             ) : (
                                 <>
@@ -248,7 +279,7 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                                     <span className="text-sm font-bold text-slate-500 text-center px-4">動画を追加 (MP4など)</span>
                                     <div className="flex items-center gap-1.5 mt-1 text-slate-400">
                                         <Info className="w-3.5 h-3.5" />
-                                        <span className="text-xs">無料枠制限: 50MB以下</span>
+                                        <span className="text-xs">制限: 500MB以下</span>
                                     </div>
                                 </>
                             )}

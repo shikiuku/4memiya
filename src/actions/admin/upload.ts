@@ -94,3 +94,49 @@ export async function uploadVideoAction(formData: FormData) {
 
     return { url: data.publicUrl };
 }
+
+export async function deleteFileAction(filePath: string) {
+    if (!filePath) {
+        return { error: 'No file path provided' };
+    }
+
+    // Initialize Admin Client
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false
+        }
+    });
+
+    const { error: deleteError } = await supabaseAdmin.storage
+        .from('products')
+        .remove([filePath]);
+
+    if (deleteError) {
+        console.error('Delete error:', deleteError);
+        return { error: deleteError.message };
+    }
+
+    return { success: true };
+}
+
+export async function getSignedUploadUrlAction(filePath: string) {
+    if (!filePath) {
+        return { error: 'No file path provided' };
+    }
+
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+        auth: { autoRefreshToken: false, persistSession: false }
+    });
+
+    const { data, error } = await supabaseAdmin.storage
+        .from('products')
+        .createSignedUploadUrl(filePath);
+
+    if (error) {
+        console.error('Signed URL Error:', error);
+        return { error: error.message };
+    }
+
+    return { signedUrl: data.signedUrl, token: data.token, path: data.path };
+}

@@ -1,9 +1,12 @@
+'use client';
+
 import { useState, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { ImagePlus, X, Loader2, GripVertical } from 'lucide-react';
 import Image from 'next/image';
-import { uploadImageAction } from '@/actions/admin/upload';
+import { uploadImageAction, deleteFileAction, getSignedUploadUrlAction } from '@/actions/admin/upload';
 import imageCompression from 'browser-image-compression';
+import { createClient } from '@/lib/supabase/client';
 import {
     DndContext,
     closestCenter,
@@ -17,11 +20,11 @@ import {
     arrayMove,
     SortableContext,
     sortableKeyboardCoordinates,
-    verticalListSortingStrategy,
     rectSortingStrategy,
     useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { Progress } from '@/components/ui/progress';
 
 interface ImageUploaderProps {
     initialImages?: string[];
@@ -111,13 +114,12 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
     const [images, setImages] = useState<string[]>(initialImages);
     const [imageSizes, setImageSizes] = useState<Record<string, number>>({});
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                // For mobile, we use a delay so that vertical scrolling is still possible
-                // When you press and hold for 250ms, it starts dragging.
                 delay: 250,
                 tolerance: 5,
             },
@@ -148,47 +150,71 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
         }
     };
 
-    // Previous removal and upload logic... (rest of the component)
-
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
 
         setIsUploading(true);
+        setUploadProgress(0);
+
         const files = Array.from(e.target.files);
         const newUrls: string[] = [];
         const newSizes: Record<string, number> = {};
 
         try {
+            const supabase = createClient();
+
             for (const file of files) {
                 // Compress image
                 const options = {
                     maxSizeMB: 0.5,
                     maxWidthOrHeight: 1280,
                     useWebWorker: true,
+                    onProgress: (percent: number) => {
+                        setUploadProgress(Math.floor(percent * 0.1));
+                    }
                 };
 
                 let compressedFile = file;
                 try {
                     compressedFile = await imageCompression(file, options);
-                    console.log(`Compressed: ${file.size} -> ${compressedFile.size}`);
                 } catch (error) {
                     console.error('Compression failed:', error);
-                    // Continue with original file if compression fails
                 }
 
-                // Use Server Action for upload to bypass RLS
-                const formData = new FormData();
-                formData.append('file', compressedFile);
+                const fileExt = compressedFile.name.split('.').pop() || 'jpg';
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
 
-                const result = await uploadImageAction(formData);
+                // 1. Get Signed URL
+                const { signedUrl, error: signError } = await getSignedUploadUrlAction(fileName);
+                if (signError) throw new Error(signError);
+                if (!signedUrl) throw new Error('Signed URL empty');
 
-                if (result.error) {
-                    throw new Error(result.error);
-                }
+                // 2. Upload via XHR for progress
+                await new Promise<void>((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('PUT', signedUrl);
+                    xhr.upload.onprogress = (event) => {
+                        if (event.lengthComputable) {
+                            const percent = Math.round((event.loaded / event.total) * 90);
+                            setUploadProgress(10 + percent);
+                        }
+                    };
+                    xhr.onload = () => {
+                        if (xhr.status >= 200 && xhr.status < 300) resolve();
+                        else reject(new Error(`Upload failed ${xhr.status}`));
+                    };
+                    xhr.onerror = () => reject(new Error('Network error'));
+                    xhr.send(compressedFile);
+                });
 
-                if (result.url) {
-                    newUrls.push(result.url);
-                    newSizes[result.url] = compressedFile.size;
+                setUploadProgress(100);
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+                const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(fileName);
+
+                if (publicUrl) {
+                    newUrls.push(publicUrl);
+                    newSizes[publicUrl] = compressedFile.size;
                 }
             }
 
@@ -207,9 +233,22 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
         }
     };
 
-    const removeImage = (indexToRemove: number) => {
-        const updatedImages = images.filter((_, index) => index !== indexToRemove);
+    const removeImage = async (indexToRemove: number) => {
         const urlToRemove = images[indexToRemove];
+        if (!urlToRemove) return;
+
+        try {
+            const url = new URL(urlToRemove);
+            const pathParts = url.pathname.split('/products/');
+            if (pathParts.length > 1) {
+                const storagePath = decodeURIComponent(pathParts[1]);
+                await deleteFileAction(storagePath);
+            }
+        } catch (error) {
+            console.error('Error extracting path for deletion:', error);
+        }
+
+        const updatedImages = images.filter((_, index) => index !== indexToRemove);
         setImages(updatedImages);
         setImageSizes(prev => {
             const newSizes = { ...prev };
@@ -253,7 +292,13 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
                             `}
                         >
                             {isUploading ? (
-                                <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
+                                <div className="flex flex-col items-center gap-1.5 w-full px-2 text-center">
+                                    <div className="flex items-center gap-1.5 justify-center">
+                                        <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                                        <span className="text-[10px] font-bold text-slate-700 leading-none">アップロード中 {uploadProgress}%</span>
+                                    </div>
+                                    <Progress value={uploadProgress} className="h-1 w-full" />
+                                </div>
                             ) : (
                                 <>
                                     <ImagePlus className="w-6 h-6 text-slate-400 mb-1" />
@@ -274,12 +319,6 @@ export function ImageUploader({ initialImages = [], onImagesChange }: ImageUploa
                 onChange={handleFileSelect}
             />
 
-            {/* Hidden input to ensure data forms submission works if this is used inside a form without AJAX override, 
-                though we are using server actions with formData. 
-                We might need to use a hidden input field that joins these URLs so that standard form submission works easily if we don't assume the parent handles it fully manually via JS. 
-                However, for the server action we mapped `images` field. 
-                The `ProductForm` uses formData. Using a hidden textarea/input with the joined string is the easiest way to keep compatibility with the existing server action.
-            */}
             <textarea
                 name="images"
                 value={images.join('\n')}
