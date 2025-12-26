@@ -182,6 +182,35 @@ export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: P
                         </div>
                     </div>
 
+                    {/* Attribute Characters (Added) */}
+                    <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 space-y-4">
+                        <h2 className="font-bold text-lg text-slate-800 border-b pb-2 mb-4 font-bold">属性別キャラクター</h2>
+                        <div className="space-y-4">
+                            {[
+                                { key: 'fire', label: '火属性', icon: '/images/icons/attributes/icon_fire.png' },
+                                { key: 'water', label: '水属性', icon: '/images/icons/attributes/icon_water.png' },
+                                { key: 'wood', label: '木属性', icon: '/images/icons/attributes/icon_wood.png' },
+                                { key: 'light', label: '光属性', icon: '/images/icons/attributes/icon_holy.png' },
+                                { key: 'dark', label: '闇属性', icon: '/images/icons/attributes/icon_dark.png' },
+                            ].map((attr) => (
+                                <div key={attr.key} className="flex items-center gap-4">
+                                    <div className="flex items-center gap-2 w-28 shrink-0">
+                                        <div className="relative w-8 h-8">
+                                            <img src={attr.icon} alt={attr.label} className="object-contain" />
+                                        </div>
+                                        <span className="text-sm font-bold text-slate-700">{attr.label}</span>
+                                    </div>
+                                    <input
+                                        name={`char_${attr.key}`}
+                                        defaultValue={(initialData?.attribute_characters as any)?.[attr.key] || ''}
+                                        className="flex-1 px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                                        placeholder="パンサー　マナ　マサムネ"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* Descriptions */}
                     <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 space-y-4">
                         <h2 className="font-bold text-lg text-slate-800 border-b pb-2 mb-4">アピールポイント</h2>
