@@ -186,39 +186,34 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
 
                         const assessmentSlide = (
                             <div key="assessment" className="flex-[0_0_100%] min-w-0 relative">
-                                <Link href="/assessment" className="block relative h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full overflow-hidden group/slide">
-                                    {/* Simple professional gradient background */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-slate-50" />
-
-                                    <div className="relative h-full flex flex-col items-center justify-center p-6 text-center">
-                                        {/* Profile Avatar Section */}
-                                        <div className="mb-2 sm:mb-4 bg-white p-1 sm:p-1.5 rounded-full shadow-sm animate-bounce">
-                                            <div className="relative w-12 h-12 sm:w-16 sm:h-16 overflow-hidden rounded-full border border-slate-100">
-                                                <Image
-                                                    src="/amamiya_icon.png"
-                                                    alt="雨宮"
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
+                                <div className="bg-white h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full flex flex-col items-center justify-center text-slate-900 p-6 text-center border-y border-slate-100">
+                                    <div className="mb-2 sm:mb-4 bg-slate-50 p-1 sm:p-1.5 rounded-full shadow-sm animate-bounce">
+                                        <div className="relative w-12 h-12 sm:w-16 sm:h-16 overflow-hidden rounded-full">
+                                            <Image
+                                                src="/amamiya_icon.png"
+                                                alt="雨宮"
+                                                fill
+                                                className="object-cover"
+                                            />
                                         </div>
-
-                                        <div className="space-y-1 sm:space-y-2 max-w-lg mb-4">
-                                            <h2 className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-                                                引退・不要アカウントを高価格で買い取ります！
-                                            </h2>
-                                            <p className="text-slate-500 text-xs sm:text-base font-bold">
-                                                業界最高水準の価格で、安心・安全な取引。
-                                            </p>
-                                        </div>
-
+                                    </div>
+                                    <div className="flex flex-col items-center mb-2">
+                                        <h2 className="text-lg sm:text-2xl md:text-3xl font-bold">
+                                            引退・不要アカウントを<br />
+                                            高価格で買い取ります！
+                                        </h2>
+                                    </div>
+                                    <p className="text-slate-600 text-xs sm:text-base mb-4 max-w-md font-medium">
+                                        多数の取引実績で、安心・安全な取引。
+                                    </p>
+                                    <Link href="/assessment">
                                         <Button
                                             className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-lg"
                                         >
                                             無料で査定を申し込む
                                         </Button>
-                                    </div>
-                                </Link>
+                                    </Link>
+                                </div>
                             </div>
                         );
 
