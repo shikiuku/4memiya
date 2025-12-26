@@ -186,24 +186,14 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
 
                         const assessmentSlide = (
                             <div key="assessment" className="flex-[0_0_100%] min-w-0 relative">
-                                <Link href="/assessment" className="block relative h-full min-h-[220px] sm:min-h-[280px] md:min-h-[340px] w-full overflow-hidden group/slide">
-                                    {/* Background with soft professional gradient */}
+                                <Link href="/assessment" className="block relative h-full min-h-[200px] sm:min-h-[250px] md:min-h-[320px] w-full overflow-hidden group/slide">
+                                    {/* Simple professional gradient background */}
                                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-slate-50" />
-
-                                    {/* Subtle Watermark Icon */}
-                                    <div className="absolute -right-16 -bottom-16 w-64 h-64 opacity-[0.03] group-hover/slide:opacity-[0.08] transition-opacity duration-500">
-                                        <Image
-                                            src="/amamiya_icon.png"
-                                            alt=""
-                                            fill
-                                            className="object-contain"
-                                        />
-                                    </div>
 
                                     <div className="relative h-full flex flex-col items-center justify-center p-6 text-center">
                                         {/* Profile Avatar Section */}
-                                        <div className="mb-4 relative">
-                                            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-white transform group-hover/slide:scale-105 transition-transform duration-300">
+                                        <div className="mb-2 sm:mb-4 bg-white p-1 sm:p-1.5 rounded-full shadow-sm animate-bounce">
+                                            <div className="relative w-12 h-12 sm:w-16 sm:h-16 overflow-hidden rounded-full border border-slate-100">
                                                 <Image
                                                     src="/amamiya_icon.png"
                                                     alt="雨宮"
@@ -211,34 +201,22 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
                                                     className="object-cover"
                                                 />
                                             </div>
-                                            {/* Verified Badge - X Style */}
-                                            <div className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md border border-slate-50">
-                                                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-[#1d9bf0]" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M22.5 12.5c0-1.58-.88-2.95-2.18-3.66.26-1.51-.21-3.11-1.32-4.22s-2.71-1.58-4.22-1.32c-.71-1.3-2.08-2.18-3.66-2.18s-2.95.88-3.66 2.18c-1.51-.26-3.11.21-4.22 1.32s-1.58 2.71-1.32 4.22c-1.3.71-2.18 2.08-2.18 3.66s.88 2.95 2.18 3.66c-.26 1.51.21 3.11 1.32 4.22s2.71 1.58 4.22 1.32c.71 1.3 2.08 2.18 3.66 2.18s2.95-.88 3.66-2.18c1.51.26 3.11-.21 4.22-1.32s1.58-2.71 1.32-4.22c1.3-.71 2.18-2.08 2.18-3.66zm-13.47 4.7L5.64 13.8l1.41-1.42 1.98 1.98 5.4-5.4 1.42 1.42-6.82 6.82z" />
-                                                </svg>
-                                            </div>
                                         </div>
 
-                                        <div className="space-y-1 sm:space-y-2 max-w-lg">
-                                            <div className="inline-flex items-center gap-1 sm:gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full font-bold text-[10px] sm:text-xs mb-1">
-                                                <Sparkles className="w-3 h-3 text-indigo-500" />
-                                                雨宮本人が直接査定
-                                            </div>
-                                            <h2 className="text-xl sm:text-3xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
-                                                引退・不要アカウント<br className="sm:hidden" />を迅速に買い取ります！
+                                        <div className="space-y-1 sm:space-y-2 max-w-lg mb-4">
+                                            <h2 className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                                                引退・不要アカウントを高価格で買い取ります！
                                             </h2>
                                             <p className="text-slate-500 text-xs sm:text-base font-bold">
-                                                業界最高水準の価格で、安心・安全な取引をお約束。
+                                                業界最高水準の価格で、安心・安全な取引。
                                             </p>
                                         </div>
 
-                                        <div className="mt-6">
-                                            <Button
-                                                className="bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-full text-sm sm:text-lg px-8 sm:px-12 py-6 h-auto shadow-xl shadow-indigo-100 transform active:scale-95 transition-all border-b-4 border-indigo-800"
-                                            >
-                                                無料で査定を申し込む
-                                            </Button>
-                                        </div>
+                                        <Button
+                                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-xs sm:text-base px-6 sm:px-8 shadow-lg"
+                                        >
+                                            無料で査定を申し込む
+                                        </Button>
                                     </div>
                                 </Link>
                             </div>
