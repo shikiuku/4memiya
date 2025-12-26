@@ -22,6 +22,7 @@ export type Product = {
   updated_at: string;
   seq_id: number;
   movies?: string[] | null;
+  attribute_characters?: Record<string, string> | null;
 };
 
 

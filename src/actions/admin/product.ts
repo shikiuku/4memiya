@@ -38,6 +38,15 @@ export async function saveProduct(currentState: any, formData: FormData) {
     const description_recommend = formData.get('description_recommend') as string;
     const seq_id = formData.get('seq_id') ? parseInt(formData.get('seq_id') as string) : undefined;
 
+    // 3. 属性別キャラクター情報を取得
+    const attribute_characters: Record<string, string> = {
+        fire: formData.get('char_fire') as string || '',
+        water: formData.get('char_water') as string || '',
+        wood: formData.get('char_wood') as string || '',
+        light: formData.get('char_light') as string || '',
+        dark: formData.get('char_dark') as string || '',
+    };
+
     // ... (rest of auth check)
     const supabase = await createServerClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -60,7 +69,7 @@ export async function saveProduct(currentState: any, formData: FormData) {
             title,
             price,
             images,
-            movies, // 明示的に最新の動画リストで上書き
+            movies,
             tags,
             rank,
             badge_power,
@@ -68,6 +77,7 @@ export async function saveProduct(currentState: any, formData: FormData) {
             gacha_charas,
             description_points: description_points || null,
             description_recommend: description_recommend || null,
+            attribute_characters, // 保存
         };
 
         if (seq_id !== undefined) updateData.seq_id = seq_id;
@@ -80,7 +90,7 @@ export async function saveProduct(currentState: any, formData: FormData) {
             title,
             price,
             images,
-            movies, // 明示的に最新の動画リストを保存
+            movies,
             tags,
             rank,
             badge_power,
@@ -89,6 +99,7 @@ export async function saveProduct(currentState: any, formData: FormData) {
             description_points: description_points || null,
             description_recommend: description_recommend || null,
             status: 'on_sale',
+            attribute_characters, // 保存
         };
         if (seq_id !== undefined) insertData.seq_id = seq_id;
 

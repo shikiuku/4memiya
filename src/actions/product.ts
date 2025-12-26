@@ -48,11 +48,11 @@ export async function getProducts(options?: {
         const isNumeric = /^\d+$/.test(options.query);
 
         if (isNumeric) {
-            // Search Title OR Description OR SeqID
-            query = query.or(`title.ilike.%${options.query}%,description_points.ilike.%${options.query}%,seq_id.eq.${options.query}`);
+            // Search Title OR Description OR SeqID OR Attribute Characters
+            query = query.or(`title.ilike.%${options.query}%,description_points.ilike.%${options.query}%,seq_id.eq.${options.query},attribute_characters->>fire.ilike.%${options.query}%,attribute_characters->>water.ilike.%${options.query}%,attribute_characters->>wood.ilike.%${options.query}%,attribute_characters->>light.ilike.%${options.query}%,attribute_characters->>dark.ilike.%${options.query}%`);
         } else {
-            // Search Title OR Description
-            query = query.or(`title.ilike.%${options.query}%,description_points.ilike.%${options.query}%`);
+            // Search Title OR Description OR Attribute Characters
+            query = query.or(`title.ilike.%${options.query}%,description_points.ilike.%${options.query}%,attribute_characters->>fire.ilike.%${options.query}%,attribute_characters->>water.ilike.%${options.query}%,attribute_characters->>wood.ilike.%${options.query}%,attribute_characters->>light.ilike.%${options.query}%,attribute_characters->>dark.ilike.%${options.query}%`);
         }
     }
 
