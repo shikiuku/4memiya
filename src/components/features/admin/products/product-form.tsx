@@ -24,14 +24,27 @@ interface ProductFormProps {
 export function ProductForm({ suggestedTags = [], initialData, defaultSeqId }: ProductFormProps) {
     const [state, formAction, isPending] = useActionState(saveProduct, initialState);
 
-    // メディアの初期化（imagesカラムに全ての順序が保存されている前提）
+    // メージと動画の両方のカラムからメディアを初期化（不整合を防ぐ）
     const initialMedia: MediaItem[] = useMemo(() => {
-        if (!initialData?.images || initialData.images.length === 0) return [];
-        return initialData.images.map(url => {
-            const isVideo = url.toLowerCase().match(/\.(mp4|mov|webm|m4v)(\?.*)?$/);
-            return { url, type: isVideo ? 'video' as const : 'image' as const };
+        const combined = new Map<string, MediaItem>();
+
+        // 1. imagesカラム（統合リスト）を優先的に追加
+        initialData?.images?.forEach(url => {
+            if (!url) return;
+            const isVideo = url.toLowerCase().match(/\.(mp4|mov|webm|m4v|ogg)(\?.*)?$/i);
+            combined.set(url, { url, type: isVideo ? 'video' : 'image' });
         });
-    }, [initialData?.images]);
+
+        // 2. moviesカラムにのみ存在する動画があれば追加（古いデータとの互換性）
+        initialData?.movies?.forEach(url => {
+            if (!url) return;
+            if (!combined.has(url)) {
+                combined.set(url, { url, type: 'video' });
+            }
+        });
+
+        return Array.from(combined.values());
+    }, [initialData?.images, initialData?.movies]);
 
     const [images, setImages] = useState<string[]>(initialData?.images || []);
     const [movies, setMovies] = useState<string[]>(initialData?.movies || []);

@@ -13,36 +13,32 @@ export async function saveProduct(currentState: any, formData: FormData) {
     const imagesRaw = formData.get('images') as string;
     const images = imagesRaw ? imagesRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
 
-    // Compatibility: Extract videos for the 'movies' column
+    // 1. 統合されたメディアリスト(images)から動画(movies)を抽出
     const movies = images.filter(url =>
         url.toLowerCase().match(/\.(mp4|mov|webm|m4v|ogg)(\?.*)?$/i)
     );
 
-    // Handle tags
+    console.log('[saveProduct] Syncing Media State:', {
+        productId: id || 'NEW',
+        totalMedia: images.length,
+        detectedVideos: movies.length,
+        allUrls: images
+    });
+
+    // 2. その他の商品情報を取得
     const tagsRaw = formData.get('tags') as string;
     const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
-    console.log('[saveProduct] Processing media:', {
-        id,
-        imageCount: images.length,
-        movieCount: movies.length,
-        firstImage: images[0],
-        firstMovie: movies[0]
-    });
-    // Specs
     const rank = parseInt(formData.get('rank') as string) || 0;
     const badge_power = parseInt(formData.get('badge_power') as string) || 0;
     const luck_max = parseInt(formData.get('luck_max') as string) || 0;
     const gacha_charas = parseInt(formData.get('gacha_charas') as string) || 0;
 
-    // Descriptions
     const description_points = formData.get('description_points') as string;
     const description_recommend = formData.get('description_recommend') as string;
-
-    // Optional seq_id Override
     const seq_id = formData.get('seq_id') ? parseInt(formData.get('seq_id') as string) : undefined;
 
-    // 1. Verify Authentication (using normal client)
+    // ... (rest of auth check)
     const supabase = await createServerClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
@@ -50,16 +46,10 @@ export async function saveProduct(currentState: any, formData: FormData) {
         return { error: '認証エラー: ログインしてください。' };
     }
 
-    // 2. Perform Admin Action (using service role to bypass RLS)
     const supabaseAdmin = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
-        {
-            auth: {
-                autoRefreshToken: false,
-                persistSession: false
-            }
-        }
+        { auth: { autoRefreshToken: false, persistSession: false } }
     );
 
     let error;
@@ -70,6 +60,7 @@ export async function saveProduct(currentState: any, formData: FormData) {
             title,
             price,
             images,
+            movies, // 明示的に最新の動画リストで上書き
             tags,
             rank,
             badge_power,
@@ -78,9 +69,6 @@ export async function saveProduct(currentState: any, formData: FormData) {
             description_points: description_points || null,
             description_recommend: description_recommend || null,
         };
-
-        // Movies added to updateData
-        updateData.movies = movies;
 
         if (seq_id !== undefined) updateData.seq_id = seq_id;
 
@@ -92,6 +80,7 @@ export async function saveProduct(currentState: any, formData: FormData) {
             title,
             price,
             images,
+            movies, // 明示的に最新の動画リストを保存
             tags,
             rank,
             badge_power,
@@ -99,8 +88,7 @@ export async function saveProduct(currentState: any, formData: FormData) {
             gacha_charas,
             description_points: description_points || null,
             description_recommend: description_recommend || null,
-            status: 'on_sale', // Default status
-            movies: movies // Defined above in previous edit block? No, variable scope issue.
+            status: 'on_sale',
         };
         if (seq_id !== undefined) insertData.seq_id = seq_id;
 
@@ -112,10 +100,7 @@ export async function saveProduct(currentState: any, formData: FormData) {
 
         error = insertError;
 
-        // Send Push Notification for new products
         if (!error && newProduct) {
-            // We don't await this to keep UI responsive? Or maybe we should log errors.
-            // Using logic from previous plan:
             const { sendPushNotification } = await import('@/actions/notification');
             await sendPushNotification({
                 title: '新着在庫が入荷しました！',
