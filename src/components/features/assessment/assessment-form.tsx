@@ -9,8 +9,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ShieldCheck, Check, BadgeCheck } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { ShieldCheck, Check, BadgeCheck, X, Gift } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
 import { AssessmentRule } from '@/types';
 
 // Base schema for fixed fields
@@ -32,6 +32,16 @@ interface AssessmentFormProps {
 export function AssessmentForm({ rules }: AssessmentFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [showCampaignPopup, setShowCampaignPopup] = useState(false);
+
+    // Show popup on mount
+    useEffect(() => {
+        // Delay slightly for better feel
+        const timer = setTimeout(() => {
+            setShowCampaignPopup(true);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, []);
 
     // Calculate days until end of month (Announcement Date)
     const daysUntilAnnouncement = useMemo(() => {
@@ -143,188 +153,348 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
 
 
     return (
-        <form className="space-y-6 bg-white p-6 rounded-md border border-slate-200" onSubmit={(e) => e.preventDefault()}>
+        <>
+            {/* Campaign Popup */}
+            {showCampaignPopup && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+                    <div
+                        className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/20 animate-in zoom-in-95 fade-in duration-300"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Decorative Header Background */}
+                        <div className="absolute top-0 left-0 w-full h-32 bg-[#FCF9D9]" />
 
-            {/* Live Price Display */}
-            <div className="sticky top-20 z-10 shadow-sm bg-slate-50 border border-slate-200 text-slate-900 p-4 rounded-md text-center transform transition-all duration-300">
-                <p className="text-slate-500 text-xs mb-1">現在の査定金額</p>
-                <div className="text-4xl font-bold tracking-tight">
-                    ¥{currentPrice.toLocaleString()}
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setShowCampaignPopup(false)}
+                            className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors z-20"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+
+                        {/* Content */}
+                        <div className="relative p-8 text-center space-y-5 pt-10">
+                            <div className="mx-auto w-24 h-24 flex items-center justify-center mb-2">
+                                <div className="relative w-full h-full animate-bounce rounded-full overflow-hidden border-2 border-slate-50 shadow-md">
+                                    <Image
+                                        src="/paypay_icon.png"
+                                        alt="PayPay"
+                                        fill
+                                        className="object-cover"
+                                        priority
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <h2 className="text-2xl font-black text-[#854d0e] leading-tight">
+                                    PayPay <span className="text-red-600">1,000</span>円分を<br />
+                                    <span className="text-red-600">10</span>名様にプレゼント！
+                                </h2>
+                                <p className="text-[13px] text-slate-500 font-bold">
+                                    買取査定キャンペーン開催中
+                                </p>
+                            </div>
+
+                            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 space-y-3">
+                                <p className="text-sm font-black text-[#854d0e] leading-relaxed">
+                                    査定結果をXでシェアするだけで<br />
+                                    <span className="text-[13px] text-slate-500 font-bold">自動で抽選に参加完了！</span>
+                                </p>
+                                <div className="pt-2 border-t border-slate-200/60 font-bold">
+                                    <p className="text-[11px] text-[#854d0e] uppercase tracking-wider">当選発表まで残り</p>
+                                    <p className="text-2xl font-black text-slate-800 tabular-nums">
+                                        あと <span className="text-red-600 text-3xl">{daysUntilAnnouncement}</span> 日
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4 pt-2">
+                                <Button
+                                    onClick={() => setShowCampaignPopup(false)}
+                                    className="w-full h-14 bg-[#007bff] hover:bg-[#0069d9] text-white font-black rounded-2xl text-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                                >
+                                    査定をスタート
+                                </Button>
+                                <Link
+                                    href="/campaign"
+                                    onClick={() => setShowCampaignPopup(false)}
+                                    className="block text-xs text-slate-400 font-bold hover:text-slate-600 transition-colors underline underline-offset-4"
+                                >
+                                    キャンペーンの詳細はこちら
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            )}
 
-            </div>
+            <form className="space-y-2.5" onSubmit={(e) => e.preventDefault()}>
 
-            <div className="space-y-4">
-                {/* Game Title - Compact */}
-                <div>
-                    <Label htmlFor="gameTitle" className="text-xs text-slate-500">ゲームタイトル</Label>
-                    <div className="font-bold text-slate-900 bg-slate-50 border border-slate-100 rounded px-3 py-2 text-sm mt-1">
-                        {watch('gameTitle')}
+                {/* Live Price Display - Slimmed and Integrated */}
+                <div className="sticky top-[52px] z-10 -mx-1 px-1 py-1">
+                    <div className="bg-white/80 backdrop-blur-md border border-[#007bff]/10 shadow-sm text-slate-900 p-2 rounded-xl text-center">
+                        <p className="text-slate-500 text-[8px] uppercase font-bold tracking-wider mb-0">現在の査定金額</p>
+                        <div className="text-2xl font-black tracking-tight text-slate-900">
+                            ¥{currentPrice.toLocaleString()}
+                        </div>
                     </div>
                 </div>
 
-                {/* Numeric Inputs Grid - Dynamic Ordering */}
-                <div className="grid grid-cols-2 gap-3">
-                    {/* Render inputs in the order they appear in rules (which is sorted by DB sort_order) */}
-                    {Array.from(new Set(rangeRules.map(r => r.category))).map(cat => {
-                        // Find a rule for this category to get label and placeholder
-                        // We use the first rule that has these values
-                        const representativeRule = rangeRules.find(r => r.category === cat);
+                <div className="space-y-3">
+                    {/* Game Title - Compact */}
+                    <div className="px-1">
+                        <Label htmlFor="gameTitle" className="text-[10px] text-slate-500 font-bold block">ゲームタイトル</Label>
+                        <div className="font-bold text-slate-900 bg-slate-50 border border-slate-100 rounded px-3 py-1 text-sm mt-0.5">
+                            {watch('gameTitle')}
+                        </div>
+                    </div>
 
-                        // Determine props based on category
-                        let inputProps = {
-                            name: `dynamicRanges.${cat}` as any,
-                            label: representativeRule?.label || cat,
-                            placeholder: representativeRule?.input_placeholder || '0',
-                            unit: representativeRule?.input_unit || '値'
-                        };
+                    {/* Numeric Inputs Grid - Dynamic Ordering */}
+                    <div className="grid grid-cols-2 gap-2.5">
+                        {/* Render inputs in the order they appear in rules (which is sorted by DB sort_order) */}
+                        {Array.from(new Set(rangeRules.map(r => r.category))).map(cat => {
+                            // Find a rule for this category to get label and placeholder
+                            // We use the first rule that has these values
+                            const representativeRule = rangeRules.find(r => r.category === cat);
 
-                        // Optional: Keep hardcoded defaults if DB value is missing, for backward compatibility or better defaults
-                        // Only apply defaults if BOTH placeholder and unit are missing? Or independently?
-                        // Let's apply independently but check specific categories.
-                        if (cat === 'rank') {
-                            if (!representativeRule?.input_placeholder) inputProps.placeholder = '1500';
-                            if (!representativeRule?.input_unit) inputProps.unit = 'ランク';
-                            // Label override for standard categories if not set in DB (or strictly enforce "Rank" vs "rank")
-                            if (!representativeRule?.label) inputProps.label = 'ランク';
-                        } else if (cat === 'luck_max') {
-                            if (!representativeRule?.input_placeholder) inputProps.placeholder = '500';
-                            if (!representativeRule?.input_unit) inputProps.unit = '体';
-                            if (!representativeRule?.label) inputProps.label = '運極数';
-                        } else if (cat === 'gacha_charas') {
-                            if (!representativeRule?.input_placeholder) inputProps.placeholder = '1000';
-                            if (!representativeRule?.input_unit) inputProps.unit = '体';
-                            if (!representativeRule?.label) inputProps.label = 'ガチャ限数';
-                        }
+                            // Determine props based on category
+                            let inputProps = {
+                                name: `dynamicRanges.${cat}` as any,
+                                label: representativeRule?.label || cat,
+                                placeholder: representativeRule?.input_placeholder || '0',
+                                unit: representativeRule?.input_unit || '値'
+                            };
 
-                        return (
-                            <div key={cat} className="space-y-1">
-                                <Label htmlFor={inputProps.name} className="capitalize text-xs">{inputProps.label}</Label>
-                                <div className="relative">
-                                    <Input
-                                        id={inputProps.name}
-                                        type="number"
-                                        min="0"
-                                        placeholder={inputProps.placeholder}
-                                        className="pr-10"
-                                        {...register(inputProps.name)}
-                                    />
-                                    <div className="absolute right-3 top-2.5 text-xs text-slate-400">{inputProps.unit}</div>
+                            // Optional: Keep hardcoded defaults if DB value is missing, for backward compatibility or better defaults
+                            // Only apply defaults if BOTH placeholder and unit are missing? Or independently?
+                            // Let's apply independently but check specific categories.
+                            if (cat === 'rank') {
+                                if (!representativeRule?.input_placeholder) inputProps.placeholder = '1500';
+                                if (!representativeRule?.input_unit) inputProps.unit = 'ランク';
+                                // Label override for standard categories if not set in DB (or strictly enforce "Rank" vs "rank")
+                                if (!representativeRule?.label) inputProps.label = 'ランク';
+                            } else if (cat === 'luck_max') {
+                                if (!representativeRule?.input_placeholder) inputProps.placeholder = '500';
+                                if (!representativeRule?.input_unit) inputProps.unit = '体';
+                                if (!representativeRule?.label) inputProps.label = '運極数';
+                            } else if (cat === 'gacha_charas') {
+                                if (!representativeRule?.input_placeholder) inputProps.placeholder = '1000';
+                                if (!representativeRule?.input_unit) inputProps.unit = '体';
+                                if (!representativeRule?.label) inputProps.label = 'ガチャ限数';
+                            }
+
+                            return (
+                                <div key={cat} className="space-y-0.5">
+                                    <Label htmlFor={inputProps.name} className="capitalize text-[10px] font-bold h-3.5 flex items-center">{inputProps.label}</Label>
+                                    <div className="relative">
+                                        <Input
+                                            id={inputProps.name}
+                                            type="number"
+                                            min="0"
+                                            placeholder={inputProps.placeholder}
+                                            className="pr-10 h-9 text-sm"
+                                            {...register(inputProps.name)}
+                                        />
+                                        <div className="absolute right-3 top-2 text-[10px] text-slate-400">{inputProps.unit}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                            );
+                        })}
+                    </div>
 
-                {/* Boolean Rules (Checkboxes) - Compact Grid */}
-                {booleanRules.length > 0 && (
-                    <div className="pt-4 border-t border-slate-100">
-                        <Label className="mb-2 block text-sm font-bold text-slate-700">プラス査定要素 / その他</Label>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {booleanRules.map(rule => (
-                                <div key={rule.id}
-                                    className="relative flex items-center space-x-2 border border-slate-200 p-2 rounded hover:bg-slate-50 transition-colors cursor-pointer bg-white"
-                                    onClick={() => {
-                                        const current = customRules?.[rule.id] ?? false;
-                                        setValue(`customRules.${rule.id}`, !current, { shouldDirty: true });
-                                    }}
-                                >
-                                    {/* Checkbox Visual */}
-                                    <div
-                                        className={`
+                    {/* Boolean Rules (Checkboxes) - Compact Grid */}
+                    {booleanRules.length > 0 && (
+                        <div className="pt-2 border-t border-slate-100">
+                            <Label className="mb-1 block text-[11px] font-bold text-slate-700">プラス査定要素 / その他</Label>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                                {booleanRules.map(rule => (
+                                    <div key={rule.id}
+                                        className="relative flex items-center space-x-2 border border-slate-200 p-2 rounded hover:bg-slate-50 transition-colors cursor-pointer bg-white"
+                                        onClick={() => {
+                                            const current = customRules?.[rule.id] ?? false;
+                                            setValue(`customRules.${rule.id}`, !current, { shouldDirty: true });
+                                        }}
+                                    >
+                                        {/* Checkbox Visual */}
+                                        <div
+                                            className={`
                                             h-4 w-4 shrink-0 rounded border flex items-center justify-center pointer-events-none transition-colors
                                             ${(customRules?.[rule.id])
-                                                ? 'bg-blue-600 border-blue-600 text-white'
-                                                : 'border-slate-300 bg-white'
-                                            }
+                                                    ? 'bg-blue-600 border-blue-600 text-white'
+                                                    : 'border-slate-300 bg-white'
+                                                }
                                         `}
-                                    >
-                                        {(customRules?.[rule.id]) && <Check className="h-3 w-3" strokeWidth={3} />}
-                                    </div>
+                                        >
+                                            {(customRules?.[rule.id]) && <Check className="h-3 w-3" strokeWidth={3} />}
+                                        </div>
 
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-medium text-slate-700 truncate leading-tight">
-                                            {rule.label || '指定なし'}
-                                        </p>
-                                        <p className="text-[10px] text-slate-400 leading-none mt-0.5">
-                                            {rule.category !== 'checkbox' && `(${rule.category})`}
-                                            <span className="font-bold text-[#e60012] ml-1">+{rule.price_adjustment.toLocaleString()}</span>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs font-medium text-slate-700 truncate leading-tight">
+                                                {rule.label || '指定なし'}
+                                            </p>
+                                            <p className="text-[10px] text-slate-400 leading-none mt-0.5">
+                                                {rule.category !== 'checkbox' && `(${rule.category})`}
+                                                <span className="font-bold text-[#e60012] ml-1">+{rule.price_adjustment.toLocaleString()}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Bottom Actions Area */}
+                <div className="pt-2 border-t border-slate-200/60 space-y-2.5">
+                    {/* Card 1: Campaign & Share */}
+                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-3.5 space-y-3">
+                        <div className="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-lg p-2.5 text-center text-[11px] font-bold">
+                            <p>
+                                シェアで毎月
+                                <span className="text-red-600 text-sm mx-0.5">10</span>名に
+                                PayPay
+                                <span className="text-red-600 text-sm mx-0.5">1,000</span>円プレゼント！
+                            </p>
+                            <p className="text-sm mt-1 mb-2">
+                                当選発表まであと <span className="text-red-600 text-lg">{daysUntilAnnouncement}</span> 日
+                            </p>
+                            <Link href="/campaign" className="text-xs text-yellow-700 underline hover:text-yellow-900 block mt-1 font-medium">
+                                このキャンペーンの詳細はこちら
+                            </Link>
+                        </div>
+
+                        <Button
+                            type="button"
+                            onClick={handleShare}
+                            className="w-full bg-black hover:bg-slate-800 text-white font-bold rounded-full h-9 text-xs transition-all"
+                        >
+                            Xで査定結果をシェアする
+                        </Button>
+                    </div>
+
+                    {/* Card 2: Account Sale Flow & DM */}
+                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-3.5 space-y-4">
+                        {/* Account Sale Flow Section */}
+                        <div className="space-y-2.5">
+                            <div className="flex items-center gap-2 border-l-4 border-[#007bff] pl-2.5">
+                                <h3 className="font-bold text-[13px] text-slate-800">アカウント売却の流れ</h3>
+                            </div>
+
+                            <div className="space-y-3 px-1">
+                                {/* Step 1 */}
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">1</div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-bold text-slate-800">
+                                            下のボタンから「売却希望です」とDMを送る
                                         </p>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
 
-            {/* Campaign Banner & Actions - Moved to Bottom */}
-            <div className="pt-6 border-t border-slate-100 space-y-4">
-                <div className="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-md p-3 text-center text-xs font-bold animate-pulse">
-                    <p>
-                        シェアで毎月
-                        <span className="text-red-600 text-sm mx-0.5">10</span>名に
-                        PayPay
-                        <span className="text-red-600 text-sm mx-0.5">1,000</span>円プレゼント！
-                    </p>
-                    <p className="text-sm mt-1 mb-2">
-                        当選発表まであと <span className="text-red-600 text-lg">{daysUntilAnnouncement}</span> 日
-                    </p>
-                    <Link href="/campaign" className="text-xs text-yellow-700 underline hover:text-yellow-900 block mt-1">
-                        このキャンペーンの詳細はこちら
-                    </Link>
-                </div>
-
-                <div className="space-y-4">
-                    {/* Share Button (Less Prominent) */}
-                    <Button
-                        type="button"
-                        onClick={handleShare}
-                        className="w-full bg-black hover:bg-slate-800 text-white font-bold rounded-full h-12 text-base"
-                    >
-                        Xで査定結果をシェア
-                    </Button>
-
-                    <div className="relative py-2">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-slate-200" />
-                        </div>
-                    </div>
-
-                    {/* DM Consultation (Primary Prominence) */}
-                    <a
-                        href="https://x.com/direct_messages/create/AJAJDNW"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block w-full pt-2"
-                    >
-                        {/* User Profile for Trust */}
-                        <div className="flex items-center justify-center gap-3 mb-3">
-                            <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200">
-                                <Image
-                                    src="/amamiya_icon.png"
-                                    alt="雨宮"
-                                    fill
-                                    className="object-cover"
-                                />
-                            </div>
-                            <div className="text-left">
-                                <div className="flex items-center gap-1">
-                                    <span className="text-sm font-bold text-slate-900 leading-tight">雨宮 【モンスト垢 買取/販売/代行】</span>
-                                    <BadgeCheck className="w-4 h-4 text-[#007bff] fill-[#007bff] text-white" />
+                                {/* Step 2 */}
+                                <div className="flex items-start gap-3">
+                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none mt-[-1px]">2</div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-bold text-slate-800 mb-2">
+                                            DMにて、以下の内容を撮影した動画を送信して下さい（属性順）
+                                        </p>
+                                        <div className="text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-3 space-y-2">
+                                            <div>
+                                                <p className="font-bold text-slate-700">① ガチャ限定キャラ [★5、★6]</p>
+                                                <p className="text-slate-500 mt-0.5">
+                                                    手順：(表示順変更 → 入手方法 → [プレミアムガチャ] → レアリティ → [最終★6] )
+                                                </p>
+                                            </div>
+                                            <p className="font-bold text-slate-700">② 運極キャラ</p>
+                                            <p className="font-bold text-slate-700">③ 紋章ページ</p>
+                                            <p className="font-bold text-slate-700">④ アイテム一通り</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="text-xs text-slate-500 font-medium">@AJAJDNW</div>
+
+                                {/* Step 3 */}
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">3</div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-bold text-slate-800">
+                                            査定額に納得頂けましたら、アカウント情報の確認を行います
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Step 4 */}
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">4</div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-bold text-slate-800">
+                                            アカウント情報の確認後、希望のお支払い方法で送金致します
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Step 5 */}
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">5</div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-bold text-slate-800">
+                                            受け取り完了後、「レビューを投稿」をクリック
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Step 6 */}
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">6</div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-bold text-slate-800">
+                                            レビューの投稿が完了できたら取引終了
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
+
+                            <p className="text-center text-[10px] text-slate-500 font-medium pt-1">
+                                何か質問や相談等ありましたらお気軽にdmください
+                            </p>
                         </div>
 
-                        <div className="w-full bg-[#007bff] hover:bg-[#0069d9] text-white font-bold rounded-full h-14 text-lg shadow-md animate-pulse flex items-center justify-center">
-                            アカウント売却の相談 (DM)
+                        <div className="space-y-3 pt-1">
+                            {/* DM Consultation */}
+                            <a
+                                href="https://x.com/direct_messages/create/AJAJDNW"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block w-full"
+                            >
+                                <div className="flex items-center justify-center gap-2.5 mb-3">
+                                    <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-slate-100 shadow-sm">
+                                        <Image
+                                            src="/amamiya_icon.png"
+                                            alt="雨宮"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="flex items-center gap-1">
+                                            <span className="text-[13px] font-bold text-slate-900 leading-tight">雨宮 【モンスト垢 買取/販売/代行】</span>
+                                            <BadgeCheck className="w-3.5 h-3.5 text-[#007bff] fill-[#007bff] text-white" />
+                                        </div>
+                                        <div className="text-[10px] text-slate-500 font-bold">@AJAJDNW</div>
+                                    </div>
+                                </div>
+
+                                <div className="w-full bg-[#007bff] hover:bg-[#0069d9] text-white font-bold rounded-full h-12 text-base shadow-lg animate-pulse flex items-center justify-center gap-2">
+                                    アカウント売却の相談 (DM)
+                                </div>
+                            </a>
                         </div>
-                    </a>
+                    </div>
                 </div>
-            </div>
 
-            {/* Submit button removed as per request */}
-        </form>
+                {/* Submit button removed as per request */}
+            </form>
+        </>
     );
 }
