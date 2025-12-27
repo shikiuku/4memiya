@@ -65,15 +65,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         </div>
 
                         <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-end gap-1">
-                                <span className="text-3xl font-bold text-[#e60012]">¥{product.price.toLocaleString()}</span>
-                                <span className="text-sm text-slate-600 mb-1">円(税込)</span>
-                            </div>
                             <LikeButton
                                 productId={product.id}
                                 initialIsLiked={isLiked}
                                 initialLikeCount={likeCount}
                             />
+                            <div className="flex items-end gap-1">
+                                <span className="text-3xl font-bold text-[#e60012]">¥{product.price.toLocaleString()}</span>
+                            </div>
                         </div>
 
                         {/* Large CTA Button (Screenshot Style) */}

@@ -279,12 +279,14 @@ export function HeroCarousel({ latestProducts, reviewStats, isLoggedIn = false }
                                                 NEW
                                             </Badge>
                                         </div>
-                                        <h3 className="text-white text-sm sm:text-xl md:text-2xl font-bold line-clamp-2 md:line-clamp-1 mb-1 sm:mb-2">
+                                        <h3 className="text-white text-sm sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">
                                             {product.title}
                                         </h3>
-                                        <p className="text-yellow-400 font-bold text-lg sm:text-3xl">
-                                            ¥{product.price.toLocaleString()}
-                                        </p>
+                                        <div className="flex justify-end">
+                                            <p className="text-yellow-400 font-bold text-lg sm:text-3xl">
+                                                ¥{product.price.toLocaleString()}
+                                            </p>
+                                        </div>
                                     </div>
                                 </Link>
                             </div>
