@@ -153,8 +153,8 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
             const supabase = createClient();
 
             for (const file of files) {
-                if (file.size > 500 * 1024 * 1024) {
-                    alert(`ファイルサイズ制限超え: ${file.name}`);
+                if (file.size > 5 * 1024 * 1024 * 1024) {
+                    alert(`ファイルサイズ制限超え (5GBまで): ${file.name}`);
                     continue;
                 }
 
@@ -264,7 +264,7 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                             `}
                         >
                             {isUploading ? (
-                                <div className="flex flex-col items-center gap-3 w-full px-6">
+                                <div className="flex flex-col items-center gap-3 w-full px-6 relative">
                                     <div className="flex items-center gap-2">
                                         <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
                                         <span className="text-sm font-bold text-slate-700">
@@ -279,7 +279,7 @@ export function VideoUploader({ initialVideos = [], onVideosChange }: VideoUploa
                                     <span className="text-sm font-bold text-slate-500 text-center px-4">動画を追加 (MP4など)</span>
                                     <div className="flex items-center gap-1.5 mt-1 text-slate-400">
                                         <Info className="w-3.5 h-3.5" />
-                                        <span className="text-xs">制限: 500MB以下</span>
+                                        <span className="text-xs">制限: 5GB以下</span>
                                     </div>
                                 </>
                             )}

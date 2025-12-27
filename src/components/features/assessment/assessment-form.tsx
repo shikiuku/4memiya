@@ -385,17 +385,17 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                     {/* Card 2: Account Sale Flow & DM */}
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-3.5 space-y-4">
                         {/* Account Sale Flow Section */}
-                        <div className="space-y-2.5">
+                        <div className="space-y-2">
                             <div className="flex items-center gap-2 border-l-4 border-[#007bff] pl-2.5">
-                                <h3 className="font-bold text-[13px] text-slate-800">アカウント売却の流れ</h3>
+                                <h3 className="font-bold text-[18px] text-slate-800">アカウント売却の流れ</h3>
                             </div>
 
-                            <div className="space-y-3 px-1">
+                            <div className="space-y-6 px-1">
                                 {/* Step 1 */}
                                 <div className="flex items-center gap-3">
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">1</div>
                                     <div className="flex-1">
-                                        <p className="text-sm font-bold text-slate-800">
+                                        <p className="text-[15px] font-bold text-slate-800">
                                             下のボタンから「売却希望です」とDMを送る
                                         </p>
                                     </div>
@@ -405,10 +405,10 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                                 <div className="flex items-start gap-3">
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none mt-[-1px]">2</div>
                                     <div className="flex-1">
-                                        <p className="text-sm font-bold text-slate-800 mb-2">
-                                            DMにて、以下の内容を撮影した動画を送信して下さい（属性順）
+                                        <p className="text-[15px] font-bold text-slate-800 mb-2">
+                                            DMにて、以下の内容を撮影した動画を送信（属性順）
                                         </p>
-                                        <div className="text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-3 space-y-2">
+                                        <div className="text-[13px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-3 space-y-2">
                                             <div>
                                                 <p className="font-bold text-slate-700">① ガチャ限定キャラ [★5、★6]</p>
                                                 <p className="text-slate-500 mt-0.5">
@@ -426,7 +426,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                                 <div className="flex items-center gap-3">
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">3</div>
                                     <div className="flex-1">
-                                        <p className="text-sm font-bold text-slate-800">
+                                        <p className="text-[15px] font-bold text-slate-800">
                                             査定額に納得頂けましたら、アカウント情報の確認を行います
                                         </p>
                                     </div>
@@ -436,7 +436,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                                 <div className="flex items-center gap-3">
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">4</div>
                                     <div className="flex-1">
-                                        <p className="text-sm font-bold text-slate-800">
+                                        <p className="text-[15px] font-bold text-slate-800">
                                             アカウント情報の確認後、希望のお支払い方法で送金致します
                                         </p>
                                     </div>
@@ -446,7 +446,7 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                                 <div className="flex items-center gap-3">
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">5</div>
                                     <div className="flex-1">
-                                        <p className="text-sm font-bold text-slate-800">
+                                        <p className="text-[15px] font-bold text-slate-800">
                                             受け取り完了後、「レビューを投稿」をクリック
                                         </p>
                                     </div>
@@ -456,14 +456,14 @@ export function AssessmentForm({ rules }: AssessmentFormProps) {
                                 <div className="flex items-center gap-3">
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#007bff] text-white grid place-items-center text-xs font-bold leading-none">6</div>
                                     <div className="flex-1">
-                                        <p className="text-sm font-bold text-slate-800">
+                                        <p className="text-[15px] font-bold text-slate-800">
                                             レビューの投稿が完了できたら取引終了
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <p className="text-center text-[10px] text-slate-500 font-medium pt-1">
+                            <p className="text-center text-[10px] text-slate-500 font-medium pt-2">
                                 何か質問や相談等ありましたらお気軽にdmください
                             </p>
                         </div>

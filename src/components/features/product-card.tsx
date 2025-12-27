@@ -24,9 +24,9 @@ export function ProductCard({ product, viewMode = 'grid', customHref, compactSta
     return (
         <Link
             href={linkHref}
-            className={`group block bg-white ${isList
+            className={`group bg-white ${isList
                 ? 'flex gap-2 px-2 py-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors'
-                : 'rounded-md overflow-hidden border border-slate-100 hover:border-slate-300 transition-colors'
+                : 'flex flex-col rounded-md overflow-hidden border border-slate-100 hover:border-slate-300 transition-colors'
                 }`}
         >
             {/* Thumbnail */}
@@ -61,10 +61,10 @@ export function ProductCard({ product, viewMode = 'grid', customHref, compactSta
             </div>
 
             {/* Content */}
-            <div className={`flex flex-col min-w-0 ${isList ? 'flex-1 h-28 py-0' : 'p-4 md:p-5'}`}>
+            <div className={`flex flex-col min-w-0 flex-1 ${isList ? 'min-h-[112px] py-1' : 'p-3.5 md:p-4 gap-2'}`}>
                 <div className="min-w-0">
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-1 mb-0.5">
+                    <div className="flex flex-wrap gap-1 mb-1">
                         {product.tags?.map((tag, i) => (
                             <span key={i} className="text-[9px] bg-slate-50 text-slate-500 px-1 py-0.5 rounded border border-slate-100">
                                 {tag}
@@ -72,7 +72,7 @@ export function ProductCard({ product, viewMode = 'grid', customHref, compactSta
                         ))}
                     </div>
 
-                    <h3 className={`font-bold text-slate-800 leading-snug group-hover:text-primary transition-colors ${isList ? 'text-[13px] mb-2 line-clamp-2' : 'text-sm line-clamp-2 mb-2'
+                    <h3 className={`font-bold text-slate-800 leading-snug group-hover:text-primary transition-colors ${isList ? 'text-[13px] mb-2' : 'text-sm line-clamp-3'
                         }`}>
                         {product.seq_id && <span className="mr-1">【No.{product.seq_id}】</span>}
                         {product.title}
@@ -80,26 +80,21 @@ export function ProductCard({ product, viewMode = 'grid', customHref, compactSta
                 </div>
 
                 {/* Footer Group (Stats + Price) */}
-                <div className={isList ? 'mt-auto' : ''}>
-                    {/* Stats (Mobile Visible) */}
-                    {isList && (
-                        <div className={`flex flex-wrap items-center gap-1 font-medium text-slate-500 text-[10px] mb-1`}>
-                            <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
-                                ランク:{product.rank ?? '-'}
-                            </span>
-                            <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
-                                運極:{product.luck_max ?? '-'}
-                            </span>
-                            <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
-                                ガチャ限:{product.gacha_charas ?? '-'}
-                            </span>
-                            <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
-                                紋章力:{product.badge_power ?? '-'}
-                            </span>
-                        </div>
-                    )}
+                <div className={`mt-auto flex flex-col ${isList ? '' : 'gap-1.5'}`}>
+                    {/* Stats (Visible in both views) */}
+                    <div className={`flex flex-wrap items-center gap-1 font-medium text-slate-500 text-[10px] mb-1 ${!isList ? 'mt-0.5' : ''}`}>
+                        <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
+                            ランク:{product.rank ?? '-'}
+                        </span>
+                        <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
+                            運極:{product.luck_max ?? '-'}
+                        </span>
+                        <span className="bg-slate-50 rounded px-1 py-0.5 text-slate-600 border border-slate-200/60 whitespace-nowrap">
+                            ガチャ限:{product.gacha_charas ?? '-'}
+                        </span>
+                    </div>
 
-                    <div className={`flex items-center justify-between ${!isList ? 'mt-2' : ''}`}>
+                    <div className="flex items-center justify-between">
                         {/* Status Badge (Bottom Left) */}
                         <div className="shrink-0">
                             {product.status === 'on_sale' ? (

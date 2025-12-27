@@ -34,17 +34,14 @@ export default async function Home({
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
-    <div className="container mx-auto px-4 pt-4 pb-20 max-w-5xl space-y-8">
-
+    <div className="container mx-auto px-4 pt-4 pb-20 max-w-5xl space-y-4 sm:space-y-8">
       {/* Hero Carousel - Always show */}
       <section>
         <HeroCarousel latestProducts={latestProducts} reviewStats={reviewStats} isLoggedIn={!!user} />
       </section>
 
-      {/* Page Title & Search (Header area) */}
-      {/* Page Title & Search (Header area) */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h1 className="text-xl font-bold text-slate-800 shrink-0">
+        <h1 className="text-xl font-bold text-slate-800 shrink-0 hidden sm:block">
           在庫一覧
         </h1>
         <div className="w-full sm:flex-1 sm:max-w-3xl flex justify-end">

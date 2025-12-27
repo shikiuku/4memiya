@@ -253,13 +253,12 @@ Wiring: UIとロジックを接続し、動的なサイトにする。
 - **禁止事項**: 手動でSQLエディタからスキーマを変更すると、ローカルのマイグレーション履歴と整合性が取れなくなるため避ける。常にコード (Migration File) を正とする。
 
 ## 9. デプロイ履歴 (Deployment History)
-- **Vercel Production**: [https://4memiya-e853byr4w-shikiuku-5395s-projects.vercel.app](https://4memiya-e853byr4w-shikiuku-5395s-projects.vercel.app)
-- **最終更新**: 2025-12-26
+- **Vercel Production**: [https://4memiya-e6281dyca-shikiuku-5395s-projects.vercel.app](https://4memiya-e6281dyca-shikiuku-5395s-projects.vercel.app)
+- **最終更新**: 2025-12-26 (23:55)
 - **主な修正**: 
-    - 買取査定ページのUIを極限までコンパクトに最適化（余白の削減、ヘッダーの削除）
-    - PayPayプレゼント告知用のキャンペーンポップアップ（PayPayアイコン、クリーム色背景、自動表示機能）を実装
-    - 属性別主要キャラの表示UIを改善（右寄せ・ドットリーダー追加）
-    - Vercel環境変数 (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) の設定
+    - ヒーローカルーセルの「買取査定」スライドの刷新（雨宮アイコン、改行調整、リンク制限）
+    - 在庫一覧ヘッダーのレイアウト改善（タイトル左寄せ、検索バーの幅拡大）
+    - 手動デプロイ手順 (`npx vercel --prod`) の明文化と実施
 
 ## 10. 手動デプロイ (Manual Deployment)
 本プロジェクトはGitHub連携を行わず、以下のコマンドで手動デプロイを行います。

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, Video } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Video, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type ImageGalleryProps = {
@@ -91,7 +91,7 @@ export function ImageGallery({ images, movies }: ImageGalleryProps) {
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-black">
                                         <video
-                                            src={item.url}
+                                            src={`${item.url}#t=0.001`}
                                             className="w-full h-full object-contain"
                                             controls
                                             playsInline
@@ -145,7 +145,20 @@ export function ImageGallery({ images, movies }: ImageGalleryProps) {
                         {item.type === 'image' ? (
                             <Image src={item.url} alt="thumb" fill className="object-cover" />
                         ) : (
-                            <Video className="w-6 h-6 text-white" />
+                            <div className="relative w-full h-full flex items-center justify-center bg-black">
+                                <video
+                                    src={`${item.url}#t=0.001`}
+                                    className="w-full h-full object-cover opacity-80"
+                                    preload="metadata"
+                                    muted
+                                    playsInline
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="bg-black/40 rounded-full p-1 border border-white/40">
+                                        <Play className="w-4 h-4 text-white fill-white" />
+                                    </div>
+                                </div>
+                            </div>
                         )}
                     </button>
                 ))}
