@@ -57,10 +57,10 @@ export function LikeButton({ productId, initialIsLiked, initialLikeCount }: Like
 
     return (
         <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={handleToggle}
-            className="group flex items-center gap-1.5 px-3 h-10 hover:bg-slate-50 text-slate-500 hover:text-slate-700"
+            className="group flex items-center gap-1.5 px-3 h-10 bg-slate-50 border-slate-200 hover:bg-slate-100 hover:border-slate-300 text-slate-500 hover:text-slate-700 transition-all"
         >
             <Heart
                 className={cn(
